@@ -1,4 +1,7 @@
 /* You can add global styles to this file, and also import other style files */
+*{
+  box-sizing: border-box;
+}
 
 html, body { height: 100%; }
 body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
@@ -7,10 +10,33 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
   display: flex;
 }
 
+.flex-col {
+  display: flex;
+  flex-direction: column;
+}
+
+.flex-row {
+  display: flex;
+  flex-direction: row;
+}
+
 .spacer {
   flex: 1;
 }
 
+.center {
+  justify-content: center;
+  text-align: center;
+  align-items: center;
+}
+.centerH {
+  align-items: center;
+}
+
 mat-icon{
   font-family: 'Material Icons' !important;
+}
+
+.width100{
+  width: 100%
 }
