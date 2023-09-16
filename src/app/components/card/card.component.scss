@@ -1,0 +1,81 @@
+@import "../../../constants";
+
+:host {
+  display: flex;
+  height: 420px;
+  padding: 16px 0;
+}
+
+.frame {
+  flex-direction: column;
+  flex: 1;
+  border: 1px solid grey;
+  border-radius: 16px;
+  background: rgb(240, 240, 240);
+  margin: 0 16px;
+  min-width: 300px;
+}
+
+.image {
+  border-radius: 16px;
+  width: 100%;
+  height: 220px;
+  background-size: 100% auto !important;
+  background-repeat: no-repeat !important;
+}
+
+.content {
+  padding: 0 8px;
+  display: flex;
+  flex-direction: column;
+  height: calc(100% - 230px);
+}
+
+.summary {
+  color: $grey;
+}
+
+.title {
+  font-size: large;
+  font-weight: 700;
+  margin: 8px 0;
+}
+
+.rating {
+  color: $orange;
+  font-weight: 600;
+}
+
+.info {
+  color: $light-black;
+  font-weight: 100;
+  position: relative;
+}
+
+.tags {
+  background-color: $light-grey;
+  display: inline;
+  width: fit-content;
+  padding: 2px 16px;
+  border-radius: 6px;
+}
+
+.price {
+font-weight: 600;
+}
+
+.price-container {
+  display: flex;
+  margin-top: auto;
+  white-space: pre;
+}
+
+.star{
+  font-size:medium;
+  position: relative;
+  top: 2px
+}
+
+mat-icon{
+  overflow: unset;
+}

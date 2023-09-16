@@ -3,5 +3,16 @@
   flex-direction: column;
   flex: 1;
   width: 70vw;
-  border: 1px solid red;
+}
+
+.container {
+  flex-wrap: wrap;
+  height: 100%;
+  min-width: 1080px;
+  align-content: start;
+  justify-content: space-between;
+}
+
+.filler{
+  width: 330px;
 }

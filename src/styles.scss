@@ -6,6 +6,10 @@
 html, body { height: 100%; }
 body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
 
+.border{
+  border: solid 1px blue;
+}
+
 .flex {
   display: flex;
 }
