@@ -4,6 +4,7 @@
   display: flex;
   height: 420px;
   padding: 16px 0;
+  margin: 8px 0;
 }
 
 .frame {
@@ -11,9 +12,10 @@
   flex: 1;
   border: 1px solid grey;
   border-radius: 16px;
-  background: rgb(240, 240, 240);
+  background: rgb(250, 250, 250);
   margin: 0 16px;
-  min-width: 300px;
+  width: 300px;
+  min-height: 420px;
 }
 
 .image {
@@ -58,6 +60,7 @@
   width: fit-content;
   padding: 2px 16px;
   border-radius: 6px;
+  margin-right: 4px;
 }
 
 .price {
@@ -78,4 +81,14 @@ font-weight: 600;
 
 mat-icon{
   overflow: unset;
+}
+
+.offer{
+  display: inline;
+  width: fit-content;
+  padding: 2px 16px;
+  border-radius: 6px;
+  margin-right: 4px;
+  background-color: $orangeBg;
+  color: $orangeFont;
 }
