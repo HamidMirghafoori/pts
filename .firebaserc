@@ -1,0 +1,14 @@
+{
+  "targets": {
+    "ptsapp-f9ac9": {
+      "hosting": {
+        "PTS": [
+          "ptsapp-f9ac9"
+        ]
+      }
+    }
+  },
+  "projects": {
+    "default": "ptsapp-f9ac9"
+  }
+}
