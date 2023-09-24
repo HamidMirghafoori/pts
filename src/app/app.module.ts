@@ -8,15 +8,16 @@ import { AppComponent } from './app.component';
 import { ToolbarComponent } from './components/toolbar/toolbar.component';
 
 import { HttpClientModule } from '@angular/common/http';
+import { initializeApp, provideFirebaseApp } from '@angular/fire/app';
+import { getAuth, provideAuth } from '@angular/fire/auth';
+import { getDatabase, provideDatabase } from '@angular/fire/database';
+import { getFirestore, provideFirestore } from '@angular/fire/firestore';
 import { FormsModule } from '@angular/forms';
+import { environment } from '../environments/environment';
 import { CardComponent } from './components/card/card.component';
 import { ProductsListComponent } from './components/products-list/products-list.component';
 import { SigninComponent } from './components/signin/signin.component';
 import { MaterialModule } from './material/material.module';
-import { initializeApp,provideFirebaseApp } from '@angular/fire/app';
-import { environment } from '../environments/environment';
-import { provideAuth,getAuth } from '@angular/fire/auth';
-import { provideFirestore,getFirestore } from '@angular/fire/firestore';
 
 export const LOCAL_STORAGE_TOKEN_KEY = 'PTS_angular_material';
 
@@ -42,22 +43,7 @@ export function tokenGetter() {
     provideFirebaseApp(() => initializeApp(environment.firebase)),
     provideAuth(() => getAuth()),
     provideFirestore(() => getFirestore()),
-    // AuthModule.forRoot({
-    //   domain: 'pts.uk.auth0.com',
-    //   clientId: '08fi20erz8VgBvW11KT0aOpZ6GO3nY4h',
-    //   authorizationParams: {
-    //     redirect_uri: window.location.origin,
-    //   },
-    // }),
-    // AuthModule.forRoot({
-    //   ...env.auth,
-    // }),
-    // JwtModule.forRoot({
-    //   config: {
-    //     tokenGetter: tokenGetter,
-    //     allowedDomains: ['localhost:3000', 'localhost:8080'],
-    //   },
-    // }),
+    provideDatabase(() => getDatabase()),
   ],
   providers: [],
   bootstrap: [AppComponent],
