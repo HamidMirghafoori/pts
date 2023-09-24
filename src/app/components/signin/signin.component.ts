@@ -1,5 +1,9 @@
-import { DOCUMENT } from '@angular/common';
-import { Component, Inject } from '@angular/core';
+import { Component } from '@angular/core';
+import {
+  Auth,
+  createUserWithEmailAndPassword,
+  signInWithEmailAndPassword,
+} from '@angular/fire/auth';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { CustomValidators } from 'src/app/custom-validator';
@@ -22,11 +26,37 @@ export class SigninComponent {
     { validators: CustomValidators.passwordsMatching }
   );
 
-  constructor(
-    private router: Router,
-    @Inject(DOCUMENT) public document: Document,
-  ) {}
+  constructor(private router: Router, public auth: Auth) {}
 
-
-
+  registerUser(value: any) {
+    // const auth = getAuth();
+    console.log(value);
+    createUserWithEmailAndPassword(this.auth, value.email, value.password)
+      .then((userCredential) => {
+        // Signed in
+        const user = userCredential.user;
+        console.log(user);
+      })
+      .catch((error) => {
+        const errorCode = error.code;
+        const errorMessage = error.message;
+        console.log(errorCode, errorMessage);
+      });
+  }
+  signInUser(value: any) {
+    // const auth = getAuth();
+    console.log(value);
+    signInWithEmailAndPassword(this.auth, value.email, value.password)
+      .then((userCredential) => {
+        // Signed in
+        const user = userCredential.user;
+        console.log(user);
+      })
+      .catch((error) => {
+        const errorCode = error.code;
+        const errorMessage = error.message;
+        console.log(errorCode);
+        console.log(errorMessage);
+      });
+  }
 }

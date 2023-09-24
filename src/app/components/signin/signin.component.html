@@ -1,1 +1,15 @@
-<div class="">Sign in</div>
+<div class="flex-col">
+  <h3>Sign up</h3>
+  <form #LoginForm="ngForm" class="flex-col">
+    <input type="text" id="email" name="email" placeholder="email" ngModel />
+    <input
+      type="password"
+      id="password"
+      name="password"
+      placeholder="password"
+      ngModel
+    />
+    <button (click)="registerUser(LoginForm.value)">Sign Up</button>
+    <button (click)="signInUser(LoginForm.value)">Sign In</button>
+  </form>
+</div>
