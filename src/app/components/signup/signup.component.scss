@@ -1,0 +1,22 @@
+form {
+  margin-top: 32px;
+  min-width: 480px;
+}
+
+.toggle {
+  margin: 16px 0;;
+}
+
+.business {
+  display: flex;
+  gap: 16px;
+}
+
+.business-section {
+  flex: 1
+}
+
+.error-snackbar {
+  background-color: #f44336; /* Red */
+  color: white;
+}

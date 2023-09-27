@@ -18,6 +18,7 @@ import { CardComponent } from './components/card/card.component';
 import { ProductsListComponent } from './components/products-list/products-list.component';
 import { SigninComponent } from './components/signin/signin.component';
 import { MaterialModule } from './material/material.module';
+import { SignupComponent } from './components/signup/signup.component';
 
 export const LOCAL_STORAGE_TOKEN_KEY = 'PTS_angular_material';
 
@@ -31,6 +32,7 @@ export function tokenGetter() {
     ProductsListComponent,
     CardComponent,
     SigninComponent,
+    SignupComponent,
   ],
   imports: [
     BrowserModule,
