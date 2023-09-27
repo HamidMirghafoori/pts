@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Auth, User, createUserWithEmailAndPassword } from '@angular/fire/auth';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { UserService } from 'src/app/services/user.service';
 
 @Component({
   selector: 'app-signup',
@@ -15,7 +16,8 @@ export class SignupComponent implements OnInit {
   constructor(
     private fb: FormBuilder,
     private snackBar: MatSnackBar,
-    public auth: Auth
+    public auth: Auth,
+    private userService: UserService
   ) {}
 
   ngOnInit() {
@@ -66,7 +68,13 @@ export class SignupComponent implements OnInit {
       .then((userCredential) => {
         // already signed in
         const user: User = userCredential.user;
-        console.log(user.getIdToken());
+        console.log(user);
+
+        this.userService
+          .addUser(user.uid, { test: 'May I ?', compact: true })
+          .then((user) => {
+            console.log('User Data:', user);
+          });
       })
       .catch((error) => {
         const errorCode = error.code;

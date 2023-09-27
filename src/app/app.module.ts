@@ -10,6 +10,7 @@ import { ToolbarComponent } from './components/toolbar/toolbar.component';
 import { HttpClientModule } from '@angular/common/http';
 import { initializeApp, provideFirebaseApp } from '@angular/fire/app';
 import { getAuth, provideAuth } from '@angular/fire/auth';
+import { FIREBASE_OPTIONS } from '@angular/fire/compat';
 import { getDatabase, provideDatabase } from '@angular/fire/database';
 import { getFirestore, provideFirestore } from '@angular/fire/firestore';
 import { FormsModule } from '@angular/forms';
@@ -17,8 +18,9 @@ import { environment } from '../environments/environment';
 import { CardComponent } from './components/card/card.component';
 import { ProductsListComponent } from './components/products-list/products-list.component';
 import { SigninComponent } from './components/signin/signin.component';
-import { MaterialModule } from './material/material.module';
 import { SignupComponent } from './components/signup/signup.component';
+import { MaterialModule } from './material/material.module';
+
 
 export const LOCAL_STORAGE_TOKEN_KEY = 'PTS_angular_material';
 
@@ -47,7 +49,9 @@ export function tokenGetter() {
     provideFirestore(() => getFirestore()),
     provideDatabase(() => getDatabase()),
   ],
-  providers: [],
+  providers: [
+    { provide: FIREBASE_OPTIONS, useValue: environment.firebase }
+  ],
   bootstrap: [AppComponent],
 })
 export class AppModule {}
