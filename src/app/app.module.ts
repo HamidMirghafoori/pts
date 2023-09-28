@@ -15,12 +15,12 @@ import { getDatabase, provideDatabase } from '@angular/fire/database';
 import { getFirestore, provideFirestore } from '@angular/fire/firestore';
 import { FormsModule } from '@angular/forms';
 import { environment } from '../environments/environment';
+import { ApplicationsComponent } from './components/applications/applications.component';
 import { CardComponent } from './components/card/card.component';
 import { ProductsListComponent } from './components/products-list/products-list.component';
 import { SigninComponent } from './components/signin/signin.component';
 import { SignupComponent } from './components/signup/signup.component';
 import { MaterialModule } from './material/material.module';
-
 
 export const LOCAL_STORAGE_TOKEN_KEY = 'PTS_angular_material';
 
@@ -35,6 +35,7 @@ export function tokenGetter() {
     CardComponent,
     SigninComponent,
     SignupComponent,
+    ApplicationsComponent,
   ],
   imports: [
     BrowserModule,

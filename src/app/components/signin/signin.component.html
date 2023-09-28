@@ -1,14 +1,33 @@
-<div class="flex-col">
-  <h3>Sign up</h3>
-  <form #LoginForm="ngForm" class="flex-col">
-    <input type="text" id="email" name="email" placeholder="email" ngModel />
+<form [formGroup]="loginForm" (ngSubmit)="onSubmit()" class="flex-col">
+  <mat-form-field>
+    <input matInput placeholder="Email" formControlName="email" />
+    <mat-error *ngIf="loginForm.get('email')?.hasError('required')"
+      >Email is required</mat-error
+    >
+    <mat-error *ngIf="loginForm.get('email')?.hasError('email')"
+      >Enter a valid email address</mat-error
+    >
+  </mat-form-field>
+
+  <mat-form-field>
     <input
+      matInput
       type="password"
-      id="password"
-      name="password"
-      placeholder="password"
-      ngModel
+      placeholder="Password"
+      formControlName="password"
     />
-    <button (click)="signInUser(LoginForm.value)">Sign In</button>
-  </form>
-</div>
+    <mat-error *ngIf="loginForm.get('password')?.hasError('required')"
+      >Password is required</mat-error
+    >
+  </mat-form-field>
+
+  <button
+    mat-raised-button
+    color="primary"
+    type="submit"
+    class="mt16"
+    [disabled]="!loginForm.valid"
+  >
+    Login
+  </button>
+</form>

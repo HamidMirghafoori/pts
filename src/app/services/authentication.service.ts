@@ -1,0 +1,99 @@
+import { Injectable } from '@angular/core';
+import {
+  Auth,
+  User,
+  createUserWithEmailAndPassword,
+  signInWithEmailAndPassword,
+} from '@angular/fire/auth';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { Router } from '@angular/router';
+import { BehaviorSubject, Observable } from 'rxjs';
+import { UserService } from './user.service';
+
+export interface AppUserType {
+  active: boolean;
+  role: string;
+}
+
+export type UserType = User & AppUserType;
+
+@Injectable({
+  providedIn: 'root',
+})
+export class AuthenticationService {
+  constructor(
+    public auth: Auth,
+    private router: Router,
+    private userService: UserService,
+    private snackBar: MatSnackBar
+  ) {}
+
+  private authSubject: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(
+    false
+  );
+  public isAuthenticated$: Observable<boolean> =
+    this.authSubject.asObservable();
+
+  private userSubject: BehaviorSubject<UserType | null> =
+    new BehaviorSubject<UserType | null>(null);
+  public authenticatedUser$: Observable<UserType | null> =
+    this.userSubject.asObservable();
+
+  login(email: string, password: string): void {
+    signInWithEmailAndPassword(this.auth, email, password)
+      .then((userCredential) => {
+        // Signed in
+        console.log('Authenticated!', userCredential);
+        this.authSubject.next(true);
+        this.userService
+          .getUser(userCredential.user.uid)
+          .subscribe((appUser) => {
+            if (appUser) {
+              this.userSubject.next({ ...userCredential.user, ...appUser });
+            }
+          });
+        this.router.navigate(['']);
+      })
+      .catch((error) => {
+        const errorCode = error.code;
+        const errorMessage = error.message;
+        console.log(errorCode);
+        console.log(errorMessage);
+      });
+  }
+
+  signup(email: string, password: string, role: string) {
+    createUserWithEmailAndPassword(this.auth, email, password)
+      .then((userCredential) => {
+        // already signed in
+        const user: User = userCredential.user;
+        console.log(user);
+
+        this.userService
+          // business role by default is inactive
+          .addUser(user.uid, { role, active: role !== 'business' })
+          .then(() => {
+            this.router.navigate(['']);
+          });
+      })
+      .catch((error) => {
+        const errorCode = error.code;
+        // const errorMessage = error.message;
+        console.log(errorCode);
+        if (errorCode === 'auth/email-already-in-use') {
+          this.snackBar.open('Error: Account already exists', 'Close', {
+            duration: 3000,
+            horizontalPosition: 'center',
+            verticalPosition: 'top',
+            panelClass: ['error-snackbar'],
+          });
+        }
+      });
+  }
+
+  logout() {
+    this.authSubject.next(false);
+    this.userSubject.next(null);
+  }
+
+}

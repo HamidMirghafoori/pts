@@ -1,15 +1,40 @@
 <mat-toolbar color="secondary" class="flex container">
-  <button mat-button class="" aria-label="Example icon-button with menu icon" routerLink="">
+  <button
+    mat-button
+    class=""
+    aria-label="Example icon-button with menu icon"
+    routerLink=""
+  >
     <mat-icon>menu</mat-icon>
     <span>PTS</span>
   </button>
   <span class="spacer"></span>
-  <button mat-button class="" aria-label="sign up icon" routerLink="signup">
-    <mat-icon>border_color</mat-icon>
-    <span>Sign up</span>
-  </button>
-  <button mat-button class="" aria-label="" routerLink="signin">
-    <mat-icon>account_circle</mat-icon>
-    <span>Sign in</span>
+
+  <div class="auth" *ngIf="!isLoggedIn">
+    <button mat-button class="" aria-label="sign up icon" routerLink="signup">
+      <mat-icon>border_color</mat-icon>
+      <span>Sign up</span>
+    </button>
+    <button mat-button class="" aria-label="" routerLink="signin">
+      <mat-icon>account_circle</mat-icon>
+      <span>Sign in</span>
+    </button>
+  </div>
+  <div class="" *ngIf="user?.role==='admin'">
+    <button mat-button class="" aria-label="" routerLink="applications">
+      <mat-icon>assignment</mat-icon>
+      <span>Applications</span>
+    </button>
+
+  </div>
+  <button
+    mat-button
+    class=""
+    aria-label=""
+    (click)="logout()"
+    *ngIf="isLoggedIn"
+  >
+    <mat-icon>exit_to_app</mat-icon>
+    <span>Sign out</span>
   </button>
 </mat-toolbar>

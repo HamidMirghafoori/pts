@@ -1,7 +1,8 @@
 import { Component, OnInit } from '@angular/core';
-import { Auth, User, createUserWithEmailAndPassword } from '@angular/fire/auth';
+import { Auth } from '@angular/fire/auth';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { AuthenticationService } from 'src/app/services/authentication.service';
 import { UserService } from 'src/app/services/user.service';
 
 @Component({
@@ -17,7 +18,8 @@ export class SignupComponent implements OnInit {
     private fb: FormBuilder,
     private snackBar: MatSnackBar,
     public auth: Auth,
-    private userService: UserService
+    private userService: UserService,
+    private authService: AuthenticationService
   ) {}
 
   ngOnInit() {
@@ -62,33 +64,12 @@ export class SignupComponent implements OnInit {
   }
 
   onSubmit() {
-    const email = this.registrationForm.value.email;
-    const password = this.registrationForm.value.password;
-    createUserWithEmailAndPassword(this.auth, email, password)
-      .then((userCredential) => {
-        // already signed in
-        const user: User = userCredential.user;
-        console.log(user);
-
-        this.userService
-          .addUser(user.uid, { test: 'May I ?', compact: true })
-          .then((user) => {
-            console.log('User Data:', user);
-          });
-      })
-      .catch((error) => {
-        const errorCode = error.code;
-        // const errorMessage = error.message;
-        console.log(errorCode);
-        if (errorCode === 'auth/email-already-in-use') {
-          this.snackBar.open('Error: Account already exists', 'Close', {
-            duration: 3000,
-            horizontalPosition: 'center',
-            verticalPosition: 'top',
-            panelClass: ['error-snackbar'],
-          });
-        }
-      });
+    const email: string = this.registrationForm.value.email;
+    const password: string = this.registrationForm.value.password;
+    const role: string = this.registrationForm.value.isBusiness
+      ? 'business'
+      : 'buyer';
+    this.authService.signup(email, password, role);
   }
 
   onFileSelected(event: any) {
