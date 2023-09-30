@@ -1,10 +1,12 @@
 import { Component, OnInit } from '@angular/core';
 import { Auth } from '@angular/fire/auth';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { MatSnackBar } from '@angular/material/snack-bar';
-import { AuthenticationService } from 'src/app/services/authentication.service';
-import { UserService } from 'src/app/services/user.service';
+import {
+  ApplicationType,
+  AuthenticationService,
+} from 'src/app/services/authentication.service';
 
+export type Role = 'business' | 'customer' | 'admin' | 'officer';
 @Component({
   selector: 'app-signup',
   templateUrl: './signup.component.html',
@@ -16,9 +18,7 @@ export class SignupComponent implements OnInit {
 
   constructor(
     private fb: FormBuilder,
-    private snackBar: MatSnackBar,
     public auth: Auth,
-    private userService: UserService,
     private authService: AuthenticationService
   ) {}
 
@@ -66,10 +66,27 @@ export class SignupComponent implements OnInit {
   onSubmit() {
     const email: string = this.registrationForm.value.email;
     const password: string = this.registrationForm.value.password;
-    const role: string = this.registrationForm.value.isBusiness
+    const role: Role = this.registrationForm.value.isBusiness
       ? 'business'
-      : 'buyer';
-    this.authService.signup(email, password, role);
+      : 'customer';
+    const application: ApplicationType = this.registrationForm.value.isBusiness
+      ? 'pending'
+      : 'NA';
+    const description: string =
+      this.registrationForm.value.businessDescription ?? '';
+    const type: string = this.registrationForm.value.businessType ?? '';
+    const status: string = this.registrationForm.value.isBusiness
+      ? 'pending'
+      : 'active';
+    this.authService.signup(
+      email,
+      password,
+      role,
+      description,
+      type,
+      status,
+      application
+    );
   }
 
   onFileSelected(event: any) {

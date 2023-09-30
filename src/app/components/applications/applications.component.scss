@@ -1,0 +1,29 @@
+.accordion {
+  min-width: 600px;
+  margin: 16px 0;
+}
+
+.actions {
+justify-content: space-around;
+padding: 0 120px;
+}
+
+.title{
+  margin: 48px 0;
+  font-size: 36px;
+  font-weight: 900;
+  text-align: center;
+  width: 100%;
+}
+
+.nothing {
+  background-color: rgb(255, 197, 197);
+  font-size: 18px;
+  font-weight: 400;
+  padding: 16px;
+  border-radius: 8px;
+}
+
+.success {
+  background-color: rgb(48, 207, 80);
+}

@@ -1,1 +1,33 @@
-<p>applications works!</p>
+<p class="title">Applications</p>
+
+<mat-accordion *ngFor="let user of inactiveUsers; let i = index">
+  <mat-expansion-panel
+    [expanded]="step === i"
+    (opened)="setStep(i)"
+    hideToggle
+    class="accordion"
+  >
+    <mat-expansion-panel-header>
+      <mat-panel-title> {{ user.email }} </mat-panel-title>
+      <mat-panel-description>
+        {{ user.type }} - {{ user.description }}
+      </mat-panel-description>
+    </mat-expansion-panel-header>
+    <div class="flex-row actions">
+      <button mat-raised-button color="warn" (click)="reject(i)">Reject</button>
+      <button mat-raised-button class="success" (click)="approve(i)">
+        Approve
+      </button>
+    </div>
+    <mat-action-row>
+      <button mat-button color="warn" (click)="prevStep()" *ngIf="i > 0">
+        Previous
+      </button>
+      <button mat-button color="primary" (click)="nextStep()">Next</button>
+    </mat-action-row>
+  </mat-expansion-panel>
+</mat-accordion>
+
+<div class="nothing" *ngIf="inactiveUsers.length === 0">
+  There is no new application
+</div>

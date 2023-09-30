@@ -3,16 +3,24 @@ import {
   Auth,
   User,
   createUserWithEmailAndPassword,
-  signInWithEmailAndPassword,
+  sendPasswordResetEmail,
+  signInWithEmailAndPassword
 } from '@angular/fire/auth';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
 import { BehaviorSubject, Observable } from 'rxjs';
+import { Role } from '../components/signup/signup.component';
 import { UserService } from './user.service';
 
+export type ApplicationType = 'pending' | 'approved' | 'rejected' | 'NA';
 export interface AppUserType {
-  active: boolean;
-  role: string;
+  id: string;
+  status: string;
+  role: Role;
+  email: string;
+  description: string;
+  type: string;
+  application: ApplicationType;
 }
 
 export type UserType = User & AppUserType;
@@ -25,7 +33,7 @@ export class AuthenticationService {
     public auth: Auth,
     private router: Router,
     private userService: UserService,
-    private snackBar: MatSnackBar
+    private snackBar: MatSnackBar,
   ) {}
 
   private authSubject: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(
@@ -43,7 +51,6 @@ export class AuthenticationService {
     signInWithEmailAndPassword(this.auth, email, password)
       .then((userCredential) => {
         // Signed in
-        console.log('Authenticated!', userCredential);
         this.authSubject.next(true);
         this.userService
           .getUser(userCredential.user.uid)
@@ -62,7 +69,15 @@ export class AuthenticationService {
       });
   }
 
-  signup(email: string, password: string, role: string) {
+  signup(
+    email: string,
+    password: string,
+    role: string,
+    description: string,
+    type: string,
+    status: string,
+    application: ApplicationType
+  ) {
     createUserWithEmailAndPassword(this.auth, email, password)
       .then((userCredential) => {
         // already signed in
@@ -71,7 +86,14 @@ export class AuthenticationService {
 
         this.userService
           // business role by default is inactive
-          .addUser(user.uid, { role, active: role !== 'business' })
+          .addUser(user.uid, {
+            role,
+            email,
+            description,
+            type,
+            status,
+            application,
+          })
           .then(() => {
             this.router.navigate(['']);
           });
@@ -94,6 +116,11 @@ export class AuthenticationService {
   logout() {
     this.authSubject.next(false);
     this.userSubject.next(null);
+    this.router.navigate(['']);
   }
 
+  // TODO: not working
+  resetPassword(email: string) {
+    return sendPasswordResetEmail(this.auth, email);
+  }
 }
