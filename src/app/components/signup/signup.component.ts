@@ -4,6 +4,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import {
   ApplicationType,
   AuthenticationService,
+  StatusType,
 } from 'src/app/services/authentication.service';
 
 export type Role = 'business' | 'customer' | 'admin' | 'officer';
@@ -75,7 +76,7 @@ export class SignupComponent implements OnInit {
     const description: string =
       this.registrationForm.value.businessDescription ?? '';
     const type: string = this.registrationForm.value.businessType ?? '';
-    const status: string = this.registrationForm.value.isBusiness
+    const status: StatusType = this.registrationForm.value.isBusiness
       ? 'pending'
       : 'active';
     this.authService.signup(

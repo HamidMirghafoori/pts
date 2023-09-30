@@ -3,7 +3,6 @@ import {
   Auth,
   User,
   createUserWithEmailAndPassword,
-  sendPasswordResetEmail,
   signInWithEmailAndPassword
 } from '@angular/fire/auth';
 import { MatSnackBar } from '@angular/material/snack-bar';
@@ -13,9 +12,10 @@ import { Role } from '../components/signup/signup.component';
 import { UserService } from './user.service';
 
 export type ApplicationType = 'pending' | 'approved' | 'rejected' | 'NA';
+export type StatusType = 'pending' | 'active';
 export interface AppUserType {
   id: string;
-  status: string;
+  status: StatusType;
   role: Role;
   email: string;
   description: string;
@@ -33,7 +33,7 @@ export class AuthenticationService {
     public auth: Auth,
     private router: Router,
     private userService: UserService,
-    private snackBar: MatSnackBar,
+    private snackBar: MatSnackBar
   ) {}
 
   private authSubject: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(
@@ -57,15 +57,27 @@ export class AuthenticationService {
           .subscribe((appUser) => {
             if (appUser) {
               this.userSubject.next({ ...userCredential.user, ...appUser });
+              switch (appUser.role) {
+                case 'business':
+                  this.router.navigate(['shop']);
+                  break;
+                default:
+                  this.router.navigate(['']);
+              }
             }
           });
-        this.router.navigate(['']);
       })
       .catch((error) => {
         const errorCode = error.code;
         const errorMessage = error.message;
         console.log(errorCode);
         console.log(errorMessage);
+        this.snackBar.open('Error: Username or Password mismatch', 'Close', {
+          duration: 3000,
+          horizontalPosition: 'center',
+          verticalPosition: 'top',
+          panelClass: ['error-snackbar'],
+        });
       });
   }
 
@@ -120,7 +132,7 @@ export class AuthenticationService {
   }
 
   // TODO: not working
-  resetPassword(email: string) {
-    return sendPasswordResetEmail(this.auth, email);
-  }
+  // resetPassword(email: string) {
+  //   return sendPasswordResetEmail(this.auth, email);
+  // }
 }

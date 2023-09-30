@@ -40,16 +40,19 @@ export class ApplicationsComponent implements OnInit {
     data.status = 'active';
     data.application = 'approved';
     this.userService.updateUser(this.inactiveUsers[index].id, data).then(() => {
-      this.authService
-        .resetPassword(this.inactiveUsers[index].email)
-        .then(() => {
-          this.snackBar.open('Application approved', 'Close', {
-            duration: 3000,
-            horizontalPosition: 'center',
-            verticalPosition: 'top',
-          });
-        })
-        .catch((err) => console.log(err));
+
+      // this.authService
+      //   .resetPassword(this.inactiveUsers[index].email)
+      //   .then(() => {
+      //   })
+      //   .catch((err) => console.log(err));
+
+
+      this.snackBar.open('Application approved', 'Close', {
+        duration: 3000,
+        horizontalPosition: 'center',
+        verticalPosition: 'top',
+      });
     });
   }
 
