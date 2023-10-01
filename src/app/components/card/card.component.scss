@@ -29,7 +29,7 @@
   padding: 0 8px;
   display: flex;
   flex-direction: column;
-  height: calc(100% - 230px);
+  // height: calc(100% - 230px);
 }
 
 .summary {
@@ -40,6 +40,7 @@
   font-size: large;
   font-weight: 700;
   margin: 8px 0;
+  height: 40px;
 }
 
 .rating {
@@ -51,6 +52,7 @@
   color: $light-black;
   font-weight: 100;
   position: relative;
+  padding: 8px 0px;
 }
 
 .tags {
@@ -60,6 +62,7 @@
   padding: 2px 16px;
   border-radius: 6px;
   margin-right: 4px;
+  margin-bottom: 8px;
 }
 
 .price {
@@ -90,4 +93,6 @@ mat-icon{
   margin-right: 4px;
   background-color: $orangeBg;
   color: $orangeFont;
+  margin-bottom: 16px;
+  margin-top: 16px;
 }
