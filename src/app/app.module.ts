@@ -22,6 +22,7 @@ import { SigninComponent } from './components/signin/signin.component';
 import { SignupComponent } from './components/signup/signup.component';
 import { MaterialModule } from './material/material.module';
 import { ShopProductsComponent } from './components/shop-products/shop-products.component';
+import { MatButtonModule } from '@angular/material/button';
 
 export const LOCAL_STORAGE_TOKEN_KEY = 'PTS_angular_material';
 
@@ -51,6 +52,7 @@ export function tokenGetter() {
     provideAuth(() => getAuth()),
     provideFirestore(() => getFirestore()),
     provideDatabase(() => getDatabase()),
+    MatButtonModule,
   ],
   providers: [
     { provide: FIREBASE_OPTIONS, useValue: environment.firebase }
