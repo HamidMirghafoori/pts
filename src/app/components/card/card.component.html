@@ -16,7 +16,7 @@
         <div class="tags" *ngFor="let tag of data.tags">{{ tag }}</div>
       </div>
       <div class="price-container">
-        From <span class="price">{{ data.currency }} {{ data.price }}</span>
+        From: &nbsp; <span class="price">{{ data.currency }} {{ data.price }}</span>
       </div>
       <div class="flex-row">
         <div class="offer" *ngFor="let offer of data.offers">{{ offer }}</div>
