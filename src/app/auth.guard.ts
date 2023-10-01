@@ -47,8 +47,6 @@ class Permissions {
           switchMap((user) => {
             const id = user?.uid;
             if (!id) return of(false);
-            console.log('BBBBB->', user);
-            
             if (user.status === 'pending') {
               this.snackBar.open(
                 'Error: Business is not approved yet',

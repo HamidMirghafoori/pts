@@ -1,12 +1,18 @@
 /* You can add global styles to this file, and also import other style files */
-*{
+* {
   box-sizing: border-box;
 }
 
-html, body { height: 100%; }
-body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+html,
+body {
+  height: 100%;
+}
+body {
+  margin: 0;
+  font-family: Roboto, "Helvetica Neue", sans-serif;
+}
 
-.border{
+.border {
   border: solid 1px blue;
 }
 
@@ -37,12 +43,12 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
   align-items: center;
 }
 
-mat-icon{
-  font-family: 'Material Icons' !important;
+mat-icon {
+  font-family: "Material Icons" !important;
 }
 
-.width100{
-  width: 100%
+.width100 {
+  width: 100%;
 }
 
 .mt16 {
@@ -51,4 +57,20 @@ mat-icon{
 
 .hidden {
   display: none;
+}
+
+.nothing {
+  background-color: rgb(255, 197, 197);
+  font-size: 18px;
+  font-weight: 400;
+  padding: 16px;
+  border-radius: 8px;
+}
+
+.title {
+  margin: 32px 0 !important;
+  font-size: 36px;
+  font-weight: 900;
+  text-align: center;
+  width: 100%;
 }
