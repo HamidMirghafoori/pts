@@ -6,17 +6,17 @@ export type Currencies = 'US$';
 export type Offers = ''| 'Exclusive Combo' | 'Best Price Guarantee' | '9th Birthday' | 'Save 22%' | 'PTS Exclusive';
 
 export interface Product {
-  bgImg: string;
+  title: string;
   category: Categories;
   destination: string;
-  title: string;
+  price: number;
+  tags: Tags[];
+  offers: Offers[];
+  bgImg: string;
+  currency: Currencies;
   rate: number;
   votes: number;
   bookedCount: number;
-  tags: Tags[];
-  price: number;
-  currency: Currencies;
-  offers: Offers[];
 }
 
 export const products: Product[] = [
