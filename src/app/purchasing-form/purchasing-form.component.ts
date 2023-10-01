@@ -5,7 +5,7 @@ import { Router } from '@angular/router';
 @Component({
   selector: 'app-purchasing-form',
   templateUrl: './purchasing-form.component.html',
-  styleUrls: ['./purchasing-form.component.scss']
+  styleUrls: ['./purchasing-form.component.scss'],
 })
 export class PurchasingFormComponent {
   purchaseForm: FormGroup;
@@ -17,19 +17,17 @@ export class PurchasingFormComponent {
       lastName: ['', Validators.required],
       emailAddress: ['', [Validators.required, Validators.email]],
       phoneNumber: ['', Validators.required],
-      address: ['', Validators.required]
+      address: ['', Validators.required],
     });
   }
 
   onSubmit() {
     if (this.purchaseForm.valid) {
-      console.log(this.purchaseForm.value);
-      // Handle your form submission logic here
+      this.router.navigateByUrl('payment gateway');
     }
   }
 
-  onBack(){
-    this.router.navigateByUrl("")
+  onBack() {
+    this.router.navigateByUrl('');
   }
-
 }
