@@ -1,7 +1,10 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { Product } from 'src/app/model/products';
-import { AuthenticationService, UserType } from 'src/app/services/authentication.service';
+import {
+  AuthenticationService,
+  UserType,
+} from 'src/app/services/authentication.service';
 
 @Component({
   selector: 'app-card',
@@ -9,11 +12,14 @@ import { AuthenticationService, UserType } from 'src/app/services/authentication
   styleUrls: ['./card.component.scss'],
   preserveWhitespaces: true,
 })
-export class CardComponent implements OnInit{
-
-  constructor(private authService: AuthenticationService, private router: Router) {}
+export class CardComponent implements OnInit {
+  constructor(
+    private authService: AuthenticationService,
+    private router: Router
+  ) {}
   isLoggedIn = false;
   user!: UserType | null;
+  showForm = false;
 
   @Input() data: Product = {
     bgImg: '',
@@ -26,14 +32,16 @@ export class CardComponent implements OnInit{
     tags: [''],
     price: 0,
     currency: 'US$',
-    offers: []
+    offers: [],
   };
+
 
   
   onButtonClick() {
-    if (this.user == null) this.router.navigateByUrl("signin")
+    this.user == null
+      ? this.router.navigateByUrl('signin')
+      : this.router.navigateByUrl('purchasing form');
   }
-
 
   ngOnInit(): void {
     this.authService.isAuthenticated$.subscribe((isLoggedIn) => {
