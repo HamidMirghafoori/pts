@@ -1,5 +1,146 @@
-<p class="title">Products</p>
+<div class="flex-col center">
+  <p class="title">Products</p>
+  <mat-accordion class="accordion">
+    <mat-expansion-panel
+      (opened)="panelOpen = true"
+      (closed)="panelOpen = false"
+    >
+      <mat-expansion-panel-header class="header">
+        <button class="add flex center">
+          <mat-icon>add</mat-icon>
+          Add Product
+        </button>
+      </mat-expansion-panel-header>
+      <mat-panel-description>
+        <form
+          [formGroup]="productForm"
+          (ngSubmit)="onSubmit()"
+          class="flex-col width100"
+        >
+          <mat-form-field>
+            <input matInput placeholder="Title" formControlName="title" />
+            <mat-error *ngIf="productForm.get('title')?.hasError('required')">
+              Title is required
+            </mat-error>
+          </mat-form-field>
+          <mat-form-field>
+            <mat-label>Category</mat-label>
+            <select matNativeControl required formControlName="category">
+              <option value="">Select an option</option>
+              <option value="Rail Passes">Rail Passes</option>
+              <option value="Theme Park">Theme Park</option>
+              <option value="Airport trains & buses">
+                Airport trains & buses
+              </option>
+              <option value="Attraction Passes">Attraction Passes</option>
+            </select>
+            <mat-error
+              *ngIf="productForm.get('category')?.hasError('required')"
+            >
+              Category is required
+            </mat-error>
+          </mat-form-field>
+          <mat-form-field>
+            <input
+              matInput
+              placeholder="Destination"
+              formControlName="destination"
+            />
+            <mat-error
+              *ngIf="productForm.get('destination')?.hasError('required')"
+            >
+              Destination is required
+            </mat-error>
+          </mat-form-field>
+          <mat-form-field>
+            <input matInput placeholder="Price US$" formControlName="price" />
+            <mat-error *ngIf="productForm.get('price')?.hasError('required')">
+              Price is required
+            </mat-error>
+          </mat-form-field>
+          <mat-form-field>
+            <mat-label>Tags</mat-label>
+            <mat-chip-grid #chipGrid aria-label="Tag selection">
+              <mat-chip-row *ngFor="let tag of tags" (removed)="removeTag(tag)">
+                {{ tag }}
+                <button matChipRemove [attr.aria-label]="'remove ' + tag">
+                  <mat-icon>cancel</mat-icon>
+                </button>
+              </mat-chip-row>
+            </mat-chip-grid>
+            <input
+              placeholder="New Tag..."
+              #tagInput
+              [formControl]="tagCtrl"
+              [matChipInputFor]="chipGrid"
+              [matAutocomplete]="auto"
+              [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+              (matChipInputTokenEnd)="addTag($event)"
+            />
+            <mat-autocomplete
+              #auto="matAutocomplete"
+              (optionSelected)="selectedTag($event)"
+            >
+              <mat-option
+                *ngFor="let tag of filteredTags | async"
+                [value]="tag"
+              >
+                {{ tag }}
+              </mat-option>
+            </mat-autocomplete>
+          </mat-form-field>
 
+          <mat-form-field>
+            <mat-label>Offers</mat-label>
+            <mat-chip-grid #chipGrid2 aria-label="Offer selection">
+              <mat-chip-row
+                *ngFor="let offer of offers"
+                (removed)="removeOffer(offer)"
+              >
+                {{ offer }}
+                <button matChipRemove [attr.aria-label]="'remove ' + offer">
+                  <mat-icon>cancel</mat-icon>
+                </button>
+              </mat-chip-row>
+            </mat-chip-grid>
+            <input
+              placeholder="New Offer..."
+              #offerInput
+              [formControl]="offerCtrl"
+              [matChipInputFor]="chipGrid2"
+              [matAutocomplete]="auto2"
+              [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+              (matChipInputTokenEnd)="addOffer($event)"
+            />
+            <mat-autocomplete
+              #auto2="matAutocomplete"
+              (optionSelected)="selectedOffer($event)"
+            >
+              <mat-option
+                *ngFor="let offer of filteredOffers | async"
+                [value]="offer"
+              >
+                {{ offer }}
+              </mat-option>
+            </mat-autocomplete>
+          </mat-form-field>
+          <button
+          mat-raised-button
+          color="primary"
+          type="submit"
+          class="mt16"
+          [disabled]="!productForm.valid"
+        >
+          Submit
+        </button>
+        </form>
+      </mat-panel-description>
+    </mat-expansion-panel>
+  </mat-accordion>
+</div>
+<ul>
+  <li *ngFor="let product of products">{{ product.id }}</li>
+</ul>
 <div class="nothing" *ngIf="products.length === 0">
   There is no product in the shop!
 </div>

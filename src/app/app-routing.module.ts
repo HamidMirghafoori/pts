@@ -11,7 +11,7 @@ const routes: Routes = [
   { path: '', component: ProductsListComponent },
   { path: 'signin', component: SigninComponent },
   { path: 'signup', component: SignupComponent },
-  { path: 'dev', component: ApplicationsComponent },
+  { path: 'dev', component: ShopProductsComponent },
   {
     path: 'applications',
     component: ApplicationsComponent,
