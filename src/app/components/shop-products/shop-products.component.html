@@ -58,81 +58,36 @@
               Price is required
             </mat-error>
           </mat-form-field>
+
           <mat-form-field>
             <mat-label>Tags</mat-label>
-            <mat-chip-grid #chipGrid aria-label="Tag selection">
-              <mat-chip-row *ngFor="let tag of tags" (removed)="removeTag(tag)">
+            <select matNativeControl formControlName="tags">
+              <option value="">Select an option</option>
+              <option *ngFor="let tag of allTags" [value]="tag">
                 {{ tag }}
-                <button matChipRemove [attr.aria-label]="'remove ' + tag">
-                  <mat-icon>cancel</mat-icon>
-                </button>
-              </mat-chip-row>
-            </mat-chip-grid>
-            <input
-              placeholder="New Tag..."
-              #tagInput
-              [formControl]="tagCtrl"
-              [matChipInputFor]="chipGrid"
-              [matAutocomplete]="auto"
-              [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
-              (matChipInputTokenEnd)="addTag($event)"
-            />
-            <mat-autocomplete
-              #auto="matAutocomplete"
-              (optionSelected)="selectedTag($event)"
-            >
-              <mat-option
-                *ngFor="let tag of filteredTags | async"
-                [value]="tag"
-              >
-                {{ tag }}
-              </mat-option>
-            </mat-autocomplete>
+              </option>
+            </select>
           </mat-form-field>
 
           <mat-form-field>
             <mat-label>Offers</mat-label>
-            <mat-chip-grid #chipGrid2 aria-label="Offer selection">
-              <mat-chip-row
-                *ngFor="let offer of offers"
-                (removed)="removeOffer(offer)"
-              >
+            <select matNativeControl formControlName="offers">
+              <option value="">Select an option</option>
+              <option *ngFor="let offer of allOffers" [value]="offer">
                 {{ offer }}
-                <button matChipRemove [attr.aria-label]="'remove ' + offer">
-                  <mat-icon>cancel</mat-icon>
-                </button>
-              </mat-chip-row>
-            </mat-chip-grid>
-            <input
-              placeholder="New Offer..."
-              #offerInput
-              [formControl]="offerCtrl"
-              [matChipInputFor]="chipGrid2"
-              [matAutocomplete]="auto2"
-              [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
-              (matChipInputTokenEnd)="addOffer($event)"
-            />
-            <mat-autocomplete
-              #auto2="matAutocomplete"
-              (optionSelected)="selectedOffer($event)"
-            >
-              <mat-option
-                *ngFor="let offer of filteredOffers | async"
-                [value]="offer"
-              >
-                {{ offer }}
-              </mat-option>
-            </mat-autocomplete>
+              </option>
+            </select>
           </mat-form-field>
+
           <button
-          mat-raised-button
-          color="primary"
-          type="submit"
-          class="mt16"
-          [disabled]="!productForm.valid"
-        >
-          Submit
-        </button>
+            mat-raised-button
+            color="primary"
+            type="submit"
+            class="mt16"
+            [disabled]="!productForm.valid"
+          >
+            Submit
+          </button>
         </form>
       </mat-panel-description>
     </mat-expansion-panel>
