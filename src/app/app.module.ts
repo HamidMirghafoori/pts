@@ -22,6 +22,15 @@ import { SigninComponent } from './components/signin/signin.component';
 import { SignupComponent } from './components/signup/signup.component';
 import { MaterialModule } from './material/material.module';
 import { ShopProductsComponent } from './components/shop-products/shop-products.component';
+import { MatButtonModule } from '@angular/material/button';
+import { PurchasingFormComponent } from './purchasing-form/purchasing-form.component';
+
+import { MatInputModule } from '@angular/material/input';
+import { MatDatepickerModule } from '@angular/material/datepicker';
+import { MatNativeDateModule } from '@angular/material/core';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { PaymentGatewayComponent } from './payment-gateway/payment-gateway.component';
+
 
 export const LOCAL_STORAGE_TOKEN_KEY = 'PTS_angular_material';
 
@@ -38,6 +47,8 @@ export function tokenGetter() {
     SignupComponent,
     ApplicationsComponent,
     ShopProductsComponent,
+    PurchasingFormComponent,
+    PaymentGatewayComponent,
   ],
   imports: [
     BrowserModule,
@@ -51,6 +62,11 @@ export function tokenGetter() {
     provideAuth(() => getAuth()),
     provideFirestore(() => getFirestore()),
     provideDatabase(() => getDatabase()),
+    MatButtonModule,
+    MatInputModule,
+    MatDatepickerModule,
+    MatNativeDateModule,
+    MatFormFieldModule,
   ],
   providers: [
     { provide: FIREBASE_OPTIONS, useValue: environment.firebase }

@@ -2,7 +2,6 @@
 
 :host {
   display: flex;
-  height: 420px;
   padding: 16px 0;
   margin: 8px 0;
 }
@@ -21,16 +20,24 @@
 .image {
   border-radius: 16px;
   width: 100%;
-  height: 220px;
+  min-height: 220px;
   background-size: 100% auto !important;
   background-repeat: no-repeat !important;
 }
 
 .content {
-  padding: 0 8px;
   display: flex;
   flex-direction: column;
-  height: calc(100% - 230px);
+  height: 100%;
+  // height: calc(100% - 230px);
+}
+
+.container{
+  padding: 0px 8px;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+
 }
 
 .summary {
@@ -41,6 +48,7 @@
   font-size: large;
   font-weight: 700;
   margin: 8px 0;
+  height: 20px;
 }
 
 .rating {
@@ -52,43 +60,54 @@
   color: $light-black;
   font-weight: 100;
   position: relative;
+  padding: 8px 0px;
 }
 
 .tags {
   background-color: $light-grey;
   display: inline;
+  width: -moz-fit-content;
   width: fit-content;
   padding: 2px 16px;
   border-radius: 6px;
   margin-right: 4px;
+  margin-bottom: 8px;
 }
 
 .price {
-font-weight: 600;
+  font-weight: 600;
 }
 
 .price-container {
   display: flex;
-  margin-top: auto;
-  white-space: pre;
+  // margin-top: auto;
+  // white-space: pre;
 }
 
-.star{
-  font-size:medium;
+.star {
+  font-size: medium;
   position: relative;
-  top: 2px
+  top: 2px;
 }
 
-mat-icon{
+mat-icon {
   overflow: unset;
 }
 
-.offer{
+.offer {
   display: inline;
+  width: -moz-fit-content;
   width: fit-content;
   padding: 2px 16px;
   border-radius: 6px;
   margin-right: 4px;
   background-color: $orangeBg;
   color: $orangeFont;
+  margin-bottom: 16px;
+  margin-top: 16px;
+}
+
+button {
+  margin-top: auto;
+  margin-bottom: 16px;
 }

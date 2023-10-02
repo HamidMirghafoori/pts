@@ -1,18 +1,36 @@
 <div class="frame">
   <!-- <img src="../../../assets/1.png" alt="" width="340" class="image"> -->
-  <div [style.background]="'url(' + data.bgImg + ')'" class="image"></div>
   <div class="content">
-    <div class="summary">{{ data.category }} {{"\u25CF"}} {{ data.destination }}</div>
-    <div class="title">{{ data.title }}</div>
-    <div class="info flex-row">
-      <span class="rating">{{ data.rate }}<mat-icon class="star">star</mat-icon></span>({{ data.votes }}) {{"\u25CF"}} {{ data.bookedCount }}k Booked
-    </div>
-    <div class="flex-row">
-      <div class="tags" *ngFor="let tag of data.tags">{{ tag }}</div>
-    </div>
-    <div class="price-container">From <span class="price">{{ data.currency }} {{ data.price }}</span></div>
-    <div class="flex-row">
-      <div class="offer" *ngFor="let offer of data.offers">{{offer}}</div>
+    <div [style.background]="'url(' + data.bgImg + ')'" class="image"></div>
+    <div class="container">
+      <div class="summary">
+        {{ data.category }} {{ "\u25CF" }} {{ data.destination }}
+      </div>
+      <div class="title">{{ data.title }}</div>
+      <div class="info flex-row">
+        <span class="rating"
+          >{{ data.rate }}<mat-icon class="star">star</mat-icon></span
+        >({{ data.votes }}) {{ "\u25CF" }} {{ data.bookedCount }}k Booked
+      </div>
+      <div class="flex-row">
+        <div class="tags" *ngFor="let tag of data.tags">{{ tag }}</div>
+      </div>
+      <div class="price-container">
+        From: &nbsp;
+        <span class="price">{{ data.currency }} {{ data.price }}</span>
+      </div>
+      <div class="flex-row">
+        <div class="offer" *ngFor="let offer of data.offers">{{ offer }}</div>
+      </div>
+      <button
+        (click)="onButtonClick()"
+        [disabled]="user == null || user.role == 'customer' ? false : true"
+        mat-stroked-button
+        color="primary"
+      >
+        BUY
+      </button>
     </div>
   </div>
 </div>
+

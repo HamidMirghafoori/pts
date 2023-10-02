@@ -6,10 +6,14 @@ import { ProductsListComponent } from './components/products-list/products-list.
 import { ShopProductsComponent } from './components/shop-products/shop-products.component';
 import { SigninComponent } from './components/signin/signin.component';
 import { SignupComponent } from './components/signup/signup.component';
+import { PurchasingFormComponent } from './purchasing-form/purchasing-form.component';
+import { PaymentGatewayComponent } from './payment-gateway/payment-gateway.component';
 
 const routes: Routes = [
   { path: '', component: ProductsListComponent },
   { path: 'signin', component: SigninComponent },
+  { path: 'purchasing form', component: PurchasingFormComponent },
+  { path: 'payment gateway', component: PaymentGatewayComponent },
   { path: 'signup', component: SignupComponent },
   { path: 'dev', component: ShopProductsComponent },
   {
