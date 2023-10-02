@@ -1,0 +1,35 @@
+<mat-form-field class="filter">
+    <mat-label>Filter by Product</mat-label>
+    <mat-select (selectionChange)="applyFilter($event.value)">
+      <mat-option value="all">All Products</mat-option>
+      <mat-option *ngFor="let product of products" [value]="product">{{ product }}</mat-option>
+    </mat-select>
+  </mat-form-field>
+  
+  
+
+
+<mat-table [dataSource]="dataSource">
+  
+    <!-- ID Column -->
+    <ng-container matColumnDef="id">
+      <mat-header-cell *matHeaderCellDef> ID </mat-header-cell>
+      <mat-cell *matCellDef="let row"> {{row.id}} </mat-cell>
+    </ng-container>
+  
+    <!-- Product Name Column -->
+    <ng-container matColumnDef="productName">
+      <mat-header-cell *matHeaderCellDef> Product Name </mat-header-cell>
+      <mat-cell *matCellDef="let row"> {{row.productName}} </mat-cell>
+    </ng-container>
+  
+    <!-- Number Sold Column -->
+    <ng-container matColumnDef="numberSold">
+      <mat-header-cell *matHeaderCellDef> Number Sold </mat-header-cell>
+      <mat-cell *matCellDef="let row"> {{row.numberSold}} </mat-cell>
+    </ng-container>
+  
+    <mat-header-row *matHeaderRowDef="['id', 'productName', 'numberSold']"></mat-header-row>
+    <mat-row *matRowDef="let row; columns: ['id', 'productName', 'numberSold'];"></mat-row>
+  </mat-table>
+  

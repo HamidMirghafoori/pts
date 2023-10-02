@@ -37,6 +37,10 @@ export class CardComponent implements OnInit {
 
 
   
+  onReviewClick() {
+    this.router.navigateByUrl('Review')
+  }
+  
   onButtonClick() {
     this.user == null
       ? this.router.navigateByUrl('signin')

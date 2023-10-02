@@ -30,6 +30,14 @@
       >
         BUY
       </button>
+      <button
+        (click)="onReviewClick()"
+        [disabled]="user != null && user.role == 'customer' ? false : true"
+        mat-stroked-button
+        color="primary"
+      >
+        Review
+      </button>
     </div>
   </div>
 </div>
