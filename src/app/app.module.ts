@@ -31,6 +31,9 @@ import { MatNativeDateModule } from '@angular/material/core';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { PaymentGatewayComponent } from './payment-gateway/payment-gateway.component';
 
+import { MatIconModule } from '@angular/material/icon';
+import { ReviewFormComponent } from './review-form/review-form.component';
+
 
 export const LOCAL_STORAGE_TOKEN_KEY = 'PTS_angular_material';
 
@@ -49,12 +52,14 @@ export function tokenGetter() {
     ShopProductsComponent,
     PurchasingFormComponent,
     PaymentGatewayComponent,
+    ReviewFormComponent,
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
     BrowserAnimationsModule,
     MaterialModule,
+    MatIconModule,
     FormsModule,
     ReactiveFormsModule,
     HttpClientModule,

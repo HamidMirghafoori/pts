@@ -8,6 +8,7 @@ import { SigninComponent } from './components/signin/signin.component';
 import { SignupComponent } from './components/signup/signup.component';
 import { PurchasingFormComponent } from './purchasing-form/purchasing-form.component';
 import { PaymentGatewayComponent } from './payment-gateway/payment-gateway.component';
+import { ReviewFormComponent } from './review-form/review-form.component';
 
 const routes: Routes = [
   { path: '', component: ProductsListComponent },
@@ -15,6 +16,7 @@ const routes: Routes = [
   { path: 'purchasing form', component: PurchasingFormComponent },
   { path: 'payment gateway', component: PaymentGatewayComponent },
   { path: 'signup', component: SignupComponent },
+  { path: 'Review', component: ReviewFormComponent },
   { path: 'dev', component: ShopProductsComponent },
   {
     path: 'applications',
