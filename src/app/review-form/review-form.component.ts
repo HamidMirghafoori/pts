@@ -23,11 +23,11 @@ export class ReviewFormComponent {
 
   onSubmit() {
     if (this.reviewForm.valid && this.rating > 0) {
-      this.router.navigate(['']);
       console.log({
         rating: this.rating,
         comments: this.reviewForm.value.comments
       });
+      this.router.navigate(['']);
       // Handle your form submission logic here
     }
   }
