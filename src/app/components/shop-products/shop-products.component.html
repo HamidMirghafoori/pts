@@ -92,6 +92,19 @@
       </mat-panel-description>
     </mat-expansion-panel>
   </mat-accordion>
+  <mat-accordion class="accordion">
+    <mat-expansion-panel
+      (opened)="panelOpen = true"
+      (closed)="panelOpen = false"
+    >
+      <mat-expansion-panel-header class="header">
+        Report
+      </mat-expansion-panel-header>
+      <mat-panel-description>
+        <app-products-table></app-products-table>
+      </mat-panel-description>
+    </mat-expansion-panel>
+  </mat-accordion>
 </div>
 <ul>
   <li *ngFor="let product of products">{{ product.id }}</li>
