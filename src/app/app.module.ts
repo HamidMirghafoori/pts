@@ -38,6 +38,7 @@ import { ProductsTableComponent } from './products-table/products-table.componen
 
 import { MatTableModule } from '@angular/material/table';
 import { MatSelectModule } from '@angular/material/select';
+import { AdminReportComponent } from './admin-report/admin-report.component';
 
 
 
@@ -60,6 +61,7 @@ export function tokenGetter() {
     PaymentGatewayComponent,
     ReviewFormComponent,
     ProductsTableComponent,
+    AdminReportComponent,
   ],
   imports: [
     BrowserModule,
