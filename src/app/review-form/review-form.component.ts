@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-review-form',
@@ -10,7 +11,7 @@ export class ReviewFormComponent {
   reviewForm: FormGroup;
   rating: number = 0; // to manage star rating
 
-  constructor(private fb: FormBuilder) {
+  constructor(private fb: FormBuilder, private router:Router) {
     this.reviewForm = this.fb.group({
       comments: ['', Validators.required]
     });
@@ -22,6 +23,7 @@ export class ReviewFormComponent {
 
   onSubmit() {
     if (this.reviewForm.valid && this.rating > 0) {
+      this.router.navigate(['']);
       console.log({
         rating: this.rating,
         comments: this.reviewForm.value.comments

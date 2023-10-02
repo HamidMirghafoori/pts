@@ -1,17 +1,13 @@
-
-
-
 <mat-form-field class="filter">
-    <mat-label>Filter by shop owner</mat-label>
-    <mat-select>
-      <mat-option value="all">All Products</mat-option>
-      <mat-option *ngFor="let product of products" [value]="product">{{ product }}</mat-option>
-    </mat-select>
-  </mat-form-field>
+  <mat-label>Filter by shop owner</mat-label>
+  <mat-select>
+    <mat-option value="all">All Sellers</mat-option>
+    <mat-option *ngFor="let product of products" [value]="product">{{
+      product
+    }}</mat-option>
+  </mat-select>
+</mat-form-field>
 
-
-  <br>
-  
-
+<br />
 
 <app-products-table></app-products-table>

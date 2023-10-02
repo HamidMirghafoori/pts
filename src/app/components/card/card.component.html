@@ -6,7 +6,7 @@
       <div class="summary">
         {{ data.category }} {{ "\u25CF" }} {{ data.destination }}
       </div>
-      <div class="title">{{ data.title }}</div>
+      <div class="card-title">{{ data.title }}</div>
       <div class="info flex-row">
         <span class="rating"
           >{{ data.rate }}<mat-icon class="star">star</mat-icon></span
@@ -15,14 +15,23 @@
       <div class="flex-row">
         <div class="tags" *ngFor="let tag of data.tags">{{ tag }}</div>
       </div>
-      <div class="price-container">
+      <div class="flex">
         From: &nbsp;
         <span class="price">{{ data.currency }} {{ data.price }}</span>
       </div>
       <div class="flex-row">
         <div class="offer" *ngFor="let offer of data.offers">{{ offer }}</div>
       </div>
-      <button
+      <div class="flex-row fill-up">
+        <button
+          (click)="onReviewClick()"
+          [disabled]="user != null && user.role == 'customer' ? false : true"
+          mat-stroked-button
+          color="primary"
+        >
+          Review
+        </button>
+        <button
         (click)="onButtonClick()"
         [disabled]="user == null || user.role == 'customer' ? false : true"
         mat-stroked-button
@@ -30,15 +39,7 @@
       >
         BUY
       </button>
-      <button
-        (click)="onReviewClick()"
-        [disabled]="user != null && user.role == 'customer' ? false : true"
-        mat-stroked-button
-        color="primary"
-      >
-        Review
-      </button>
+      </div>
     </div>
   </div>
 </div>
-
