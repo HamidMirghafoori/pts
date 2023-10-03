@@ -106,6 +106,7 @@
 <ul>
   <li *ngFor="let product of products">{{ product.id }}</li>
 </ul>
+<app-card *ngFor="let product of products" [data]="product"></app-card>
 <div class="nothing" *ngIf="products.length === 0">
   There is no product in the shop!
 </div>

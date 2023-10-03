@@ -9,6 +9,17 @@ import { AuthenticationService } from './authentication.service';
 export interface ProductType {
   id: string;
   ownerId: string;
+  bgImg: string;
+  category: string;
+  destination: string;
+  title: string;
+  rate: number;
+  votes: number;
+  bookedCount: number;
+  tags: string[];
+  price: number;
+  currency: string;
+  offers: string[];
 }
 
 @Injectable({

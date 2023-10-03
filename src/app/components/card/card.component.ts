@@ -1,10 +1,10 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { Product } from 'src/app/model/products';
 import {
   AuthenticationService,
   UserType,
 } from 'src/app/services/authentication.service';
+import { ProductType } from 'src/app/services/shop.service';
 
 @Component({
   selector: 'app-card',
@@ -21,7 +21,9 @@ export class CardComponent implements OnInit {
   user!: UserType | null;
   showForm = false;
 
-  @Input() data: Product = {
+  @Input() data: ProductType = {
+    id: '',
+    ownerId: '',
     bgImg: '',
     category: '',
     destination: '-',

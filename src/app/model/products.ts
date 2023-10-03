@@ -1,26 +1,26 @@
+import { ProductType } from '../services/shop.service';
 import { cardsImg } from './images';
 
-export type Categories = ''| 'Rail Passes' | 'Theme Park' | 'Airport trains & buses' | 'Attraction Passes';
-export type Tags = ''| 'Bestseller' | 'Easy Refund';
+export type Categories =
+  | ''
+  | 'Rail Passes'
+  | 'Theme Park'
+  | 'Airport trains & buses'
+  | 'Attraction Passes';
+export type Tags = '' | 'Bestseller' | 'Easy Refund';
 export type Currencies = 'US$';
-export type Offers = ''| 'Exclusive Combo' | 'Best Price Guarantee' | '9th Birthday' | 'Save 22%' | 'PTS Exclusive';
+export type Offers =
+  | ''
+  | 'Exclusive Combo'
+  | 'Best Price Guarantee'
+  | '9th Birthday'
+  | 'Save 22%'
+  | 'PTS Exclusive';
 
-export interface Product {
-  title: string;
-  category: Categories;
-  destination: string;
-  price: number;
-  tags: Tags[];
-  offers: Offers[];
-  bgImg: string;
-  currency: Currencies;
-  rate: number;
-  votes: number;
-  bookedCount: number;
-}
-
-export const products: Product[] = [
+export const products: ProductType[] = [
   {
+    id: '0',
+    ownerId: '0',
     bgImg: cardsImg[0],
     category: 'Rail Passes',
     destination: 'Tokyo',
@@ -34,6 +34,8 @@ export const products: Product[] = [
     offers: [],
   },
   {
+    id: '1',
+    ownerId: '0',
     bgImg: cardsImg[1],
     category: 'Theme Park',
     destination: 'Tokyo',
@@ -47,6 +49,8 @@ export const products: Product[] = [
     offers: [],
   },
   {
+    id: '2',
+    ownerId: '0',
     bgImg: cardsImg[2],
     category: 'Theme Park',
     destination: 'Singapore',
@@ -57,9 +61,11 @@ export const products: Product[] = [
     tags: ['Bestseller'],
     price: 57.99,
     currency: 'US$',
-    offers: ['Exclusive Combo']
+    offers: ['Exclusive Combo'],
   },
   {
+    id: '3',
+    ownerId: '0',
     bgImg: cardsImg[3],
     category: 'Airport trains & buses',
     destination: 'Tokyo',
@@ -70,9 +76,11 @@ export const products: Product[] = [
     tags: ['Bestseller'],
     price: 19.55,
     currency: 'US$',
-    offers: ['Best Price Guarantee']
+    offers: ['Best Price Guarantee'],
   },
   {
+    id: '4',
+    ownerId: '0',
     bgImg: cardsImg[4],
     category: 'Rail Passes',
     destination: 'Tokyo',
@@ -83,9 +91,11 @@ export const products: Product[] = [
     tags: ['Bestseller'],
     price: 135.29,
     currency: 'US$',
-    offers: ['9th Birthday', 'Save 22%']
+    offers: ['9th Birthday', 'Save 22%'],
   },
   {
+    id: '5',
+    ownerId: '0',
     bgImg: cardsImg[5],
     category: 'Attraction Passes',
     destination: 'Singapore',
@@ -96,9 +106,11 @@ export const products: Product[] = [
     tags: ['Bestseller', 'Easy Refund'],
     price: 62.85,
     currency: 'US$',
-    offers: ['PTS Exclusive']
+    offers: ['PTS Exclusive'],
   },
   {
+    id: '6',
+    ownerId: '0',
     bgImg: cardsImg[6],
     category: 'Theme Park',
     destination: 'Tokyo',
@@ -109,6 +121,6 @@ export const products: Product[] = [
     tags: ['Bestseller'],
     price: 42.65,
     currency: 'US$',
-    offers: ['Best Price Guarantee']
+    offers: ['Best Price Guarantee'],
   },
 ];
