@@ -1,10 +1,7 @@
 <div class="flex-col center">
   <p class="title">Products</p>
   <mat-accordion class="accordion">
-    <mat-expansion-panel
-      (opened)="panelOpen = true"
-      (closed)="panelOpen = false"
-    >
+    <mat-expansion-panel #productPanel>
       <mat-expansion-panel-header class="header">
         <button class="add flex center">
           <mat-icon>add</mat-icon>
@@ -94,8 +91,8 @@
   </mat-accordion>
   <mat-accordion class="accordion">
     <mat-expansion-panel
-      (opened)="panelOpen = true"
-      (closed)="panelOpen = false"
+      (opened)="panelOpen === true"
+      (closed)="panelOpen === false"
     >
       <mat-expansion-panel-header class="header">
         Report

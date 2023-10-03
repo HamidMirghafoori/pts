@@ -1,8 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import {
-  AppUserType,
-  AuthenticationService,
+  AppUserType
 } from 'src/app/services/authentication.service';
 import { UserService } from 'src/app/services/user.service';
 
@@ -15,7 +14,6 @@ export class ApplicationsComponent implements OnInit {
   constructor(
     private userService: UserService,
     private snackBar: MatSnackBar,
-    private authService: AuthenticationService
   ) {}
   inactiveUsers: AppUserType[] = [];
   step: number = 0;

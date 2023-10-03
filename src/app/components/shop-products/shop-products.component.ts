@@ -1,5 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { MatExpansionPanel } from '@angular/material/expansion';
 import { ProductType, ShopService } from 'src/app/services/shop.service';
 
 @Component({
@@ -8,6 +9,8 @@ import { ProductType, ShopService } from 'src/app/services/shop.service';
   styleUrls: ['./shop-products.component.scss'],
 })
 export class ShopProductsComponent implements OnInit {
+  @ViewChild('productPanel') productPanel!: MatExpansionPanel;
+
   products: ProductType[] = [];
   panelOpen = false;
   productForm!: FormGroup;
@@ -20,7 +23,10 @@ export class ShopProductsComponent implements OnInit {
     'PTS Exclusive',
   ];
 
-  constructor(private shopService: ShopService, private fb: FormBuilder) {}
+  constructor(
+    private shopService: ShopService,
+    private fb: FormBuilder,
+  ) {}
 
   ngOnInit(): void {
     this.productForm = this.fb.group({
@@ -34,27 +40,18 @@ export class ShopProductsComponent implements OnInit {
     });
 
     this.shopService.getAllProducts().subscribe((products) => {
+      console.log(products);
+
       this.products = products;
     });
   }
 
-
-  // export interface Product {
-  //   title: string;
-  //   category: Categories;
-  //   destination: string;
-  //   price: number;
-  //   tags: Tags[];
-  //   offers: Offers[];
-  //   bgImg: string;
-  //   currency: Currencies;
-  //   rate: number;
-  //   votes: number;
-  //   bookedCount: number;
-  // }
   onSubmit() {
     const form = this.productForm.value;
-    console.log(form);
-    
+    // console.log(form);
+    this.shopService.addProduct(form).then((result) => {
+      console.log('result', result);
+      this.productPanel.close()
+    });
   }
 }
