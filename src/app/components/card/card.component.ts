@@ -23,6 +23,7 @@ export class CardComponent implements OnInit {
   isBusiness: boolean = false;
 
   @Input() onEdit!: (index: number) => void;
+  @Input() onDelete!: (index: number) => void;
   @Input() index!: number;
 
   @Input() data: ProductType = {

@@ -91,8 +91,8 @@
   </mat-accordion>
   <mat-accordion class="accordion">
     <mat-expansion-panel
-      (opened)="panelOpen === true"
-      (closed)="panelOpen === false"
+      (opened)="(panelOpen === true)"
+      (closed)="(panelOpen === false)"
     >
       <mat-expansion-panel-header class="header">
         Report
@@ -104,7 +104,13 @@
   </mat-accordion>
 </div>
 <div class="flex-row container">
-  <app-card *ngFor="let product of products;let i = index" [data]="product" [onEdit]="onEdit" [index]="i"></app-card>
+  <app-card
+    *ngFor="let product of products; let i = index"
+    [data]="product"
+    [onEdit]="onEdit"
+    [index]="i"
+    [onDelete]="onDelete"
+  ></app-card>
   <div class="filler"></div>
   <div class="filler"></div>
 </div>

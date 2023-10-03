@@ -92,9 +92,21 @@ export class ShopProductsComponent implements OnInit {
   public onEdit = (index: number) => {
     this.selectedProduct = this.products[index];
     this.productForm.patchValue(this.selectedProduct);
-    // console.log('editing...', this.selectedProduct);
-
     this.editMode = true;
     this.productPanel.open();
   };
+
+  public onDelete = (index: number) => {
+    this.selectedProduct = this.products[index];
+    const id = this.selectedProduct.id;
+    this.shopService.deleteProduct(id).then(() => {
+      this.snackBar.open('Product deleted successfully', 'Close', {
+        duration: 3000,
+        horizontalPosition: 'center',
+        verticalPosition: 'top',
+      });
+    });
+  };
+
+
 }
