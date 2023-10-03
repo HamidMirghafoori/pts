@@ -23,7 +23,7 @@ export class PurchasingFormComponent {
 
   onSubmit() {
     if (this.purchaseForm.valid) {
-      this.router.navigateByUrl('payment gateway');
+      this.router.navigateByUrl('payment_gateway');
     }
   }
 

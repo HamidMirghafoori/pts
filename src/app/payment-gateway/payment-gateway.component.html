@@ -2,6 +2,9 @@
   <mat-form-field appearance="fill">
     <mat-label>Card Holder Name</mat-label>
     <input matInput formControlName="cardHolderName" />
+    <mat-error *ngIf="paymentForm.get('cardHolderName')?.hasError('required')">
+      Card Holder Name is required.
+    </mat-error>
   </mat-form-field>
 
   <mat-form-field appearance="fill">
@@ -12,30 +15,24 @@
       placeholder="1234 5678 9012 3456"
       inputmode="numeric"
     />
+    <mat-error *ngIf="paymentForm.get('cardNumber')?.hasError('required')">
+      Card Number is required.
+    </mat-error>
+    <mat-error
+      *ngIf="
+        paymentForm.get('cardNumber')?.hasError('minlength') ||
+        paymentForm.get('cardNumber')?.hasError('maxlength')
+      "
+    >
+      Card Number must be 16 digits.
+    </mat-error>
   </mat-form-field>
+
   <div class="flex-row">
     <mat-form-field appearance="fill">
       <mat-label>Expiry Month</mat-label>
       <mat-select formControlName="expiryMonth">
-        <mat-option
-          *ngFor="
-            let month of [
-              '01',
-              '02',
-              '03',
-              '04',
-              '05',
-              '06',
-              '07',
-              '08',
-              '09',
-              '10',
-              '11',
-              '12'
-            ]
-          "
-          [value]="month"
-        >
+        <mat-option *ngFor="let month of months" [value]="month">
           {{ month }}
         </mat-option>
       </mat-select>
@@ -45,9 +42,8 @@
     <mat-form-field appearance="fill">
       <mat-label>Expiry Year</mat-label>
       <mat-select formControlName="expiryYear">
-        <!-- Replace the year range with your desired range -->
         <mat-option
-          *ngFor="let year of ['2023', '2024', '2025', '2026', '2027']"
+          *ngFor="let year of years"
           [value]="year"
         >
           {{ year }}
@@ -55,13 +51,26 @@
       </mat-select>
     </mat-form-field>
   </div>
+
   <mat-form-field appearance="fill">
     <mat-label>CVV</mat-label>
     <input matInput formControlName="cvv" inputmode="numeric" />
+    <mat-error *ngIf="paymentForm.get('cvv')?.hasError('required')">
+      CVV is required.
+    </mat-error>
+    <mat-error
+      *ngIf="
+        paymentForm.get('cvv')?.hasError('minlength') ||
+        paymentForm.get('cvv')?.hasError('maxlength')
+      "
+    >
+      CVV must be between 3 or 4 digits.
+    </mat-error>
   </mat-form-field>
+
   <div class="flex-row">
-    <button mat-raised-button color="primary" type="submit">Submit</button>
-    <div class="flex-grow"></div>
     <button mat-raised-button (click)="onBack()" color="warn">Back</button>
+    <div class="flex-grow"></div>
+    <button mat-raised-button color="primary" type="submit">Submit</button>
   </div>
 </form>

@@ -49,7 +49,7 @@ export class CardComponent implements OnInit {
   onButtonClick() {
     this.user == null
       ? this.router.navigateByUrl('signin')
-      : this.router.navigateByUrl('purchasing form');
+      : this.router.navigateByUrl('purchasing_form');
   }
 
   ngOnInit(): void {

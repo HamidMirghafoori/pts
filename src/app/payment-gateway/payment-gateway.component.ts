@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { FormGroup, FormBuilder, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 
 @Component({
@@ -9,7 +9,21 @@ import { Router } from '@angular/router';
 })
 export class PaymentGatewayComponent {
   paymentForm: FormGroup;
-
+  public months = [
+    '01',
+    '02',
+    '03',
+    '04',
+    '05',
+    '06',
+    '07',
+    '08',
+    '09',
+    '10',
+    '11',
+    '12',
+  ];
+  public years = ['2023', '2024', '2025', '2026', '2027'];
   constructor(private fb: FormBuilder, private router: Router) {
     this.paymentForm = this.fb.group({
       cardHolderName: ['', Validators.required],

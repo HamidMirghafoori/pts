@@ -4,37 +4,61 @@
     <input matInput [matDatepicker]="picker" formControlName="dateOfBirth" />
     <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
     <mat-datepicker #picker></mat-datepicker>
+    <mat-error *ngIf="purchaseForm.get('dateOfBirth')?.hasError('required')">
+      Date of Birth is required
+    </mat-error>
   </mat-form-field>
+
   <div class="flex-row">
     <mat-form-field appearance="fill">
       <mat-label>First Name</mat-label>
       <input matInput formControlName="firstName" />
+      <mat-error *ngIf="purchaseForm.get('firstName')?.hasError('required')">
+        First Name is required
+      </mat-error>
     </mat-form-field>
+
     <div style="width: 10%"></div>
+
     <mat-form-field appearance="fill">
       <mat-label>Last Name</mat-label>
       <input matInput formControlName="lastName" />
+      <mat-error *ngIf="purchaseForm.get('lastName')?.hasError('required')">
+        Last Name is required
+      </mat-error>
     </mat-form-field>
   </div>
 
   <mat-form-field appearance="fill">
     <mat-label>Email Address</mat-label>
     <input matInput formControlName="emailAddress" type="email" />
+    <mat-error *ngIf="purchaseForm.get('emailAddress')?.hasError('required')">
+      Email Address is required
+    </mat-error>
+    <mat-error *ngIf="purchaseForm.get('emailAddress')?.hasError('email')">
+      Enter a valid email address
+    </mat-error>
   </mat-form-field>
 
   <mat-form-field appearance="fill">
     <mat-label>Phone Number</mat-label>
     <input matInput formControlName="phoneNumber" />
+    <mat-error *ngIf="purchaseForm.get('phoneNumber')?.hasError('required')">
+      Phone Number is required
+    </mat-error>
   </mat-form-field>
 
   <mat-form-field appearance="fill">
     <mat-label>Address</mat-label>
     <textarea matInput formControlName="address"></textarea>
+    <mat-error *ngIf="purchaseForm.get('address')?.hasError('required')">
+      Address is required
+    </mat-error>
   </mat-form-field>
-<div class="flex-row">
 
-    <button mat-raised-button color="primary" type="submit">Submit</button>
-    <div class="flex-grow"></div>
+  <div class="flex-row">
     <button mat-raised-button (click)="onBack()" color="warn">Back</button>
-</div>
+    <div class="flex-grow"></div>
+    <button mat-raised-button color="primary" type="submit">Submit</button>
+  </div>
 </form>
