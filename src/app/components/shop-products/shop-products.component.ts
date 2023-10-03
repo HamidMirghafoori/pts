@@ -1,6 +1,7 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatExpansionPanel } from '@angular/material/expansion';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { cardsImg } from 'src/app/model/images';
 import { ProductType, ShopService } from 'src/app/services/shop.service';
 
@@ -16,6 +17,9 @@ export class ShopProductsComponent implements OnInit {
   panelOpen = false;
   productForm!: FormGroup;
   allTags: string[] = ['Bestseller', 'Easy Refund'];
+  editMode: boolean = false;
+  selectedProduct!: ProductType;
+
   allOffers: string[] = [
     'Exclusive Combo',
     'Best Price Guarantee',
@@ -24,7 +28,11 @@ export class ShopProductsComponent implements OnInit {
     'PTS Exclusive',
   ];
 
-  constructor(private shopService: ShopService, private fb: FormBuilder) {}
+  constructor(
+    private shopService: ShopService,
+    private fb: FormBuilder,
+    private snackBar: MatSnackBar
+  ) {}
 
   ngOnInit(): void {
     this.productForm = this.fb.group({
@@ -34,7 +42,7 @@ export class ShopProductsComponent implements OnInit {
       price: ['', Validators.required],
       tags: [''],
       offers: [''],
-      image: [-1],
+      bgImg: [''],
     });
 
     this.shopService.getAllProducts().subscribe((products) => {
@@ -53,10 +61,40 @@ export class ShopProductsComponent implements OnInit {
 
   onSubmit() {
     const form = this.productForm.value;
-    // console.log(form);
+    if (this.editMode) {
+      const id = this.selectedProduct.id;
+      const data: ProductType = {
+        ...this.selectedProduct,
+        category: this.productForm.get('category')?.value,
+        destination: this.productForm.get('destination')?.value,
+        offers: [this.productForm.get('offers')?.value],
+        price: this.productForm.get('price')?.value,
+        tags: [this.productForm.get('tags')?.value],
+        title: this.productForm.get('title')?.value,
+      };
+      this.editMode = false;
+      this.shopService.updateProduct(id, data).then(() => {
+        this.snackBar.open('Product updated successfully', 'Close', {
+          duration: 3000,
+          horizontalPosition: 'center',
+          verticalPosition: 'top',
+        });
+        this.productPanel.close();
+      });
+      return;
+    }
     this.shopService.addProduct(form).then((result) => {
       console.log('result', result);
       this.productPanel.close();
     });
   }
+
+  public onEdit = (index: number) => {
+    this.selectedProduct = this.products[index];
+    this.productForm.patchValue(this.selectedProduct);
+    // console.log('editing...', this.selectedProduct);
+
+    this.editMode = true;
+    this.productPanel.open();
+  };
 }

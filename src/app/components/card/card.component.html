@@ -1,5 +1,4 @@
 <div class="frame">
-  <!-- <img src="../../../assets/1.png" alt="" width="340" class="image"> -->
   <div class="content">
     <div [style.background]="'url(' + data.bgImg + ')'" class="image"></div>
     <div class="container">
@@ -22,24 +21,34 @@
       <div class="flex-row">
         <div class="offer" *ngFor="let offer of data.offers">{{ offer }}</div>
       </div>
-      <div class="flex-row fill-up">
-        <button
-          (click)="onReviewClick()"
-          [disabled]="user != null && user.role == 'customer' ? false : true"
-          mat-stroked-button
-          color="primary"
-        >
-          Review
+      <div class="flex-row fill-up" *ngIf="isBusiness; else customer">
+        <button (click)="onEdit(index)" mat-stroked-button color="primary">
+          Edit
         </button>
-        <button
-        (click)="onButtonClick()"
-        [disabled]="user == null || user.role == 'customer' ? false : true"
-        mat-stroked-button
-        color="primary"
-      >
-        BUY
-      </button>
+        <button  mat-icon-button color="warn">
+          <mat-icon class="delete">delete</mat-icon>
+        </button>
       </div>
+      <ng-template #customer>
+        <div class="flex-row fill-up">
+          <button
+            (click)="onReviewClick()"
+            mat-stroked-button
+            color="primary"
+            [disabled]="!user || user.role == 'customer' ? false : true"
+          >
+            Review
+          </button>
+          <button
+            (click)="onButtonClick()"
+            mat-stroked-button
+            color="primary"
+            [disabled]="!user"
+          >
+            BUY
+          </button>
+        </div>
+      </ng-template>
     </div>
   </div>
 </div>

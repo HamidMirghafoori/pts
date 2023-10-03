@@ -20,6 +20,10 @@ export class CardComponent implements OnInit {
   isLoggedIn = false;
   user!: UserType | null;
   showForm = false;
+  isBusiness: boolean = false;
+
+  @Input() onEdit!: (index: number) => void;
+  @Input() index!: number;
 
   @Input() data: ProductType = {
     id: '',
@@ -37,12 +41,10 @@ export class CardComponent implements OnInit {
     offers: [],
   };
 
-
-  
   onReviewClick() {
-    this.router.navigateByUrl('Review')
+    this.router.navigateByUrl('Review');
   }
-  
+
   onButtonClick() {
     this.user == null
       ? this.router.navigateByUrl('signin')
@@ -54,5 +56,6 @@ export class CardComponent implements OnInit {
       this.isLoggedIn = isLoggedIn;
     });
     this.authService.authenticatedUser$.subscribe((user) => (this.user = user));
+    this.isBusiness = this.user?.role === 'business' ? true : false;
   }
 }
