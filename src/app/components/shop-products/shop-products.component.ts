@@ -1,6 +1,7 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatExpansionPanel } from '@angular/material/expansion';
+import { cardsImg } from 'src/app/model/images';
 import { ProductType, ShopService } from 'src/app/services/shop.service';
 
 @Component({
@@ -23,10 +24,7 @@ export class ShopProductsComponent implements OnInit {
     'PTS Exclusive',
   ];
 
-  constructor(
-    private shopService: ShopService,
-    private fb: FormBuilder,
-  ) {}
+  constructor(private shopService: ShopService, private fb: FormBuilder) {}
 
   ngOnInit(): void {
     this.productForm = this.fb.group({
@@ -40,9 +38,16 @@ export class ShopProductsComponent implements OnInit {
     });
 
     this.shopService.getAllProducts().subscribe((products) => {
-      console.log(products);
+      const transformed = products.map((product, index) => ({
+        ...product,
+        bgImg: cardsImg[index],
+        offers: Array.isArray(product.offers)
+          ? product.offers
+          : [product.offers],
+        tags: Array.isArray(product.tags) ? product.tags : [product.tags],
+      }));
 
-      this.products = products;
+      this.products = transformed;
     });
   }
 
@@ -51,7 +56,7 @@ export class ShopProductsComponent implements OnInit {
     // console.log(form);
     this.shopService.addProduct(form).then((result) => {
       console.log('result', result);
-      this.productPanel.close()
+      this.productPanel.close();
     });
   }
 }

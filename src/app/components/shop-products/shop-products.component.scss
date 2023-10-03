@@ -1,3 +1,10 @@
+:host {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  width: 70vw;
+}
+
 .add {
   padding: 8px 32px;
   font-size: large;
@@ -14,3 +21,15 @@
   min-width: 500px;
 }
 
+
+.container {
+  flex-wrap: wrap;
+  height: 100%;
+  min-width: 1080px;
+  align-content: start;
+  justify-content: space-between;
+}
+
+.filler{
+  width: 330px;
+}
