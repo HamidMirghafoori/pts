@@ -40,7 +40,7 @@ export class ShopProductsComponent implements OnInit {
     this.shopService.getAllProducts().subscribe((products) => {
       const transformed = products.map((product, index) => ({
         ...product,
-        bgImg: cardsImg[index],
+        bgImg: cardsImg[index % 7],
         offers: Array.isArray(product.offers)
           ? product.offers
           : [product.offers],
