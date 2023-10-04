@@ -1,30 +1,28 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
+import { BuyService } from '../services/buy.service';
 
 @Component({
   selector: 'app-payment-gateway',
   templateUrl: './payment-gateway.component.html',
   styleUrls: ['./payment-gateway.component.scss'],
 })
-export class PaymentGatewayComponent {
+export class PaymentGatewayComponent implements OnInit {
   paymentForm: FormGroup;
-  public months = [
-    '01',
-    '02',
-    '03',
-    '04',
-    '05',
-    '06',
-    '07',
-    '08',
-    '09',
-    '10',
-    '11',
-    '12',
-  ];
-  public years = ['2023', '2024', '2025', '2026', '2027'];
-  constructor(private fb: FormBuilder, private router: Router) {
+  public months = Array.from({ length: 12 }, (_, i) =>
+    (i + 1).toString().padStart(2, '0')
+  );
+  public years = Array.from({ length: 8 }, (_, i) => (i + 2023).toString());
+  private itemId: string = '';
+  private address: string = '';
+
+  constructor(
+    private fb: FormBuilder,
+    private router: Router,
+    private route: ActivatedRoute,
+    private buyService: BuyService
+  ) {
     this.paymentForm = this.fb.group({
       cardHolderName: ['', Validators.required],
       cardNumber: [
@@ -44,15 +42,26 @@ export class PaymentGatewayComponent {
     });
   }
 
+  ngOnInit(): void {
+    this.route.queryParams.subscribe((params) => {
+      this.itemId = params['itemID'];
+      this.address = params['address'];
+    });
+  }
+
   onSubmit() {
     if (this.paymentForm.valid) {
       console.log(this.paymentForm.value);
-      // Handle your form submission logic here
-      this.router.navigateByUrl('');
+      this.buyService.buyPackage(this.itemId, this.address).then(() => {
+        // display receipt
+
+        // after receipt
+        this.router.navigate(['']);
+      });
     }
   }
 
   onBack() {
-    this.router.navigateByUrl('');
+    this.router.navigate(['']);
   }
 }

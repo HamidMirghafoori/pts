@@ -41,6 +41,19 @@ class Permissions {
             );
           })
         );
+      case 'customer':
+        return this.authService.isAuthenticated$.pipe(
+          switchMap(() => this.authService.authenticatedUser$),
+          switchMap((user) => {
+            const id = user?.uid;
+            if (!id) return of(false);
+
+            return this.userService.getUser(id).pipe(
+              map((userData) => userData?.role === roles[0]),
+              catchError(() => of(false))
+            );
+          })
+        );
       case 'business':
         return this.authService.isAuthenticated$.pipe(
           switchMap(() => this.authService.authenticatedUser$),

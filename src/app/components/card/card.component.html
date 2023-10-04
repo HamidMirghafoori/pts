@@ -35,12 +35,12 @@
             (click)="onReviewClick()"
             mat-stroked-button
             color="primary"
-            [disabled]="!user || user.role == 'customer' ? false : true"
+            [disabled]="!canReview"
           >
             Review
           </button>
           <button
-            (click)="onButtonClick()"
+            (click)="onPurchase()"
             mat-stroked-button
             color="primary"
             [disabled]="!user"

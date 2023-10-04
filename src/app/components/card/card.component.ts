@@ -21,6 +21,7 @@ export class CardComponent implements OnInit {
   user!: UserType | null;
   showForm = false;
   isBusiness: boolean = false;
+  canReview: boolean = false;
 
   @Input() onEdit!: (index: number) => void;
   @Input() onDelete!: (index: number) => void;
@@ -43,13 +44,13 @@ export class CardComponent implements OnInit {
   };
 
   onReviewClick() {
-    this.router.navigateByUrl('Review');
+    this.router.navigate(['Review']);
   }
 
-  onButtonClick() {
+  onPurchase() {    
     this.user == null
-      ? this.router.navigateByUrl('signin')
-      : this.router.navigateByUrl('purchasing_form');
+      ? this.router.navigate(['signin'])
+      : this.router.navigate(['purchasing-form'], { queryParams: { itemID: this.data.id } });
   }
 
   ngOnInit(): void {
@@ -58,5 +59,11 @@ export class CardComponent implements OnInit {
     });
     this.authService.authenticatedUser$.subscribe((user) => (this.user = user));
     this.isBusiness = this.user?.role === 'business' ? true : false;
+    if (this.user && this.user.role ==='customer'){
+      this.canReview = true
+    }else{
+      this.canReview = false;
+    }
+    
   }
 }

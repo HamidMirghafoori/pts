@@ -14,12 +14,18 @@ import { ReviewFormComponent } from './review-form/review-form.component';
 const routes: Routes = [
   { path: '', component: ProductsListComponent },
   { path: 'signin', component: SigninComponent },
-  { path: 'purchasing_form', component: PurchasingFormComponent },
-  { path: 'admin_review', component: AdminReportComponent },
-  { path: 'payment_gateway', component: PaymentGatewayComponent },
+  { path: 'purchasing-form', component: PurchasingFormComponent },
+  { path: 'admin-review', component: AdminReportComponent },
+  { path: 'payment-gateway', component: PaymentGatewayComponent },
   { path: 'signup', component: SignupComponent },
   { path: 'Review', component: ReviewFormComponent },
   { path: 'dev', component: ShopProductsComponent },
+  {
+    path: 'my-orders',
+    component: ProductsListComponent,  //TODO read the role in the component
+    canActivate: [AuthGuard],
+    data: { roles: ['customer'] },
+  },
   {
     path: 'applications',
     component: ApplicationsComponent,

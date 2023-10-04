@@ -1,16 +1,21 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
   selector: 'app-purchasing-form',
   templateUrl: './purchasing-form.component.html',
   styleUrls: ['./purchasing-form.component.scss'],
 })
-export class PurchasingFormComponent {
+export class PurchasingFormComponent implements OnInit {
   purchaseForm: FormGroup;
+  private itemId: string = '';
 
-  constructor(private fb: FormBuilder, private router: Router) {
+  constructor(
+    private fb: FormBuilder,
+    private router: Router,
+    private route: ActivatedRoute
+  ) {
     this.purchaseForm = this.fb.group({
       dateOfBirth: ['', Validators.required],
       firstName: ['', Validators.required],
@@ -21,13 +26,24 @@ export class PurchasingFormComponent {
     });
   }
 
+  ngOnInit(): void {
+    this.route.queryParams.subscribe((params) => {
+      this.itemId = params['itemID'];
+    });
+  }
+
   onSubmit() {
     if (this.purchaseForm.valid) {
-      this.router.navigateByUrl('payment_gateway');
+      this.router.navigate(['payment-gateway'], {
+        queryParams: {
+          itemID: this.itemId,
+          address: this.purchaseForm.get('address')?.value,
+        },
+      });
     }
   }
 
   onBack() {
-    this.router.navigateByUrl('');
+    this.router.navigate(['']);
   }
 }
