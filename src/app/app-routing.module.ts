@@ -15,14 +15,13 @@ const routes: Routes = [
   { path: '', component: ProductsListComponent },
   { path: 'signin', component: SigninComponent },
   { path: 'purchasing-form', component: PurchasingFormComponent },
-  { path: 'admin-review', component: AdminReportComponent },
   { path: 'payment-gateway', component: PaymentGatewayComponent },
   { path: 'signup', component: SignupComponent },
   { path: 'Review', component: ReviewFormComponent },
   { path: 'dev', component: ShopProductsComponent },
   {
     path: 'my-orders',
-    component: ProductsListComponent,  //TODO read the role in the component
+    component: ProductsListComponent, //TODO read the role in the component
     canActivate: [AuthGuard],
     data: { roles: ['customer'] },
   },
@@ -37,6 +36,12 @@ const routes: Routes = [
     component: ShopProductsComponent,
     canActivate: [AuthGuard],
     data: { roles: ['business'] },
+  },
+  {
+    path: 'reports',
+    component: AdminReportComponent,
+    canActivate: [AuthGuard],
+    data: { roles: ['officer'] },
   },
   { path: '**', redirectTo: '' },
 ];

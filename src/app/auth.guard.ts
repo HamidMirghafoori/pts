@@ -5,7 +5,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import {
   ActivatedRouteSnapshot,
   CanActivateFn,
-  RouterStateSnapshot
+  RouterStateSnapshot,
 } from '@angular/router';
 import { Observable, catchError, map, of, switchMap } from 'rxjs';
 import { AuthenticationService } from './services/authentication.service';
@@ -82,6 +82,19 @@ class Permissions {
               });
               return of(false);
             }
+            return this.userService.getUser(id).pipe(
+              map((userData) => userData?.role === roles[0]),
+              catchError(() => of(false))
+            );
+          })
+        );
+      case 'officer':
+        return this.authService.isAuthenticated$.pipe(
+          switchMap(() => this.authService.authenticatedUser$),
+          switchMap((user) => {
+            const id = user?.uid;
+            if (!id) return of(false);
+
             return this.userService.getUser(id).pipe(
               map((userData) => userData?.role === roles[0]),
               catchError(() => of(false))
