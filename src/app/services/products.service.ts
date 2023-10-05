@@ -28,6 +28,7 @@ export interface ProductType {
   price: number;
   currency: string;
   offers: string[];
+  shopEmail: string;
 }
 
 @Injectable({

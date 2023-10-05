@@ -9,6 +9,15 @@ export interface SoldType {
   rate?: number;
 }
 
+export interface RevenueType {
+  customerId: string;
+  customerEmail: string;
+  itemId: string;
+  itemName: string;
+  shopId: string;
+  shopEmail: string;
+  price: string;
+}
 @Injectable({
   providedIn: 'root',
 })
@@ -17,19 +26,19 @@ export class BuyService {
     private db: AngularFireDatabase,
     private authService: AuthenticationService
   ) {}
-  
+
   buyItem(
     itemId: string,
     address: string,
     shopId: string,
-    price: string
+    price: string,
+    itemName: string,
+    shopEmail: string
   ): Promise<string> {
     return new Promise((resolve, reject) => {
-      this.authService.authenticatedUser$
-      .pipe(take(1))    
-      .subscribe((user) => {
+      this.authService.authenticatedUser$.pipe(take(1)).subscribe((user) => {
         if (user) {
-          const uid = user.uid;          
+          const uid = user.uid;
           const ref = this.db.database.ref(`sold/${uid}`).push();
           const soldData: SoldType = {
             productId: itemId,
@@ -39,11 +48,14 @@ export class BuyService {
           ref
             .set(soldData)
             .then(() => {
-              const data = {
+              const data: RevenueType = {
                 customerId: uid,
+                customerEmail: user.email,
                 itemId: itemId,
+                itemName: itemName,
                 price: price,
                 shopId: shopId,
+                shopEmail: shopEmail,
               };
               this.db
                 .list('revenue')
@@ -58,6 +70,21 @@ export class BuyService {
         }
       });
     });
+  }
+
+  getRevenueData(): Observable<RevenueType[] | []> {
+    return this.db
+      .object<any>(`revenue`)
+      .valueChanges()
+      .pipe(
+        map((data) => {
+          if (data) {
+            return Object.keys(data).map((key) => data[key]) as RevenueType[];
+          } else {
+            return [];
+          }
+        })
+      );
   }
 
   getSoldItem(uid: string): Observable<SoldType | null> {

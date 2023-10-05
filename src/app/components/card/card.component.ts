@@ -44,6 +44,7 @@ export class CardComponent implements OnInit {
     price: 0,
     currency: 'US$',
     offers: [],
+    shopEmail: '',
   };
 
   onReviewClick() {
@@ -57,7 +58,9 @@ export class CardComponent implements OnInit {
           queryParams: {
             itemID: this.data.productId,
             shopId: this.data.ownerId,
-            price: this.data.price
+            price: this.data.price,
+            itemName: this.data.title,
+            shopEmail: this.data.shopEmail
           },
         });
   }

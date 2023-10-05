@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import {
   AppUserType
@@ -10,7 +10,7 @@ import { UserService } from 'src/app/services/user.service';
   templateUrl: './applications.component.html',
   styleUrls: ['./applications.component.scss'],
 })
-export class ApplicationsComponent implements OnInit , OnDestroy{
+export class ApplicationsComponent implements OnInit {
   constructor(
     private userService: UserService,
     private snackBar: MatSnackBar,
@@ -72,10 +72,5 @@ export class ApplicationsComponent implements OnInit , OnDestroy{
     this.userService.getAllApplications().subscribe((users) => {
       this.inactiveUsers = users;
     });
-  }
-
-  ngOnDestroy(): void {
-  
-
   }
 }

@@ -15,30 +15,25 @@ import { getDatabase, provideDatabase } from '@angular/fire/database';
 import { getFirestore, provideFirestore } from '@angular/fire/firestore';
 import { FormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
+import { MatNativeDateModule } from '@angular/material/core';
+import { MatDatepickerModule } from '@angular/material/datepicker';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatIconModule } from '@angular/material/icon';
+import { MatInputModule } from '@angular/material/input';
+import { MatSelectModule } from '@angular/material/select';
+import { MatTableModule } from '@angular/material/table';
 import { environment } from '../environments/environment';
+import { AdminReportComponent } from './components/admin-report/admin-report.component';
 import { ApplicationsComponent } from './components/applications/applications.component';
 import { CardComponent } from './components/card/card.component';
+import { PaymentGatewayComponent } from './components/payment-gateway/payment-gateway.component';
 import { ProductsListComponent } from './components/products-list/products-list.component';
 import { PurchasingFormComponent } from './components/purchasing-form/purchasing-form.component';
+import { ReviewFormComponent } from './components/review-form/review-form.component';
 import { ShopProductsComponent } from './components/shop-products/shop-products.component';
 import { SigninComponent } from './components/signin/signin.component';
 import { SignupComponent } from './components/signup/signup.component';
 import { MaterialModule } from './material/material.module';
-
-import { MatNativeDateModule } from '@angular/material/core';
-import { MatDatepickerModule } from '@angular/material/datepicker';
-import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatInputModule } from '@angular/material/input';
-import { PaymentGatewayComponent } from './components/payment-gateway/payment-gateway.component';
-
-import { MatIconModule } from '@angular/material/icon';
-import { ProductsTableComponent } from './components/products-table/products-table.component';
-import { ReviewFormComponent } from './components/review-form/review-form.component';
-
-
-import { MatSelectModule } from '@angular/material/select';
-import { MatTableModule } from '@angular/material/table';
-import { AdminReportComponent } from './components/admin-report/admin-report.component';
 
 
 
@@ -60,7 +55,6 @@ export function tokenGetter() {
     PurchasingFormComponent,
     PaymentGatewayComponent,
     ReviewFormComponent,
-    ProductsTableComponent,
     AdminReportComponent,
   ],
   imports: [

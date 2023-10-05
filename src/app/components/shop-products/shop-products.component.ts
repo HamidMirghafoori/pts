@@ -3,6 +3,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatExpansionPanel } from '@angular/material/expansion';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { cardsImg } from 'src/app/model/images';
+import { AuthenticationService } from 'src/app/services/authentication.service';
 import { ProductService, ProductType } from 'src/app/services/products.service';
 
 @Component({
@@ -31,7 +32,8 @@ export class ShopProductsComponent implements OnInit {
   constructor(
     private productService: ProductService,
     private fb: FormBuilder,
-    private snackBar: MatSnackBar
+    private snackBar: MatSnackBar,
+    private authService: AuthenticationService
   ) {}
 
   ngOnInit(): void {
@@ -60,6 +62,11 @@ export class ShopProductsComponent implements OnInit {
   }
 
   onSubmit() {
+    let shopEmail: string = '';
+    this.authService.authenticatedUser$.subscribe((user) => {
+      shopEmail = user ? user.email : '';
+    });
+
     const form = this.productForm.value;
     if (this.editMode) {
       const id = this.selectedProduct.productId;
@@ -71,6 +78,7 @@ export class ShopProductsComponent implements OnInit {
         price: this.productForm.get('price')?.value,
         tags: [this.productForm.get('tags')?.value],
         title: this.productForm.get('title')?.value,
+        shopEmail,
       };
       this.editMode = false;
       this.productService.updateProduct(id, data).then(() => {
@@ -83,7 +91,7 @@ export class ShopProductsComponent implements OnInit {
       });
       return;
     }
-    this.productService.addProduct(form).then(() => {
+    this.productService.addProduct({ ...form, shopEmail }).then(() => {
       this.productPanel.close();
     });
   }
@@ -106,6 +114,4 @@ export class ShopProductsComponent implements OnInit {
       });
     });
   };
-
-
 }
