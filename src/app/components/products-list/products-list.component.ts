@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
+import { BuyService } from 'src/app/services/buy.service';
 import { ProductsService } from 'src/app/services/products.service';
 import { ProductType } from 'src/app/services/shop.service';
 
@@ -11,7 +12,11 @@ import { ProductType } from 'src/app/services/shop.service';
 export class ProductsListComponent implements OnInit {
   public products: ProductType[] = [];
 
-  constructor(private productsService: ProductsService, private route: ActivatedRoute) {}
+  constructor(
+    private productsService: ProductsService,
+    private route: ActivatedRoute,
+    private buyService: BuyService
+  ) {}
 
   ngOnInit(): void {
     const roles = this.route.snapshot.data['roles'];
@@ -19,13 +24,13 @@ export class ProductsListComponent implements OnInit {
 
     if (roles && roles.includes('customer')) {
       // Do something for customer role
-      console.log('........');
-      
+      this.buyService.getAllSoldItems().subscribe((soldItems)=>{
+        console.log(soldItems);
+      })
     } else {
       this.productsService
-      .getProducts()
-      .subscribe((products) => (this.products = products));
+        .getProducts()
+        .subscribe((products) => (this.products = products));
     }
-
   }
 }

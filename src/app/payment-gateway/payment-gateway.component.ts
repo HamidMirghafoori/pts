@@ -52,7 +52,7 @@ export class PaymentGatewayComponent implements OnInit {
   onSubmit() {
     if (this.paymentForm.valid) {
       console.log(this.paymentForm.value);
-      this.buyService.buyPackage(this.itemId, this.address).then(() => {
+      this.buyService.buyItem(this.itemId, this.address).then(() => {
         // display receipt
 
         // after receipt
