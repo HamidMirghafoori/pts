@@ -1,10 +1,10 @@
 import { Injectable } from '@angular/core';
 import { AngularFireDatabase } from '@angular/fire/compat/database';
-import { Observable, map, of, switchMap } from 'rxjs';
+import { Observable, map, of, switchMap, take } from 'rxjs';
 import { AuthenticationService } from './authentication.service';
 
 export interface SoldType {
-  id: string;
+  productId: string;
   address: string;
   rate?: number;
 }
@@ -17,7 +17,7 @@ export class BuyService {
     private db: AngularFireDatabase,
     private authService: AuthenticationService
   ) {}
-
+  
   buyItem(
     itemId: string,
     address: string,
@@ -25,12 +25,14 @@ export class BuyService {
     price: string
   ): Promise<string> {
     return new Promise((resolve, reject) => {
-      this.authService.authenticatedUser$.subscribe((user) => {
+      this.authService.authenticatedUser$
+      .pipe(take(1))    
+      .subscribe((user) => {
         if (user) {
-          const uid = user.uid;
+          const uid = user.uid;          
           const ref = this.db.database.ref(`sold/${uid}`).push();
           const soldData: SoldType = {
-            id: itemId,
+            productId: itemId,
             address: address,
             rate: -1,
           };

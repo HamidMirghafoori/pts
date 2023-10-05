@@ -25,7 +25,7 @@ export class ProductsListComponent implements OnInit {
         if (!soldItems){
           return
         }
-        const ids = soldItems?.map(item => item.id)
+        const ids = soldItems?.map(item => item.productId)
         this.productService.getProductsByIds(ids).subscribe(products =>{
           this.products = products
         })

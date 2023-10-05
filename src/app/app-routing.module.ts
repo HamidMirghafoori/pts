@@ -21,7 +21,7 @@ const routes: Routes = [
   { path: 'dev', component: ShopProductsComponent },
   {
     path: 'my-orders',
-    component: ProductsListComponent, //TODO read the role in the component
+    component: ProductsListComponent,
     canActivate: [AuthGuard],
     data: { roles: ['customer'] },
   },

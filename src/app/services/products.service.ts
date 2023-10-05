@@ -10,7 +10,7 @@ import {
   map,
   mergeMap,
   of,
-  switchMap,
+  switchMap
 } from 'rxjs';
 import { AuthenticationService } from './authentication.service';
 

@@ -83,8 +83,7 @@ export class ShopProductsComponent implements OnInit {
       });
       return;
     }
-    this.productService.addProduct(form).then((result) => {
-      console.log('result', result);
+    this.productService.addProduct(form).then(() => {
       this.productPanel.close();
     });
   }
