@@ -25,7 +25,7 @@ export interface ProductType {
 @Injectable({
   providedIn: 'root',
 })
-export class ShopService {
+export class ProductService {
   private productsRef!: AngularFireList<ProductType>;
 
   constructor(
@@ -65,7 +65,7 @@ export class ShopService {
     return this.db.object(`products/${uid}`).remove();
   }
 
-  getAllProducts(): Observable<ProductType[] | []> {
+  getAllUserProducts(): Observable<ProductType[] | []> {
     return this.authService.authenticatedUser$.pipe(
       switchMap((user) => {
         return this.productsRef.snapshotChanges().pipe(
@@ -84,6 +84,21 @@ export class ShopService {
             return of([]);
           })
         );
+      })
+    );
+  }
+
+  getAllProducts(): Observable<ProductType[] | []> {
+    return this.productsRef.snapshotChanges().pipe(
+      map((products) => {
+        return products.map((c) => ({
+          ...(c.payload.val() as ProductType),
+          id: c.key ?? '',
+        }));
+      }),
+      catchError((error) => {
+        console.error('Error fetching data:', error);
+        return of([]);
       })
     );
   }

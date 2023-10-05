@@ -1,12 +1,12 @@
 import { Injectable } from '@angular/core';
 import { Observable, of } from 'rxjs';
 import { products } from '../model/products';
-import { ProductType } from './shop.service';
+import { ProductType } from './product.service';
 
 @Injectable({
   providedIn: 'root'
 })
-export class ProductsService {
+export class DummyProductsService {
   private products:ProductType[] = products;
 
   constructor() { }

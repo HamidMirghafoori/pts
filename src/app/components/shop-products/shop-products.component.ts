@@ -3,7 +3,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatExpansionPanel } from '@angular/material/expansion';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { cardsImg } from 'src/app/model/images';
-import { ProductType, ShopService } from 'src/app/services/shop.service';
+import { ProductService, ProductType } from 'src/app/services/product.service';
 
 @Component({
   selector: 'app-shop-products',
@@ -29,7 +29,7 @@ export class ShopProductsComponent implements OnInit {
   ];
 
   constructor(
-    private shopService: ShopService,
+    private productService: ProductService,
     private fb: FormBuilder,
     private snackBar: MatSnackBar
   ) {}
@@ -45,7 +45,7 @@ export class ShopProductsComponent implements OnInit {
       bgImg: [''],
     });
 
-    this.shopService.getAllProducts().subscribe((products) => {
+    this.productService.getAllUserProducts().subscribe((products) => {
       const transformed = products.map((product, index) => ({
         ...product,
         bgImg: cardsImg[index % 7],
@@ -73,7 +73,7 @@ export class ShopProductsComponent implements OnInit {
         title: this.productForm.get('title')?.value,
       };
       this.editMode = false;
-      this.shopService.updateProduct(id, data).then(() => {
+      this.productService.updateProduct(id, data).then(() => {
         this.snackBar.open('Product updated successfully', 'Close', {
           duration: 3000,
           horizontalPosition: 'center',
@@ -83,7 +83,7 @@ export class ShopProductsComponent implements OnInit {
       });
       return;
     }
-    this.shopService.addProduct(form).then((result) => {
+    this.productService.addProduct(form).then((result) => {
       console.log('result', result);
       this.productPanel.close();
     });
@@ -99,7 +99,7 @@ export class ShopProductsComponent implements OnInit {
   public onDelete = (index: number) => {
     this.selectedProduct = this.products[index];
     const id = this.selectedProduct.id;
-    this.shopService.deleteProduct(id).then(() => {
+    this.productService.deleteProduct(id).then(() => {
       this.snackBar.open('Product deleted successfully', 'Close', {
         duration: 3000,
         horizontalPosition: 'center',

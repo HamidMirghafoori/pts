@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
+import { cardsImg } from 'src/app/model/images';
 import { BuyService } from 'src/app/services/buy.service';
-import { ProductsService } from 'src/app/services/products.service';
-import { ProductType } from 'src/app/services/shop.service';
+import { ProductService, ProductType } from 'src/app/services/product.service';
 
 @Component({
   selector: 'app-products-list',
@@ -13,24 +13,29 @@ export class ProductsListComponent implements OnInit {
   public products: ProductType[] = [];
 
   constructor(
-    private productsService: ProductsService,
     private route: ActivatedRoute,
-    private buyService: BuyService
+    private buyService: BuyService,
+    private productService: ProductService
   ) {}
 
   ngOnInit(): void {
     const roles = this.route.snapshot.data['roles'];
-    console.log('Roles:', roles);
-
     if (roles && roles.includes('customer')) {
-      // Do something for customer role
-      this.buyService.getAllSoldItems().subscribe((soldItems)=>{
+      this.buyService.getAllSoldItems().subscribe((soldItems) => {
         console.log(soldItems);
-      })
+      });
     } else {
-      this.productsService
-        .getProducts()
-        .subscribe((products) => (this.products = products));
+      this.productService.getAllProducts().subscribe((products) => {
+        const updated = products.map((product, index) => {
+          return {
+            ...product,
+            bgImg: cardsImg[index % 7],
+            offers: Array.isArray(product.offers)? product.offers :[product.offers],
+            tags: Array.isArray(product.tags)? product.tags :[product.tags]
+          };
+        });
+        this.products = updated;
+      });
     }
   }
 }

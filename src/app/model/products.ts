@@ -1,4 +1,4 @@
-import { ProductType } from '../services/shop.service';
+import { ProductType } from '../services/product.service';
 import { cardsImg } from './images';
 
 export type Categories =
