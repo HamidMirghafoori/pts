@@ -15,7 +15,9 @@ export class PaymentGatewayComponent implements OnInit {
   );
   public years = Array.from({ length: 8 }, (_, i) => (i + 2023).toString());
   private itemId: string = '';
+  private shopId: string = '';
   private address: string = '';
+  private price: string = '';
 
   constructor(
     private fb: FormBuilder,
@@ -46,18 +48,22 @@ export class PaymentGatewayComponent implements OnInit {
     this.route.queryParams.subscribe((params) => {
       this.itemId = params['itemID'];
       this.address = params['address'];
+      this.shopId = params['shopId'];
+      this.price = params['price'];
     });
   }
 
   onSubmit() {
     if (this.paymentForm.valid) {
       console.log(this.paymentForm.value);
-      this.buyService.buyItem(this.itemId, this.address).then(() => {
-        // display receipt
+      this.buyService
+        .buyItem(this.itemId, this.address, this.shopId, this.price)
+        .then(() => {
+          // display receipt
 
-        // after receipt
-        this.router.navigate(['']);
-      });
+          // after receipt
+          this.router.navigate(['']);
+        });
     }
   }
 

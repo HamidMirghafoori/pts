@@ -18,7 +18,12 @@ export class BuyService {
     private authService: AuthenticationService
   ) {}
 
-  buyItem(itemId: string, address: string): Promise<string> {
+  buyItem(
+    itemId: string,
+    address: string,
+    shopId: string,
+    price: string
+  ): Promise<string> {
     return new Promise((resolve, reject) => {
       this.authService.authenticatedUser$.subscribe((user) => {
         if (user) {
@@ -32,7 +37,18 @@ export class BuyService {
           ref
             .set(soldData)
             .then(() => {
-              resolve(ref.key as string);
+              const data = {
+                customerId: uid,
+                itemId: itemId,
+                price: price,
+                shopId: shopId,
+              };
+              this.db
+                .list('revenue')
+                .push(data)
+                .then(() => {
+                  resolve(ref.key as string);
+                });
             })
             .catch((error) => {
               reject(error);

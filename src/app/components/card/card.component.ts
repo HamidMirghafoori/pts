@@ -18,7 +18,7 @@ export class CardComponent implements OnInit {
     private authService: AuthenticationService,
     private router: Router,
     private readonly location: Location
-  ) {  }
+  ) {}
   isLoggedIn = false;
   user!: UserType | null;
   showForm = false;
@@ -50,10 +50,16 @@ export class CardComponent implements OnInit {
     this.router.navigate(['Review']);
   }
 
-  onPurchase() {    
+  onPurchase() {
     this.user == null
       ? this.router.navigate(['signin'])
-      : this.router.navigate(['purchasing-form'], { queryParams: { itemID: this.data.productId } });
+      : this.router.navigate(['purchasing-form'], {
+          queryParams: {
+            itemID: this.data.productId,
+            shopId: this.data.ownerId,
+            price: this.data.price
+          },
+        });
   }
 
   ngOnInit(): void {
@@ -62,13 +68,13 @@ export class CardComponent implements OnInit {
     });
     this.authService.authenticatedUser$.subscribe((user) => (this.user = user));
     this.isBusiness = this.user?.role === 'business' ? true : false;
-    if (this.user && this.user.role ==='customer'){
-      this.canReview = true
-    }else{
+    if (this.user && this.user.role === 'customer') {
+      this.canReview = true;
+    } else {
       this.canReview = false;
     }
-   if(  this.location.path()==='/my-orders'){
-    this.showReview = true;
-   }
+    if (this.location.path() === '/my-orders') {
+      this.showReview = true;
+    }
   }
 }
