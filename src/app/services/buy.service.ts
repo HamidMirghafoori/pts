@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { AngularFireDatabase } from '@angular/fire/compat/database';
-import { Observable, map, of, switchMap, take } from 'rxjs';
+import { Observable, filter, map, of, switchMap, take } from 'rxjs';
 import { AuthenticationService } from './authentication.service';
 
 export interface SoldType {
@@ -80,6 +80,24 @@ export class BuyService {
         map((data) => {
           if (data) {
             return Object.keys(data).map((key) => data[key]) as RevenueType[];
+          } else {
+            return [];
+          }
+        })
+      );
+  }
+
+  getRevenueDataById(uid: string): Observable<RevenueType[] | []> {
+    return this.db
+      .object<any>(`revenue`)
+      .valueChanges()
+      .pipe(
+        filter((data) => !!data),
+        map((data) => {
+          if (data) {
+            return Object.keys(data)
+              .filter((key) => data[key].shopId === uid)
+              .map((key) => data[key]) as RevenueType[];
           } else {
             return [];
           }
