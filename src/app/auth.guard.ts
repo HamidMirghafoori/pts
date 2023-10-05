@@ -1,5 +1,3 @@
-// auth.guard.ts
-
 import { Injectable, inject } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import {
@@ -7,9 +5,8 @@ import {
   CanActivateFn,
   RouterStateSnapshot,
 } from '@angular/router';
-import { Observable, catchError, map, of, switchMap } from 'rxjs';
+import { Observable, of, switchMap, take } from 'rxjs';
 import { AuthenticationService } from './services/authentication.service';
-import { UserService } from './services/user.service';
 
 @Injectable({
   providedIn: 'root',
@@ -17,9 +14,16 @@ import { UserService } from './services/user.service';
 class Permissions {
   constructor(
     private authService: AuthenticationService,
-    private userService: UserService,
     private snackBar: MatSnackBar
   ) {}
+
+  isMatchOne(role: string, roles: string[]) {
+    if (role === roles[0]) return true;
+    if (roles.length > 1) {
+      if (role === roles[1]) return true;
+    }
+    return false;
+  }
 
   canActivate(
     route: ActivatedRouteSnapshot,
@@ -27,82 +31,34 @@ class Permissions {
   ): Observable<boolean> | Promise<boolean> | boolean {
     const roles = route.data['roles'] as string[];
 
-    switch (roles[0]) {
-      case 'admin':
-        return this.authService.isAuthenticated$.pipe(
-          switchMap(() => this.authService.authenticatedUser$),
-          switchMap((user) => {
-            const id = user?.uid;
-            if (!id) return of(false);
-
-            return this.userService.getUser(id).pipe(
-              map((userData) => userData?.role === roles[0]),
-              catchError(() => of(false))
-            );
-          })
-        );
-      case 'customer':
-        return this.authService.isAuthenticated$.pipe(
-          switchMap(() => this.authService.authenticatedUser$),
-          switchMap((user) => {
-            const id = user?.uid;
-            if (!id) return of(false);
-
-            return this.userService.getUser(id).pipe(
-              map((userData) => userData?.role === roles[0]),
-              catchError(() => of(false))
-            );
-          })
-        );
-      case 'business':
-        return this.authService.isAuthenticated$.pipe(
-          switchMap(() => this.authService.authenticatedUser$),
-          switchMap((user) => {
-            const id = user?.uid;
-            if (!id) return of(false);
-            if (user.status === 'pending') {
-              this.snackBar.open(
-                'Error: Business is not approved yet',
-                'Close',
-                {
-                  duration: 3000,
-                  horizontalPosition: 'center',
-                  verticalPosition: 'top',
-                  panelClass: ['error-snackbar'],
-                }
-              );
-              return of(false);
-            }
-            if (user.application === 'rejected') {
-              this.snackBar.open('Error: Business is Rejected!', 'Close', {
-                duration: 3000,
-                horizontalPosition: 'center',
-                verticalPosition: 'top',
-                panelClass: ['error-snackbar'],
-              });
-              return of(false);
-            }
-            return this.userService.getUser(id).pipe(
-              map((userData) => userData?.role === roles[0]),
-              catchError(() => of(false))
-            );
-          })
-        );
-      case 'officer':
-        return this.authService.isAuthenticated$.pipe(
-          switchMap(() => this.authService.authenticatedUser$),
-          switchMap((user) => {
-            const id = user?.uid;
-            if (!id) return of(false);
-
-            return this.userService.getUser(id).pipe(
-              map((userData) => userData?.role === roles[0]),
-              catchError(() => of(false))
-            );
-          })
-        );
-    }
-    return of(false);
+    return this.authService.authenticatedUser$.pipe(
+      take(1),
+      switchMap((user) => {
+        const id = user?.uid;
+        if (!id) return of(false);
+        if (user.role === 'business') {
+          if (user.status === 'pending') {
+            this.snackBar.open('Error: Business is not approved yet', 'Close', {
+              duration: 3000,
+              horizontalPosition: 'center',
+              verticalPosition: 'top',
+              panelClass: ['error-snackbar'],
+            });
+            return of(false);
+          }
+          if (user.application === 'rejected') {
+            this.snackBar.open('Error: Business is Rejected!', 'Close', {
+              duration: 3000,
+              horizontalPosition: 'center',
+              verticalPosition: 'top',
+              panelClass: ['error-snackbar'],
+            });
+            return of(false);
+          }
+        }
+        return of(this.isMatchOne(user.role, roles));
+      })
+    );
   }
 }
 

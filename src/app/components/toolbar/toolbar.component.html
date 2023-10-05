@@ -26,6 +26,12 @@
       <span>Applications</span>
     </button>
   </div>
+  <div class="flex-row" *ngIf="user?.role === 'business'">
+    <button mat-button class="" aria-label="" routerLink="reports">
+      <mat-icon>assignment</mat-icon>
+      <span>Reports</span>
+    </button>
+  </div>
   <div class="flex-row" *ngIf="user?.role === 'customer'">
     <button mat-button class="" aria-label="" routerLink="my-orders">
       <mat-icon>shop</mat-icon>
