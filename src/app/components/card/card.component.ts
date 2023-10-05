@@ -28,7 +28,7 @@ export class CardComponent implements OnInit {
   @Input() index!: number;
 
   @Input() data: ProductType = {
-    id: '',
+    productId: '',
     ownerId: '',
     bgImg: '',
     category: '',
@@ -50,7 +50,7 @@ export class CardComponent implements OnInit {
   onPurchase() {    
     this.user == null
       ? this.router.navigate(['signin'])
-      : this.router.navigate(['purchasing-form'], { queryParams: { itemID: this.data.id } });
+      : this.router.navigate(['purchasing-form'], { queryParams: { itemID: this.data.productId } });
   }
 
   ngOnInit(): void {

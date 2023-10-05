@@ -1,8 +1,6 @@
 import { Injectable } from '@angular/core';
-import {
-  AngularFireDatabase
-} from '@angular/fire/compat/database';
-import { Observable, of, switchMap } from 'rxjs';
+import { AngularFireDatabase } from '@angular/fire/compat/database';
+import { Observable, map, of, switchMap } from 'rxjs';
 import { AuthenticationService } from './authentication.service';
 
 export interface SoldType {
@@ -54,7 +52,18 @@ export class BuyService {
         if (!user) {
           return of([]);
         }
-        return this.db.object<SoldType[]>(`sold/${user?.uid}`).valueChanges()
+        return this.db
+          .object<any>(`sold/${user?.uid}`)
+          .valueChanges()
+          .pipe(
+            map((data) => {
+              if (data) {
+                return Object.keys(data).map((key) => data[key]);
+              } else {
+                return [];
+              }
+            })
+          );
       })
     );
   }

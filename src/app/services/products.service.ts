@@ -3,11 +3,19 @@ import {
   AngularFireDatabase,
   AngularFireList,
 } from '@angular/fire/compat/database';
-import { Observable, catchError, map, of, switchMap } from 'rxjs';
+import {
+  Observable,
+  catchError,
+  combineLatest,
+  map,
+  mergeMap,
+  of,
+  switchMap,
+} from 'rxjs';
 import { AuthenticationService } from './authentication.service';
 
 export interface ProductType {
-  id: string;
+  productId: string;
   ownerId: string;
   bgImg: string;
   category: string;
@@ -39,7 +47,7 @@ export class ProductService {
     return new Promise((resolve, reject) => {
       const ref = this.db.database.ref('products').push();
       this.authService.authenticatedUser$.subscribe((user) => {
-        productData = { ...productData, ownerId: user?.id };
+        productData = { ...productData, ownerId: user?.id, productId: ref.key };
       });
 
       ref
@@ -100,6 +108,39 @@ export class ProductService {
         console.error('Error fetching data:', error);
         return of([]);
       })
+    );
+  }
+
+  getProductsByIds(productIds: string[]): Observable<any[]> {
+    const productsRef = this.db.list<ProductType>('products');
+
+    return combineLatest(
+      productIds.map((id) =>
+        productsRef
+          .valueChanges()
+          .pipe(
+            map((products) => {
+              return products.filter((product) => product.productId === id);
+            })
+          )
+          .pipe(
+            map((products) =>
+              products.map((product) => {
+                return {
+                  ...product,
+                  offers: Array.isArray(product.offers)
+                    ? product.offers
+                    : [product.offers],
+                  tags: Array.isArray(product.tags)
+                    ? product.tags
+                    : [product.tags],
+                };
+              })
+            )
+          )
+          //flatten the array
+          .pipe(mergeMap((productArrays) => productArrays))
+      )
     );
   }
 }

@@ -22,7 +22,13 @@ export class ProductsListComponent implements OnInit {
     const roles = this.route.snapshot.data['roles'];
     if (roles && roles.includes('customer')) {
       this.buyService.getAllSoldItems().subscribe((soldItems) => {
-        console.log(soldItems);
+        if (!soldItems){
+          return
+        }
+        const ids = soldItems?.map(item => item.id)
+        this.productService.getProductsByIds(ids).subscribe(products =>{
+          this.products = products
+        })
       });
     } else {
       this.productService.getAllProducts().subscribe((products) => {
