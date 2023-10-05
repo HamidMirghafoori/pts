@@ -36,6 +36,7 @@
             mat-stroked-button
             color="primary"
             [disabled]="!canReview"
+            *ngIf="showReview"
           >
             Review
           </button>

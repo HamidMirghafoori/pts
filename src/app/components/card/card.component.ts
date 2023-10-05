@@ -1,3 +1,4 @@
+import { Location } from '@angular/common';
 import { Component, Input, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import {
@@ -15,8 +16,9 @@ import { ProductType } from 'src/app/services/products.service';
 export class CardComponent implements OnInit {
   constructor(
     private authService: AuthenticationService,
-    private router: Router
-  ) {}
+    private router: Router,
+    private readonly location: Location
+  ) {  }
   isLoggedIn = false;
   user!: UserType | null;
   showForm = false;
@@ -26,6 +28,7 @@ export class CardComponent implements OnInit {
   @Input() onEdit!: (index: number) => void;
   @Input() onDelete!: (index: number) => void;
   @Input() index!: number;
+  @Input() showReview: boolean = false;
 
   @Input() data: ProductType = {
     productId: '',
@@ -64,6 +67,8 @@ export class CardComponent implements OnInit {
     }else{
       this.canReview = false;
     }
-    
+   if(  this.location.path()==='/my-orders'){
+    this.showReview = true;
+   }
   }
 }
