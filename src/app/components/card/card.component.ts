@@ -4,7 +4,7 @@ import {
   AuthenticationService,
   UserType,
 } from 'src/app/services/authentication.service';
-import { ProductType } from 'src/app/services/product.service';
+import { ProductType } from 'src/app/services/products.service';
 
 @Component({
   selector: 'app-card',

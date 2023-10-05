@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { cardsImg } from 'src/app/model/images';
 import { BuyService } from 'src/app/services/buy.service';
-import { ProductService, ProductType } from 'src/app/services/product.service';
+import { ProductService, ProductType } from 'src/app/services/products.service';
 
 @Component({
   selector: 'app-products-list',

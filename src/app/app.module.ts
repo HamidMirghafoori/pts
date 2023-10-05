@@ -14,31 +14,31 @@ import { FIREBASE_OPTIONS } from '@angular/fire/compat';
 import { getDatabase, provideDatabase } from '@angular/fire/database';
 import { getFirestore, provideFirestore } from '@angular/fire/firestore';
 import { FormsModule } from '@angular/forms';
+import { MatButtonModule } from '@angular/material/button';
 import { environment } from '../environments/environment';
 import { ApplicationsComponent } from './components/applications/applications.component';
 import { CardComponent } from './components/card/card.component';
 import { ProductsListComponent } from './components/products-list/products-list.component';
+import { PurchasingFormComponent } from './components/purchasing-form/purchasing-form.component';
+import { ShopProductsComponent } from './components/shop-products/shop-products.component';
 import { SigninComponent } from './components/signin/signin.component';
 import { SignupComponent } from './components/signup/signup.component';
 import { MaterialModule } from './material/material.module';
-import { ShopProductsComponent } from './components/shop-products/shop-products.component';
-import { MatButtonModule } from '@angular/material/button';
-import { PurchasingFormComponent } from './purchasing-form/purchasing-form.component';
 
-import { MatInputModule } from '@angular/material/input';
-import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatNativeDateModule } from '@angular/material/core';
+import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatFormFieldModule } from '@angular/material/form-field';
-import { PaymentGatewayComponent } from './payment-gateway/payment-gateway.component';
+import { MatInputModule } from '@angular/material/input';
+import { PaymentGatewayComponent } from './components/payment-gateway/payment-gateway.component';
 
 import { MatIconModule } from '@angular/material/icon';
-import { ReviewFormComponent } from './review-form/review-form.component';
-import { ProductsTableComponent } from './products-table/products-table.component';
+import { ProductsTableComponent } from './components/products-table/products-table.component';
+import { ReviewFormComponent } from './components/review-form/review-form.component';
 
 
-import { MatTableModule } from '@angular/material/table';
 import { MatSelectModule } from '@angular/material/select';
-import { AdminReportComponent } from './admin-report/admin-report.component';
+import { MatTableModule } from '@angular/material/table';
+import { AdminReportComponent } from './components/admin-report/admin-report.component';
 
 
 

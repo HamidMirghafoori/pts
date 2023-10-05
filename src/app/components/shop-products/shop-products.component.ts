@@ -3,7 +3,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatExpansionPanel } from '@angular/material/expansion';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { cardsImg } from 'src/app/model/images';
-import { ProductService, ProductType } from 'src/app/services/product.service';
+import { ProductService, ProductType } from 'src/app/services/products.service';
 
 @Component({
   selector: 'app-shop-products',
