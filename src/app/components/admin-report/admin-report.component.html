@@ -1,5 +1,5 @@
 <mat-form-field *ngIf="showShopFilter">
-  <mat-label>Shop ID</mat-label>
+  <mat-label>Shop Email</mat-label>
   <mat-select [(ngModel)]="selectedShopId" (ngModelChange)="filterTable()">
     <!-- Options for Shop ID -->
     <mat-option *ngFor="let shop of uniqueShopIds()" [value]="shop">{{ shop }}</mat-option>
@@ -7,7 +7,7 @@
 </mat-form-field>
 
 <mat-form-field>
-  <mat-label>Item ID</mat-label>
+  <mat-label>Item Name</mat-label>
   <mat-select [(ngModel)]="selectedItemId" (ngModelChange)="filterTable()">
     <!-- Options for Item ID -->
     <mat-option *ngFor="let item of uniqueItemIds()" [value]="item">{{ item }}</mat-option>
