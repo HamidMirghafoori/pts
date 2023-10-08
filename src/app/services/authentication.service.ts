@@ -61,6 +61,9 @@ export class AuthenticationService {
                 case 'business':
                   this.router.navigate(['shop']);
                   break;
+                case 'admin':
+                  this.router.navigate(['applications']);
+                  break;
                 case 'officer':
                   this.router.navigate(['reports']);
                   break;

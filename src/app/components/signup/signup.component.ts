@@ -29,7 +29,7 @@ export class SignupComponent implements OnInit {
         email: ['', [Validators.required, Validators.email]],
         password: ['', Validators.required],
         repeatPassword: ['', Validators.required],
-        isBusiness: [false],
+        isBusiness: false,
         businessDescription: [''],
         businessType: [''],
         files: [[]],
@@ -41,13 +41,16 @@ export class SignupComponent implements OnInit {
       .get('isBusiness')
       ?.valueChanges.subscribe((isBusiness) => {
         const businessDescriptionControl = this.registrationForm.get(
-          'businessDescription'
+          'businessDescription',
+        );
+        const fileController = this.registrationForm.get(
+          'fileSubmission',
         );
         const businessTypeControl = this.registrationForm.get('businessType');
 
         if (isBusiness) {
           businessDescriptionControl?.setValidators([Validators.required]);
-          businessTypeControl?.setValidators([Validators.required]);
+          fileController?.setValidators([Validators.required])
         } else {
           businessDescriptionControl?.clearValidators();
           businessTypeControl?.clearValidators();
