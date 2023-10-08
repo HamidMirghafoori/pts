@@ -57,21 +57,21 @@ export class AdminReportComponent {
 
   uniqueShopIds(): string[] {
     if (!this.filteredData?.data) return [];
-    return ['', ...new Set(this.filteredData.data.map((item) => item.shopId))];
+    return ['', ...new Set(this.filteredData.data.map((item) => item.shopEmail))];
   }
 
   uniqueItemIds(): string[] {
     if (!this.filteredData?.data) return [];
-    return ['', ...new Set(this.filteredData.data.map((item) => item.itemId))];
+    return ['', ...new Set(this.filteredData.data.map((item) => item.itemName))];
   }
 
   filterTable(): void {
     this.filteredData.data = this.revenueData.filter((item) => {
       const isShopSelected = this.selectedShopId
-        ? item.shopId === this.selectedShopId
+        ? item.shopEmail === this.selectedShopId
         : true;
       const isItemSelected = this.selectedItemId
-        ? item.itemId === this.selectedItemId
+        ? item.itemName === this.selectedItemId
         : true;
       return isShopSelected && isItemSelected;
     });
