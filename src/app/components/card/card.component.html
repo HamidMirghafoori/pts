@@ -19,7 +19,7 @@
         <span class="price">{{ data.currency }} {{ data.price }}</span>
       </div>
       <div class="flex-row">
-        <div class="offer" *ngFor="let offer of data.offers">{{ offer }}</div>
+        <div class="offer" [ngStyle]="{'visibility': (offer)? 'visible' : 'hidden'}" *ngFor="let offer of data.offers">{{ offer }}</div>
       </div>
       <div class="flex-row fill-up" *ngIf="isBusiness; else customer">
         <button (click)="onEdit(index)" mat-stroked-button color="primary">
