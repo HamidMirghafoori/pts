@@ -1,0 +1,85 @@
+{
+    "client": "Thunder Client",
+    "collectionName": "Auth",
+    "dateExported": "2023-10-26T17:30:09.398Z",
+    "version": "1.1",
+    "folders": [],
+    "requests": [
+        {
+            "_id": "187260f3-c26b-4870-93a7-a5ef396173ee",
+            "colId": "23373054-7350-4a4d-b0e7-6b7edaa7f94b",
+            "containerId": "",
+            "name": "home",
+            "url": "http://localhost:8001/",
+            "method": "GET",
+            "sortNum": 10000,
+            "created": "2023-10-21T16:41:22.315Z",
+            "modified": "2023-10-21T16:41:32.427Z",
+            "headers": [],
+            "params": [],
+            "tests": []
+        },
+        {
+            "_id": "129f85ff-eb51-4b29-8a09-676ee54fcdda",
+            "colId": "23373054-7350-4a4d-b0e7-6b7edaa7f94b",
+            "containerId": "",
+            "name": "signin",
+            "url": "http://localhost:8001/api/signin",
+            "method": "POST",
+            "sortNum": 30000,
+            "created": "2023-10-21T21:20:55.212Z",
+            "modified": "2023-10-25T20:25:57.068Z",
+            "headers": [
+                {
+                    "name": "Content-Type",
+                    "value": "application/json"
+                }
+            ],
+            "params": [],
+            "body": {
+                "type": "json",
+                "raw": "{\n \"password\": \"123456\",\n  \"email\": \"admin@pts.com\"\n}",
+                "form": []
+            },
+            "tests": []
+        },
+        {
+            "_id": "a18ff6e4-adc8-4499-a51a-6bb3c28bb2cf",
+            "colId": "23373054-7350-4a4d-b0e7-6b7edaa7f94b",
+            "containerId": "",
+            "name": "signup",
+            "url": "http://localhost:8001/api/signup",
+            "method": "POST",
+            "sortNum": 40000,
+            "created": "2023-10-21T22:26:18.942Z",
+            "modified": "2023-10-25T22:56:48.567Z",
+            "headers": [
+                {
+                    "name": "Content-Type",
+                    "value": "application/json"
+                }
+            ],
+            "params": [],
+            "body": {
+                "type": "json",
+                "raw": "{\n  \"name\": \"shop\",\n  \"password\": \"123456\",\n  \"email\": \"shop@gmail.com\",\n  \"isBusiness\": true,\n  \"businessDescription\": \"This is shop business\",\n  \"businessType\": \"Travel Agency\",\n  \"files\": \"test.jpg\"\n}",
+                "form": []
+            },
+            "tests": []
+        },
+        {
+            "_id": "f3e8756e-bb20-43ac-970c-33a0e4735a10",
+            "colId": "23373054-7350-4a4d-b0e7-6b7edaa7f94b",
+            "containerId": "",
+            "name": "logout",
+            "url": "http://localhost:8001/api/logout",
+            "method": "GET",
+            "sortNum": 50000,
+            "created": "2023-10-23T20:26:36.138Z",
+            "modified": "2023-10-23T20:26:47.013Z",
+            "headers": [],
+            "params": [],
+            "tests": []
+        }
+    ]
+}
