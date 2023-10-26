@@ -1,11 +1,12 @@
 import { CookieOptions, NextFunction, Request, Response } from "express";
-import { UserModel, UserType } from "../models/user";
+import { BusinessUserModel, UserModel, UserType } from "../models/user";
 import { ErrorResponse } from "../utils/errorResponse";
 
 const expire = process.env.EXPIRE_TOKEN ? +process.env.EXPIRE_TOKEN : 36000000;
 
 exports.signup = async (req: Request, res: Response, next: NextFunction) => {
   const { email } = req.body;
+  const { isBusiness } = req.body;
 
   if (!email) {
     return res.status(400).send("Email is missing");
@@ -15,6 +16,37 @@ exports.signup = async (req: Request, res: Response, next: NextFunction) => {
 
   if (userExist) {
     return next(new ErrorResponse("E-mail already exists", 400));
+  }
+
+  if (isBusiness) {
+    const businessDescription: string = req.body.businessDescription || "";
+    // const businessType = (req.body.businessType as string) || "";
+    // const files = (req.body.files as string[]) || [""];
+    if (businessDescription === "") {
+      return res.status(400).send("Business description is missing");
+    }
+
+    try {
+      const businessUser = await BusinessUserModel.create(req.body);
+      return res.status(201).json({
+        success: true,
+        businessUser,
+      });
+    } catch (error: any) {
+      if (error.errors.name) {
+        res.status(400).send(error.errors.name.message);
+        return;
+      }
+      if (error.errors.password) {
+        res.status(400).send(error.errors.password.message);
+        return;
+      }
+      if (error.errors.businessDescription) {
+        res.status(400).send(error.errors.businessDescription.message);
+        return;
+      }
+      next();
+    }
   }
 
   try {
@@ -77,7 +109,7 @@ const generateToken = async (
   res
     .status(statusCode)
     .cookie("token", token, options)
-    .json({ success: true, token });
+    .json({ success: true, token, user });
 };
 
 //LOG OUT USER
@@ -90,6 +122,10 @@ exports.logout = (req: Request, res: Response, next: NextFunction) => {
 };
 
 export interface ReqType extends Request {
+  user: UserType | null;
+}
+
+export interface ResType extends Response {
   user: UserType | null;
 }
 
@@ -106,18 +142,18 @@ exports.userProfile = async (
   });
 };
 
-exports.singleUser = async (
-  req: Request,
-  res: Response,
-  next: NextFunction
-) => {
-  try {
-    const user = await UserModel.findById(req.params.id);
-    res.status(200).json({
-      success: true,
-      user,
-    });
-  } catch (error) {
-    next(error);
-  }
-};
+// exports.singleUser = async (
+//   req: Request,
+//   res: Response,
+//   next: NextFunction
+// ) => {
+//   try {
+//     const user = await UserModel.findById(req.params.id);
+//     res.status(200).json({
+//       success: true,
+//       user,
+//     });
+//   } catch (error) {
+//     next(error);
+//   }
+// };

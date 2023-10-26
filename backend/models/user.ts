@@ -80,3 +80,86 @@ export interface UserType extends IUserType {
 }
 
 export const UserModel: Model<UserType> = model<UserType>("users", userSchema);
+
+const businessUserSchema = new Schema({
+  name: {
+    type: String,
+    trim: true,
+    required: [true, "Name is missing"],
+    maxlength: [32, "Maximum length is 32"],
+  },
+  email: {
+    type: String,
+    trim: true,
+    required: [true, "E-mail is missing"],
+    unique: true,
+    match: [
+      /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/,
+      "E-mail format is not valid",
+    ],
+  },
+  password: {
+    type: String,
+    trim: true,
+    required: [true, "Password is missing"],
+    minlength: [6, "password must have at least six(6) characters"],
+    // match: [
+    //   /^(?=.*\d)(?=.*[@#\-_$%^&+=§!\?])(?=.*[a-z])(?=.*[A-Z])[0-9A-Za-z@#\-_$%^&+=§!\?]+$/,
+    //   "Password must contain at least 1 uppercase letter, 1 lowercase letter, 1 number and a special characters",
+    // ],
+  },
+  role: {
+    type: String,
+    default: "business",
+  },
+  businessDescription: {
+    type: String,
+    trim: true,
+    required: [true, "Description is missing"],
+    maxlength: [128, "Maximum length is 128"],
+  },
+  isBusiness: {
+    type: Boolean,
+  },
+  businessType: {
+    type: String,
+    trim: true,
+    maxlength: [24, "Maximum length is 24"],
+  },
+  files: {
+    type: [String],
+    trim: true,
+    maxlength: [256, "Maximum length is 256"],
+  },
+});
+
+// encrypting password before saving
+businessUserSchema.pre("save", async function (next) {
+  if (!this.isModified("password")) {
+    next();
+  }
+  this.password = await bcrypt.hash(this.password, 10);
+});
+
+// verify password
+businessUserSchema.methods.comparePassword = async function (password: string) {
+  return await bcrypt.compare(password, this.password);
+};
+
+// get the token
+businessUserSchema.methods.jwtGenerateToken = function () {
+  return jwt.sign({ id: this.id }, JWT_Secret, {
+    expiresIn: 3600,
+  });
+};
+
+type IBusinessUserType = InferSchemaType<typeof businessUserSchema>;
+
+export interface BusinessUserType extends IBusinessUserType {
+  comparePassword(password: string): Promise<boolean>;
+  jwtGenerateToken(): string;
+  _id: Types.ObjectId;
+}
+
+export const BusinessUserModel: Model<IBusinessUserType> =
+  model<IBusinessUserType>("business-users", businessUserSchema);
