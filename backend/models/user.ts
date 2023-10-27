@@ -4,25 +4,19 @@ import { InferSchemaType, Model, Schema, Types, model } from "mongoose";
 
 const JWT_Secret = process.env.JWT_SECRET || "";
 
-export interface User {
-  name: string;
-  email: string;
-  password: string;
-  role: string;
-  _id: string;
-  createdAt: string;
-  updatedAt: string;
-  __v: number;
-}
+// export interface User {
+//   email: string;
+//   password: string;
+//   role: string;
+//   _id: string;
+//   status: string;
+//   createdAt: string;
+//   updatedAt: string;
+//   __v: number;
+// }
 
 const userSchema = new Schema(
   {
-    name: {
-      type: String,
-      trim: true,
-      required: [true, "Name is missing"],
-      maxlength: [32, "Maximum length is 32"],
-    },
     email: {
       type: String,
       trim: true,
@@ -47,6 +41,10 @@ const userSchema = new Schema(
       type: String,
       default: "buyer",
     },
+    status: {
+      type: String,
+      default: "active",
+    }
   },
   { timestamps: true }
 );
@@ -82,12 +80,6 @@ export interface UserType extends IUserType {
 export const UserModel: Model<UserType> = model<UserType>("users", userSchema);
 
 const businessUserSchema = new Schema({
-  name: {
-    type: String,
-    trim: true,
-    required: [true, "Name is missing"],
-    maxlength: [32, "Maximum length is 32"],
-  },
   email: {
     type: String,
     trim: true,
@@ -130,6 +122,14 @@ const businessUserSchema = new Schema({
     type: [String],
     trim: true,
     maxlength: [256, "Maximum length is 256"],
+  },
+  status: {
+    type: String,
+    default: "active",
+  },
+  application: {
+    type: String,
+    default: "pending",
   },
 });
 

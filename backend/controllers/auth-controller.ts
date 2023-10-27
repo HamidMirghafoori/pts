@@ -33,10 +33,6 @@ exports.signup = async (req: Request, res: Response, next: NextFunction) => {
         businessUser,
       });
     } catch (error: any) {
-      if (error.errors.name) {
-        res.status(400).send(error.errors.name.message);
-        return;
-      }
       if (error.errors.password) {
         res.status(400).send(error.errors.password.message);
         return;
@@ -56,10 +52,6 @@ exports.signup = async (req: Request, res: Response, next: NextFunction) => {
       user,
     });
   } catch (error: any) {
-    if (error.errors.name) {
-      res.status(400).send(error.errors.name.message);
-      return;
-    }
     if (error.errors.password) {
       res.status(400).send(error.errors.password.message);
       return;

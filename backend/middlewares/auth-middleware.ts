@@ -7,7 +7,7 @@ import { ErrorResponse } from "../utils/errorResponse";
 const JWT_Secret = process.env.JWT_SECRET || "";
 
 // check if user is authenticated
-export const isAuthenticated = async (
+exports.isAuthenticated = async (
   req: ReqType,
   res: Response,
   next: NextFunction
@@ -40,8 +40,10 @@ export const isAuthenticated = async (
 
 // admin middleware
 exports.isAdmin = (req: ReqType, res: Response, next: NextFunction) => {
-  if (req.user?.role === "admin") {
-    return next(new ErrorResponse("Access denied, you must be an admin", 401));
+  if (req.user?.role !== "admin") {
+    return res.status(401).json({
+      message: 'Access denied, you must be an admin',
+    })    
   }
   next();
 };

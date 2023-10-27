@@ -1,8 +1,8 @@
+import cookieParser from 'cookie-parser';
 import cors from 'cors';
 import dotenv from "dotenv";
 import express, { Application, Request, Response } from "express";
 import mongoose from "mongoose";
-const cookieParser = require('cookie-parser');
 
 dotenv.config();
 
@@ -17,9 +17,11 @@ app.use(cors());
 
 // Routes
 const authRoutes = require("./routes/auth-routes");
+const adminRoutes = require("./routes/admin-routes")
 
 // Routes Middlewares
 app.use("/api", authRoutes);
+app.use("/api", adminRoutes);
 
 app.get("/", (req: Request, res: Response) => {
   res.redirect(302, '/api')
