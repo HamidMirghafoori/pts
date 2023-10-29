@@ -115,3 +115,28 @@ export const getProducts = async (
   }
 
 };
+
+export const getAllProducts = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+    try {
+
+    const products = await ProductModel.find()
+
+    return res.status(200).json({
+      success: true,
+      message: "All products fetched",
+      products
+    });
+
+  } catch (error) {
+    return res.status(401).json({
+      success: false,
+      message: "Product creation failed",
+      error,
+    });
+  }
+
+};

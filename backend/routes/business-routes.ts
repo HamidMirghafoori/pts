@@ -1,5 +1,5 @@
 import express from "express";
-import { createProduct, getProducts } from "../controllers/business-controller";
+import { createProduct, getAllProducts, getProducts } from "../controllers/business-controller";
 
 const router = express.Router();
 const {
@@ -8,6 +8,7 @@ const {
 } = require("../middlewares/auth-middleware");
 
 router.get("/products", isAuthenticated, isBusiness, getProducts);
+router.get("/products-list", getAllProducts);
 router.post("/create-product", isAuthenticated, isBusiness, createProduct);
 
 module.exports = router;

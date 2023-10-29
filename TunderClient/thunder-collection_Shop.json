@@ -1,7 +1,7 @@
 {
     "client": "Thunder Client",
     "collectionName": "Shop",
-    "dateExported": "2023-10-29T18:22:27.014Z",
+    "dateExported": "2023-10-29T18:29:52.594Z",
     "version": "1.1",
     "folders": [],
     "requests": [
@@ -41,6 +41,20 @@
                 "raw": "{\n  \"id\": \"653cfc60a17df5c7d8012a79\"\n}",
                 "form": []
             },
+            "tests": []
+        },
+        {
+            "_id": "f2abf83b-6d35-4903-b89f-6a21265278e7",
+            "colId": "7ccadf2d-98b7-4e33-a5d4-c441d6166cd0",
+            "containerId": "",
+            "name": "allProducts",
+            "url": "http://localhost:8001/api/products-list",
+            "method": "GET",
+            "sortNum": 25000,
+            "created": "2023-10-29T18:28:51.047Z",
+            "modified": "2023-10-29T18:29:35.006Z",
+            "headers": [],
+            "params": [],
             "tests": []
         },
         {
