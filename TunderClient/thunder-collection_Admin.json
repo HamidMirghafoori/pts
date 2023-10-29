@@ -1,0 +1,42 @@
+{
+    "client": "Thunder Client",
+    "collectionName": "Admin",
+    "dateExported": "2023-10-28T12:34:01.204Z",
+    "version": "1.1",
+    "folders": [],
+    "requests": [
+        {
+            "_id": "e4e2ae6b-7a52-484a-8405-e6064027d98b",
+            "colId": "252b2f55-c1f3-47a6-8b89-0e8c3d3f6d50",
+            "containerId": "",
+            "name": "applications",
+            "url": "http://localhost:8001/api/applications",
+            "method": "GET",
+            "sortNum": 10000,
+            "created": "2023-10-27T20:40:27.518Z",
+            "modified": "2023-10-27T20:40:27.518Z",
+            "headers": [],
+            "params": [],
+            "tests": []
+        },
+        {
+            "_id": "6f440a83-193c-4a16-af63-7b80cb68663c",
+            "colId": "252b2f55-c1f3-47a6-8b89-0e8c3d3f6d50",
+            "containerId": "",
+            "name": "applicationUpdate",
+            "url": "http://localhost:8001/api/update-application",
+            "method": "POST",
+            "sortNum": 20000,
+            "created": "2023-10-27T20:40:30.596Z",
+            "modified": "2023-10-28T12:20:38.610Z",
+            "headers": [],
+            "params": [],
+            "body": {
+                "type": "json",
+                "raw": "{\n\"id\" : \"653cfc60a17df5c7d8012a79\",\n\"applicationUpdate\": \"approved\"\n}",
+                "form": []
+            },
+            "tests": []
+        }
+    ]
+}

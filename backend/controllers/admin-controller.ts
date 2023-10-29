@@ -36,9 +36,9 @@ export const updateApplications = async (
     const objectId = new ObjectId(id);
     const updateRes = await BusinessUserModel.findOneAndUpdate(
       { _id: objectId },
-      { application: applicationUpdate }
+      { application: applicationUpdate },
+      {new: true}
     );
-    console.log(updateRes);
 
     return res.status(200).json({
       success: true,

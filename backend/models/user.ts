@@ -161,5 +161,5 @@ export interface BusinessUserType extends IBusinessUserType {
   _id: Types.ObjectId;
 }
 
-export const BusinessUserModel: Model<IBusinessUserType> =
-  model<IBusinessUserType>("business-users", businessUserSchema);
+export const BusinessUserModel: Model<BusinessUserType> =
+  model<BusinessUserType>("business-users", businessUserSchema);

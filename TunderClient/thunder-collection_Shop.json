@@ -1,0 +1,47 @@
+{
+    "client": "Thunder Client",
+    "collectionName": "Shop",
+    "dateExported": "2023-10-28T12:33:45.108Z",
+    "version": "1.1",
+    "folders": [],
+    "requests": [
+        {
+            "_id": "92b74456-ba5f-4bce-abe5-ce9653093abb",
+            "colId": "7ccadf2d-98b7-4e33-a5d4-c441d6166cd0",
+            "containerId": "",
+            "name": "create-product",
+            "url": "http://localhost:8001/api/create-product",
+            "method": "POST",
+            "sortNum": 10000,
+            "created": "2023-10-27T20:41:07.557Z",
+            "modified": "2023-10-28T12:23:02.935Z",
+            "headers": [],
+            "params": [],
+            "body": {
+                "type": "json",
+                "raw": "{\n  \"title\": \"Mexican Theme Park\",\n  \"bgImg\": \"4.png\",\n  \"category\": \"Themeparks\",\n  \"destination\": \"Mexico City\",\n  \"offers\": [\n    \"PTS exclusive\"\n  ],\n  \"tags\": [\n    \"Free food\"\n  ],\n  \"ownerId\": \"653cfc60a17df5c7d8012a79\",\n  \"price\": 25,\n  \"shopEmail\": \"shop2@gmail.com\"\n}",
+                "form": []
+            },
+            "tests": []
+        },
+        {
+            "_id": "0d16a9fb-66c2-442d-8bf3-4def82b50b54",
+            "colId": "7ccadf2d-98b7-4e33-a5d4-c441d6166cd0",
+            "containerId": "",
+            "name": "products",
+            "url": "http://localhost:8001/api/products",
+            "method": "GET",
+            "sortNum": 20000,
+            "created": "2023-10-28T12:31:23.846Z",
+            "modified": "2023-10-28T12:33:40.869Z",
+            "headers": [],
+            "params": [],
+            "body": {
+                "type": "json",
+                "raw": "{\n  \"id\": \"653cfc60a17df5c7d8012a79\"\n}",
+                "form": []
+            },
+            "tests": []
+        }
+    ]
+}

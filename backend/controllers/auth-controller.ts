@@ -1,5 +1,5 @@
 import { CookieOptions, NextFunction, Request, Response } from "express";
-import { BusinessUserModel, UserModel, UserType } from "../models/user";
+import { BusinessUserModel, BusinessUserType, UserModel, UserType } from "../models/user";
 import { ErrorResponse } from "../utils/errorResponse";
 
 const expire = process.env.EXPIRE_TOKEN ? +process.env.EXPIRE_TOKEN : 36000000;
@@ -69,16 +69,24 @@ exports.signin = async (req: Request, res: Response, next: NextFunction) => {
     // check user e-mail
     const user = await UserModel.findOne({ email });
     if (!user) {
-      return res.status(400).send("Invalid credentials");
+      const businessUser = await BusinessUserModel.findOne({ email });
+      if (!businessUser) {
+        return res.status(400).send("user not found");
+      }
+      // verify user password
+      const isMatched = await businessUser.comparePassword(password);
+      if (!isMatched) {
+        return res.status(400).send("Invalid credentials");
+      }
+      generateBusinessToken(businessUser, 200, res);
+    } else {
+      // verify user password
+      const isMatched = await user.comparePassword(password);
+      if (!isMatched) {
+        return res.status(400).send("Invalid credentials");
+      }
+      generateUserToken(user, 200, res);
     }
-
-    // verify user password
-    const isMatched = await user.comparePassword(password);
-    if (!isMatched) {
-      return res.status(400).send("Invalid credentials");
-    }
-
-    generateToken(user, 200, res);
   } catch (error) {
     console.log(error);
 
@@ -86,8 +94,26 @@ exports.signin = async (req: Request, res: Response, next: NextFunction) => {
   }
 };
 
-const generateToken = async (
+const generateUserToken = async (
   user: UserType,
+  statusCode: number,
+  res: Response
+) => {
+  const token: string = await user.jwtGenerateToken();
+
+  const options: CookieOptions = {
+    httpOnly: true,
+    expires: new Date(Date.now() + expire),
+  };
+
+  res
+    .status(statusCode)
+    .cookie("token", token, options)
+    .json({ success: true, token, user });
+};
+
+const generateBusinessToken = async (
+  user: BusinessUserType,
   statusCode: number,
   res: Response
 ) => {
@@ -114,7 +140,7 @@ exports.logout = (req: Request, res: Response, next: NextFunction) => {
 };
 
 export interface ReqType extends Request {
-  user: UserType | null;
+  user: UserType | BusinessUserType | null;
 }
 
 export interface ResType extends Response {

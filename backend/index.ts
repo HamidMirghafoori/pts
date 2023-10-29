@@ -14,14 +14,18 @@ const mongoDbUrl = process.env.MONGODB_URI || "";
 app.use(express.json());
 app.use(cookieParser());
 app.use(cors());
+app.use(express.static('public'));
+
 
 // Routes
 const authRoutes = require("./routes/auth-routes");
 const adminRoutes = require("./routes/admin-routes")
+const businessRoutes = require("./routes/business-routes")
 
 // Routes Middlewares
 app.use("/api", authRoutes);
 app.use("/api", adminRoutes);
+app.use("/api", businessRoutes);
 
 app.get("/", (req: Request, res: Response) => {
   res.redirect(302, '/api')
