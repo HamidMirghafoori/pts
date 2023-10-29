@@ -159,19 +159,3 @@ exports.userProfile = async (
     user,
   });
 };
-
-// exports.singleUser = async (
-//   req: Request,
-//   res: Response,
-//   next: NextFunction
-// ) => {
-//   try {
-//     const user = await UserModel.findById(req.params.id);
-//     res.status(200).json({
-//       success: true,
-//       user,
-//     });
-//   } catch (error) {
-//     next(error);
-//   }
-// };

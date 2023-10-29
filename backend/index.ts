@@ -16,6 +16,23 @@ app.use(cookieParser());
 app.use(cors());
 app.use(express.static('public'));
 
+// // Your API endpoint to trigger SSE updates  SAMPLE
+// app.post('/trigger-sse-update', (req, res) => {
+//   const eventData = {
+//     type: 'productAdded',
+//     data: {
+//       // Your product data
+//     },
+//   };
+
+//   // Send the SSE event to all connected clients
+//   clients.forEach((client) => {
+//     client.write(`data: ${JSON.stringify(eventData)}\n\n`);
+//   });
+
+//   res.status(200).send('SSE update triggered');
+// });
+
 
 // Routes
 const authRoutes = require("./routes/auth-routes");
