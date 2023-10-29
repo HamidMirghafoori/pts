@@ -21,11 +21,13 @@ app.use(express.static('public'));
 const authRoutes = require("./routes/auth-routes");
 const adminRoutes = require("./routes/admin-routes")
 const businessRoutes = require("./routes/business-routes")
+const shopRoutes = require("./routes/shop-routes")
 
 // Routes Middlewares
 app.use("/api", authRoutes);
 app.use("/api", adminRoutes);
 app.use("/api", businessRoutes);
+app.use("/api", shopRoutes);
 
 app.get("/", (req: Request, res: Response) => {
   res.redirect(302, '/api')

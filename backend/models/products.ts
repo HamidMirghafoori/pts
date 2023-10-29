@@ -1,7 +1,5 @@
 import { InferSchemaType, Model, Schema, Types, model } from "mongoose";
 
-const JWT_Secret = process.env.JWT_SECRET || "";
-
 const productsSchema = new Schema(
   {
     title: {

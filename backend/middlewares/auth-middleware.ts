@@ -26,7 +26,7 @@ exports.isAuthenticated = async (
   }
 
   try {
-    //verify token
+    // TODO: when expires should return error message
     const decoded = jwt.verify(token, JWT_Secret) as JwtPayload;
     
     req.user = await UserModel.findById(decoded.id);
@@ -51,6 +51,16 @@ exports.isAdmin = (req: ReqType, res: Response, next: NextFunction) => {
   if (req.user?.role !== "admin") {
     return res.status(401).json({
       message: 'Access denied, you must be an admin',
+    })    
+  }
+  next();
+};
+
+// user middleware
+exports.isBuyer = (req: ReqType, res: Response, next: NextFunction) => {
+  if (req.user?.role !== "buyer") {
+    return res.status(401).json({
+      message: 'Access denied, you must be a customer',
     })    
   }
   next();
