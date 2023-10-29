@@ -44,7 +44,7 @@ const userSchema = new Schema(
     status: {
       type: String,
       default: "active",
-    }
+    },
   },
   { timestamps: true }
 );
@@ -63,9 +63,12 @@ userSchema.methods.comparePassword = async function (password: string) {
 };
 
 // get the token
-userSchema.methods.jwtGenerateToken = function () {
+userSchema.methods.jwtGenerateToken = function (): string {
+  const exp = process.env.EXPIRE_TOKEN
+    ? parseInt(process.env.EXPIRE_TOKEN)
+    : 3600000;
   return jwt.sign({ id: this.id }, JWT_Secret, {
-    expiresIn: 3600,
+    expiresIn: Math.floor(Date.now() / 1000) + exp,
   });
 };
 
@@ -148,8 +151,11 @@ businessUserSchema.methods.comparePassword = async function (password: string) {
 
 // get the token
 businessUserSchema.methods.jwtGenerateToken = function () {
+  const exp = process.env.EXPIRE_TOKEN
+  ? parseInt(process.env.EXPIRE_TOKEN)
+  : 3600000;
   return jwt.sign({ id: this.id }, JWT_Secret, {
-    expiresIn: 3600,
+    expiresIn: Math.floor(Date.now() / 1000) + exp,
   });
 };
 

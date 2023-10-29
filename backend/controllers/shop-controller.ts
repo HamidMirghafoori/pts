@@ -1,5 +1,5 @@
 import { NextFunction, Request, Response } from "express";
-import { ProductModel } from "../models/products";
+import { ProductModel, ProductType } from "../models/products";
 import { PurchaseModel } from "../models/purchase";
 
 const mongoose = require("mongoose");
@@ -54,34 +54,140 @@ export const purchaseItem = async (
   }
 };
 
-// export const getProducts = async (
-//   req: Request,
-//   res: Response,
-//   next: NextFunction
-// ) => {
-//     try {
-//     const { id } = req.body;
-//     if (id){
-//       if (!mongoose.Types.ObjectId.isValid(id)) {
-//         return res.status(400).json({ message: 'Invalid ownerId' });
-//       }
-//     }
-//     const payload = id ? {ownerId: id} : {};
+export const getPurchases = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const { userId } = req.body;
 
-//     const products = await ProductModel.find(payload)
+    if (!mongoose.Types.ObjectId.isValid(userId)) {
+      return res.status(400).json({ message: "Invalid userId" });
+    }
 
-//     return res.status(200).json({
-//       success: true,
-//       message: "Products fetched",
-//       products
-//     });
+    const payload = {
+      userId,
+    };
+    const purchasesRes = await PurchaseModel.find(payload, {
+      // _id: { $toString: "$_id" },
+    }).lean();
 
-//   } catch (error) {
-//     return res.status(401).json({
-//       success: false,
-//       message: "Product creation failed",
-//       error,
-//     });
-//   }
+    const productIds = purchasesRes.map((purchase) => purchase.productId);
+    const purchaseIds = new Map(
+      purchasesRes.map((purchase) => [
+        purchase.productId.toHexString(),
+        purchase._id.toHexString(),
+      ])
+    );
 
-// };
+    const productsRes = (await ProductModel.find({
+      _id: { $in: productIds },
+    }).lean()) as ProductType[];
+    const products = productsRes.map((product: any) => {
+      return {
+        ...product,
+        purchaseId: purchaseIds.get(product._id.toHexString()),
+      };
+    });
+    return res.status(200).json({
+      success: true,
+      message: "list of purchases",
+      products,
+    });
+  } catch (error) {
+    return res.status(401).json({
+      success: false,
+      message: "Purchase failed",
+      error,
+    });
+  }
+};
+
+export const getSales = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const sales = await ProductModel.find();
+
+    return res.status(200).json({
+      success: true,
+      message: "list of sales",
+      sales,
+    });
+  } catch (error) {
+    return res.status(401).json({
+      success: false,
+      message: "Sales list failed",
+      error,
+    });
+  }
+};
+
+export const ratePurchase = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const { userId } = req.body;
+    const { productId } = req.body;
+    const { purchaseId } = req.body;
+    const { rate } = req.body;
+
+    if (!mongoose.Types.ObjectId.isValid(userId)) {
+      return res.status(400).json({ message: "Invalid userId" });
+    }
+    if (!mongoose.Types.ObjectId.isValid(productId)) {
+      return res.status(400).json({ message: "Invalid productId" });
+    }
+    if (!mongoose.Types.ObjectId.isValid(purchaseId)) {
+      return res.status(400).json({ message: "Invalid purchaseId" });
+    }
+    if (!rate) {
+      return res.status(400).json({ message: "rate is missing" });
+    }
+
+    const purchase = await PurchaseModel.find({ _id: purchaseId });
+    console.log(purchase);
+
+    if (purchase.length < 1) {
+      return res.status(404).json({
+        success: false,
+        message: "purchase not found",
+      });
+    }
+
+    if (
+      purchase[0].userId.toHexString() !== userId ||
+      purchase[0].productId.toHexString() !== productId
+    ) {
+      console.log(purchase[0]);
+      return res.status(404).json({
+        success: false,
+        message:
+          "provided userId or productId is not matching with the purchase",
+      });
+    }
+
+    const updateRes = await PurchaseModel.findOneAndUpdate(
+      { _id: purchaseId },
+      { rate },
+      { new: true }
+    );
+
+    return res.status(200).json({
+      success: true,
+      message: "product rated successfully",
+      purchase: updateRes,
+    });
+  } catch (error) {
+    return res.status(401).json({
+      success: false,
+      message: "rating failed",
+      error,
+    });
+  }
+};

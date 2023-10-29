@@ -26,8 +26,9 @@ exports.isAuthenticated = async (
   }
 
   try {
-    // TODO: when expires should return error message
+  
     const decoded = jwt.verify(token, JWT_Secret) as JwtPayload;
+    
     
     req.user = await UserModel.findById(decoded.id);
     if(!req.user){
@@ -51,6 +52,24 @@ exports.isAdmin = (req: ReqType, res: Response, next: NextFunction) => {
   if (req.user?.role !== "admin") {
     return res.status(401).json({
       message: 'Access denied, you must be an admin',
+    })    
+  }
+  next();
+};
+
+exports.isOfficer = (req: ReqType, res: Response, next: NextFunction) => {
+  if (req.user?.role !== "officer") {
+    return res.status(401).json({
+      message: 'Access denied, you must be an officer',
+    })    
+  }
+  next();
+};
+
+exports.isAdminOrOfficer = (req: ReqType, res: Response, next: NextFunction) => {
+  if (req.user?.role !== "admin" && req.user?.role !== "officer") {
+    return res.status(401).json({
+      message: 'Access denied, you must be an officer or admin',
     })    
   }
   next();
