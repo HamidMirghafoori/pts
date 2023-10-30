@@ -54,6 +54,7 @@ export const purchaseItem = async (
   }
 };
 
+// Return all the purchased products by the customer
 export const getPurchases = async (
   req: Request,
   res: Response,
@@ -69,9 +70,7 @@ export const getPurchases = async (
     const payload = {
       userId,
     };
-    const purchasesRes = await PurchaseModel.find(payload, {
-      // _id: { $toString: "$_id" },
-    }).lean();
+    const purchasesRes = await PurchaseModel.find(payload).lean();
 
     const productIds = purchasesRes.map((purchase) => purchase.productId);
     const purchaseIds = new Map(

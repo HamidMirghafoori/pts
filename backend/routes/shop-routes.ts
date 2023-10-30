@@ -9,7 +9,7 @@ const {
 } = require("../middlewares/auth-middleware");
 
 router.post("/purchase", isAuthenticated, isCustomer, purchaseItem);
-router.get("/purchases-list", isAuthenticated, isCustomer, getPurchases);
+router.post("/purchases-list", isAuthenticated, isCustomer, getPurchases);
 router.get("/sales-list", isAuthenticated, isAdminOrOfficer, getSales);
 router.post("/rate-purchase", isAuthenticated, isCustomer, ratePurchase);
 

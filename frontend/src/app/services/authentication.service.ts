@@ -21,6 +21,7 @@ export interface UserType {
   description: string;
   type: string;
   application: ApplicationType;
+  token: string;
 }
 
 interface UserResponse extends UserType {
@@ -55,22 +56,21 @@ export class AuthenticationService {
       .post<UserResponse>(this.rootUrl + signin, { email, password })
       .subscribe({
         next: (response) => {
-          console.log(response);
           this.authSubject.next(true);
-          this.userSubject.next({ ...response.user });
-              switch (response.user.role) {
-                case 'business':
-                  this.router.navigate(['shop']);
-                  break;
-                case 'admin':
-                  this.router.navigate(['applications']);
-                  break;
-                case 'officer':
-                  this.router.navigate(['reports']);
-                  break;
-                default:
-                  this.router.navigate(['']);
-              }
+          this.userSubject.next({ ...response.user, token: response.token });
+          switch (response.user.role) {
+            case 'business':
+              this.router.navigate(['shop']);
+              break;
+            case 'admin':
+              this.router.navigate(['applications']);
+              break;
+            case 'officer':
+              this.router.navigate(['reports']);
+              break;
+            default:
+              this.router.navigate(['']);
+          }
         },
         error: (error) => {
           console.log(error.error);

@@ -1,6 +1,9 @@
 <div class="frame">
   <div class="content">
-    <div [style.background]="'url(' + data.bgImg + ')'" class="image"></div>
+    <div
+      [style.background]="'url(' + serverUrl + data.bgImg + ')'"
+      class="image"
+    ></div>
     <div class="container">
       <div class="summary">
         {{ data.category }} {{ "\u25CF" }} {{ data.destination }}
@@ -12,20 +15,32 @@
         >({{ data.votes }}) {{ "\u25CF" }} {{ data.bookedCount }}k Booked
       </div>
       <div class="flex-row">
-        <div class="tags" [ngStyle]="{'visibility': (tag)? 'visible' : 'hidden'}" *ngFor="let tag of data.tags">{{ tag }}</div>
+        <div
+          class="tags"
+          [ngStyle]="{ visibility: tag ? 'visible' : 'hidden' }"
+          *ngFor="let tag of data.tags"
+        >
+          {{ tag }}
+        </div>
       </div>
       <div class="flex">
         From: &nbsp;
         <span class="price">{{ data.currency }} {{ data.price }}</span>
       </div>
       <div class="flex-row">
-        <div class="offer" [ngStyle]="{'visibility': (offer)? 'visible' : 'hidden'}" *ngFor="let offer of data.offers">{{ offer }}</div>
+        <div
+          class="offer"
+          [ngStyle]="{ visibility: offer ? 'visible' : 'hidden' }"
+          *ngFor="let offer of data.offers"
+        >
+          {{ offer }}
+        </div>
       </div>
       <div class="flex-row fill-up" *ngIf="isBusiness; else customer">
         <button (click)="onEdit(index)" mat-stroked-button color="primary">
           Edit
         </button>
-        <button  mat-icon-button color="warn" (click)="onDelete(index)">
+        <button mat-icon-button color="warn" (click)="onDelete(index)">
           <mat-icon class="delete">delete</mat-icon>
         </button>
       </div>
