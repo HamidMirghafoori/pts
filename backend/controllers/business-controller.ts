@@ -1,5 +1,5 @@
 import { NextFunction, Request, Response } from "express";
-import { ProductModel } from "../models/products";
+import { ProductModel, ProductType } from "../models/products";
 import { BusinessUserModel } from "../models/user";
 
 const mongoose = require("mongoose");
@@ -22,7 +22,7 @@ export const createProduct = async (
     const { shopEmail } = req.body;
 
     if (!mongoose.Types.ObjectId.isValid(ownerId)) {
-      return res.status(400).json({ message: 'Invalid ownerId' });
+      return res.status(400).json({ message: "Invalid ownerId" });
     }
     const user = await BusinessUserModel.findById(ownerId);
     if (!user) {
@@ -41,8 +41,8 @@ export const createProduct = async (
       offers,
       bgImg,
       ownerId,
-      shopEmail
-    }
+      shopEmail,
+    };
 
     if (!title) {
       return res.status(401).send({ message: "title is missing" });
@@ -67,13 +67,12 @@ export const createProduct = async (
     }
 
     const product = await ProductModel.create(payload);
-      
+
     return res.status(200).json({
       success: true,
       message: "Product created",
-      product
+      product,
     });
-
   } catch (error) {
     return res.status(401).json({
       success: false,
@@ -81,7 +80,6 @@ export const createProduct = async (
       error,
     });
   }
-
 };
 
 export const getProducts = async (
@@ -89,23 +87,22 @@ export const getProducts = async (
   res: Response,
   next: NextFunction
 ) => {
-    try {
+  try {
     const { id } = req.body;
-    if (id){
+    if (id) {
       if (!mongoose.Types.ObjectId.isValid(id)) {
-        return res.status(400).json({ message: 'Invalid ownerId' });
+        return res.status(400).json({ message: "Invalid ownerId" });
       }
     }
-    const payload = id ? {ownerId: id} : {};
+    const payload = id ? { ownerId: id } : {};
 
-    const products = await ProductModel.find(payload)
+    const products = await ProductModel.find(payload);
 
     return res.status(200).json({
       success: true,
       message: "Products fetched",
-      products
+      products,
     });
-
   } catch (error) {
     return res.status(401).json({
       success: false,
@@ -113,7 +110,6 @@ export const getProducts = async (
       error,
     });
   }
-
 };
 
 export const getAllProducts = async (
@@ -121,16 +117,16 @@ export const getAllProducts = async (
   res: Response,
   next: NextFunction
 ) => {
-    try {
-
-    const products = await ProductModel.find()
-
+  try {
+    let products = (await ProductModel.find().lean()) as ProductType[];
+    products = products.map((product) => {
+      return { ...product, rate: 0, votes: 0, bookedCount: 0, currency: "US$" };
+    });
     return res.status(200).json({
       success: true,
       message: "All products fetched",
-      products
+      products,
     });
-
   } catch (error) {
     return res.status(401).json({
       success: false,
@@ -138,5 +134,4 @@ export const getAllProducts = async (
       error,
     });
   }
-
 };
