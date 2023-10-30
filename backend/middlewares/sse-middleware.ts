@@ -14,6 +14,8 @@ const clients = new Map<string, Response>();
 
 exports.sseMiddleware = (req: ReqType, res: Response, next: NextFunction) => {
   res.sseSetup = () => {
+    console.log(80000);
+    
     res.setHeader("Content-Type", "text/event-stream");
     res.setHeader("Cache-Control", "no-cache");
     res.flushHeaders();

@@ -6,6 +6,23 @@ import { BusinessUserModel, BusinessUserType, UserModel } from "../models/user";
 const JWT_Secret = process.env.JWT_SECRET || "";
 
 // check if user is authenticated
+exports.isRootAuthenticated = async (
+  req: ReqType,
+  res: Response,
+  next: NextFunction
+) => {
+  let token!: string;
+  if (req.cookies){
+    token = req.cookies.token
+  }
+
+  // make sure token exists
+  if (!token) {    
+    next();
+    return;
+  }
+};
+
 exports.isAuthenticated = async (
   req: ReqType,
   res: Response,
