@@ -93,18 +93,6 @@ export class ProductService {
 
   getAllProducts(): Observable<ProductType[] | []> {
     return this.http.get<any>(this.rootUrl).pipe(map(response => response.products));
-    // return this.productsRef.snapshotChanges().pipe(
-    //   map((products) => {
-    //     return products.map((c) => ({
-    //       ...(c.payload.val() as ProductType),
-    //       id: c.key ?? '',
-    //     }));
-    //   }),
-    //   catchError((error) => {
-    //     console.error('Error fetching data:', error);
-    //     return of([]);
-    //   })
-    // );
   }
 
   // getProductsByIds(productIds: string[]): Observable<any[]> {

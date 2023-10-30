@@ -1,5 +1,10 @@
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { Observable, map, tap } from 'rxjs';
+import { environment } from 'src/environments/environment.development';
+import { purchasesList } from './api';
 import { AuthenticationService } from './authentication.service';
+import { ProductType } from './products.service';
 
 export interface SoldType {
   productId: string;
@@ -21,8 +26,11 @@ export interface RevenueType {
 })
 export class BuyService {
   constructor(
-    private authService: AuthenticationService
+    private authService: AuthenticationService,
+    private http: HttpClient
   ) {}
+
+  private rootUrl = environment.SERVER_URL;
 
   buyItem(
     itemId: string,
@@ -69,19 +77,19 @@ export class BuyService {
     });
   }
 
- // getRevenueData(): Observable<RevenueType[] | []> {
-    // return this.db
-    //   .object<any>(`revenue`)
-    //   .valueChanges()
-    //   .pipe(
-    //     map((data) => {
-    //       if (data) {
-    //         return Object.keys(data).map((key) => data[key]) as RevenueType[];
-    //       } else {
-    //         return [];
-    //       }
-    //     })
-    //   );
+  // getRevenueData(): Observable<RevenueType[] | []> {
+  // return this.db
+  //   .object<any>(`revenue`)
+  //   .valueChanges()
+  //   .pipe(
+  //     map((data) => {
+  //       if (data) {
+  //         return Object.keys(data).map((key) => data[key]) as RevenueType[];
+  //       } else {
+  //         return [];
+  //       }
+  //     })
+  //   );
   //}
 
   // getRevenueDataById(uid: string): Observable<RevenueType[] | []> {
@@ -106,25 +114,36 @@ export class BuyService {
   //   return this.db.object<SoldType>(`sold/${uid}`).valueChanges();
   // }
 
-  // getAllSoldItems(): Observable<SoldType[] | [] | null> {
-  //   return this.authService.authenticatedUser$.pipe(
-  //     switchMap((user) => {
-  //       if (!user) {
-  //         return of([]);
-  //       }
-  //       return this.db
-  //         .object<any>(`sold/${user?.uid}`)
-  //         .valueChanges()
-  //         .pipe(
-  //           map((data) => {
-  //             if (data) {
-  //               return Object.keys(data).map((key) => data[key]);
-  //             } else {
-  //               return [];
-  //             }
-  //           })
-  //         );
-  //     })
-  //   );
-  // }
+  getCustomerBoughtItems(userId: string): Observable<ProductType[] | [] | null> {
+    const body = { userId };
+
+    const headers = new HttpHeaders({
+      'Content-Type': 'application/json',
+    });
+
+    return this.http
+      .post<any>(this.rootUrl + purchasesList, body, { headers: headers })
+      .pipe(tap(console.log))
+      .pipe(map((response) => response.products));
+
+    // return this.authService.authenticatedUser$.pipe(
+    //   switchMap((user) => {
+    //     if (!user) {
+    //       return of([]);
+    //     }
+    //     return this.db
+    //       .object<any>(`sold/${user?.uid}`)
+    //       .valueChanges()
+    //       .pipe(
+    //         map((data) => {
+    //           if (data) {
+    //             return Object.keys(data).map((key) => data[key]);
+    //           } else {
+    //             return [];
+    //           }
+    //         })
+    //       );
+    //   })
+    // );
+  }
 }

@@ -6,6 +6,7 @@ import {
   UserType,
 } from 'src/app/services/authentication.service';
 import { ProductType } from 'src/app/services/products.service';
+import { environment } from 'src/environments/environment.development';
 
 @Component({
   selector: 'app-card',
@@ -19,6 +20,7 @@ export class CardComponent implements OnInit {
     private router: Router,
     private readonly location: Location
   ) {}
+  serverUrl = environment.SERVER_BASE;
   isLoggedIn = false;
   user!: UserType | null;
   showForm = false;
