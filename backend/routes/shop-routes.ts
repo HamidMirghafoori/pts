@@ -4,13 +4,13 @@ import { getPurchases, getSales, purchaseItem, ratePurchase } from "../controlle
 const router = express.Router();
 const {
   isAuthenticated,
-  isBuyer,
+  isCustomer,
   isAdminOrOfficer
 } = require("../middlewares/auth-middleware");
 
-router.post("/purchase", isAuthenticated, isBuyer, purchaseItem);
-router.get("/purchases-list", isAuthenticated, isBuyer, getPurchases);
+router.post("/purchase", isAuthenticated, isCustomer, purchaseItem);
+router.post("/purchases-list", isAuthenticated, isCustomer, getPurchases);
 router.get("/sales-list", isAuthenticated, isAdminOrOfficer, getSales);
-router.post("/rate-purchase", isAuthenticated, isBuyer, ratePurchase);
+router.post("/rate-purchase", isAuthenticated, isCustomer, ratePurchase);
 
 module.exports = router;

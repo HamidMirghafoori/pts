@@ -39,7 +39,7 @@ const userSchema = new Schema(
     },
     role: {
       type: String,
-      default: "buyer",
+      default: "customer",
     },
     status: {
       type: String,

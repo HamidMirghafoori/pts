@@ -93,8 +93,8 @@ exports.isAdminOrOfficer = (req: ReqType, res: Response, next: NextFunction) => 
 };
 
 // user middleware
-exports.isBuyer = (req: ReqType, res: Response, next: NextFunction) => {
-  if (req.user?.role !== "buyer") {
+exports.isCustomer = (req: ReqType, res: Response, next: NextFunction) => {
+  if (req.user?.role !== "customer") {
     return res.status(401).json({
       message: 'Access denied, you must be a customer',
     })    
