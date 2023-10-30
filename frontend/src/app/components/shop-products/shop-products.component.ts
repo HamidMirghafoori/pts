@@ -2,7 +2,6 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatExpansionPanel } from '@angular/material/expansion';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { cardsImg } from 'src/app/model/images';
 import { AuthenticationService } from 'src/app/services/authentication.service';
 import { ProductService, ProductType } from 'src/app/services/products.service';
 
@@ -47,18 +46,18 @@ export class ShopProductsComponent implements OnInit {
       bgImg: [''],
     });
 
-    this.productService.getAllUserProducts().subscribe((products) => {
-      const transformed = products.map((product, index) => ({
-        ...product,
-        bgImg: cardsImg[index % 7],
-        offers: Array.isArray(product.offers)
-          ? product.offers
-          : [product.offers],
-        tags: Array.isArray(product.tags) ? product.tags : [product.tags],
-      }));
+    // this.productService.getAllUserProducts().subscribe((products) => {
+    //   const transformed = products.map((product, index) => ({
+    //     ...product,
+    //     bgImg: cardsImg[index % 7],
+    //     offers: Array.isArray(product.offers)
+    //       ? product.offers
+    //       : [product.offers],
+    //     tags: Array.isArray(product.tags) ? product.tags : [product.tags],
+    //   }));
 
-      this.products = transformed;
-    });
+    //   this.products = transformed;
+    // });
   }
 
   onSubmit() {
@@ -81,14 +80,14 @@ export class ShopProductsComponent implements OnInit {
         shopEmail,
       };
       this.editMode = false;
-      this.productService.updateProduct(id, data).then(() => {
-        this.snackBar.open('Product updated successfully', 'Close', {
-          duration: 3000,
-          horizontalPosition: 'center',
-          verticalPosition: 'top',
-        });
-        this.productPanel.close();
-      });
+      // this.productService.updateProduct(id, data).then(() => {
+      //   this.snackBar.open('Product updated successfully', 'Close', {
+      //     duration: 3000,
+      //     horizontalPosition: 'center',
+      //     verticalPosition: 'top',
+      //   });
+      //   this.productPanel.close();
+      // });
       return;
     }
     this.productService.addProduct({ ...form, shopEmail }).then(() => {
@@ -106,12 +105,12 @@ export class ShopProductsComponent implements OnInit {
   public onDelete = (index: number) => {
     this.selectedProduct = this.products[index];
     const id = this.selectedProduct.productId;
-    this.productService.deleteProduct(id).then(() => {
-      this.snackBar.open('Product deleted successfully', 'Close', {
-        duration: 3000,
-        horizontalPosition: 'center',
-        verticalPosition: 'top',
-      });
-    });
+    // this.productService.deleteProduct(id).then(() => {
+    //   this.snackBar.open('Product deleted successfully', 'Close', {
+    //     duration: 3000,
+    //     horizontalPosition: 'center',
+    //     verticalPosition: 'top',
+    //   });
+    // });
   };
 }

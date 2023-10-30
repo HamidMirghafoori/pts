@@ -1,10 +1,4 @@
 import { Injectable } from '@angular/core';
-import {
-  Auth,
-  User,
-  createUserWithEmailAndPassword,
-  signInWithEmailAndPassword,
-} from '@angular/fire/auth';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
 import { BehaviorSubject, Observable } from 'rxjs';
@@ -23,14 +17,13 @@ export interface AppUserType {
   application: ApplicationType;
 }
 
-export type UserType = User & AppUserType;
+export type UserType =   AppUserType;
 
 @Injectable({
   providedIn: 'root',
 })
 export class AuthenticationService {
   constructor(
-    public auth: Auth,
     private router: Router,
     private userService: UserService,
     private snackBar: MatSnackBar
@@ -48,43 +41,43 @@ export class AuthenticationService {
     this.userSubject.asObservable();
 
   login(email: string, password: string): void {
-    signInWithEmailAndPassword(this.auth, email, password)
-      .then((userCredential) => {
-        // Signed in
-        this.authSubject.next(true);
-        this.userService
-          .getUser(userCredential.user.uid)
-          .subscribe((appUser) => {
-            if (appUser) {
-              this.userSubject.next({ ...userCredential.user, ...appUser });
-              switch (appUser.role) {
-                case 'business':
-                  this.router.navigate(['shop']);
-                  break;
-                case 'admin':
-                  this.router.navigate(['applications']);
-                  break;
-                case 'officer':
-                  this.router.navigate(['reports']);
-                  break;
-                default:
-                  this.router.navigate(['']);
-              }
-            }
-          });
-      })
-      .catch((error) => {
-        const errorCode = error.code;
-        const errorMessage = error.message;
-        console.log(errorCode);
-        console.log(errorMessage);
-        this.snackBar.open('Error: Username or Password mismatch', 'Close', {
-          duration: 3000,
-          horizontalPosition: 'center',
-          verticalPosition: 'top',
-          panelClass: ['error-snackbar'],
-        });
-      });
+    // signInWithEmailAndPassword(this.auth, email, password)
+    //   .then((userCredential) => {
+    //     // Signed in
+    //     this.authSubject.next(true);
+    //     this.userService
+    //       .getUser(userCredential.user.uid)
+    //       .subscribe((appUser) => {
+    //         if (appUser) {
+    //           this.userSubject.next({ ...userCredential.user, ...appUser });
+    //           switch (appUser.role) {
+    //             case 'business':
+    //               this.router.navigate(['shop']);
+    //               break;
+    //             case 'admin':
+    //               this.router.navigate(['applications']);
+    //               break;
+    //             case 'officer':
+    //               this.router.navigate(['reports']);
+    //               break;
+    //             default:
+    //               this.router.navigate(['']);
+    //           }
+    //         }
+    //       });
+    //   })
+    //   .catch((error) => {
+    //     const errorCode = error.code;
+    //     const errorMessage = error.message;
+    //     console.log(errorCode);
+    //     console.log(errorMessage);
+    //     this.snackBar.open('Error: Username or Password mismatch', 'Close', {
+    //       duration: 3000,
+    //       horizontalPosition: 'center',
+    //       verticalPosition: 'top',
+    //       panelClass: ['error-snackbar'],
+    //     });
+    //   });
   }
 
   signup(
@@ -96,39 +89,39 @@ export class AuthenticationService {
     status: string,
     application: ApplicationType
   ) {
-    createUserWithEmailAndPassword(this.auth, email, password)
-      .then((userCredential) => {
-        // already signed in
-        const user: User = userCredential.user;
-        console.log(user);
+    // createUserWithEmailAndPassword(this.auth, email, password)
+    //   .then((userCredential) => {
+    //     // already signed in
+    //     const user: User = userCredential.user;
+    //     console.log(user);
 
-        this.userService
-          // business role by default is inactive
-          .addUser(user.uid, {
-            role,
-            email,
-            description,
-            type,
-            status,
-            application,
-          })
-          .then(() => {
-            this.router.navigate(['']);
-          });
-      })
-      .catch((error) => {
-        const errorCode = error.code;
-        // const errorMessage = error.message;
-        console.log(errorCode);
-        if (errorCode === 'auth/email-already-in-use') {
-          this.snackBar.open('Error: Account already exists', 'Close', {
-            duration: 3000,
-            horizontalPosition: 'center',
-            verticalPosition: 'top',
-            panelClass: ['error-snackbar'],
-          });
-        }
-      });
+    //     this.userService
+    //       // business role by default is inactive
+    //       .addUser(user.uid, {
+    //         role,
+    //         email,
+    //         description,
+    //         type,
+    //         status,
+    //         application,
+    //       })
+    //       .then(() => {
+    //         this.router.navigate(['']);
+    //       });
+    //   })
+    //   .catch((error) => {
+    //     const errorCode = error.code;
+    //     // const errorMessage = error.message;
+    //     console.log(errorCode);
+    //     if (errorCode === 'auth/email-already-in-use') {
+    //       this.snackBar.open('Error: Account already exists', 'Close', {
+    //         duration: 3000,
+    //         horizontalPosition: 'center',
+    //         verticalPosition: 'top',
+    //         panelClass: ['error-snackbar'],
+    //       });
+    //     }
+    //   });
   }
 
   logout() {
@@ -137,8 +130,4 @@ export class AuthenticationService {
     this.router.navigate(['']);
   }
 
-  // TODO: not working
-  // resetPassword(email: string) {
-  //   return sendPasswordResetEmail(this.auth, email);
-  // }
 }

@@ -37,7 +37,7 @@ export class ApplicationsComponent implements OnInit {
     const data = this.inactiveUsers[index];
     data.status = 'active';
     data.application = 'approved';
-    this.userService.updateUser(this.inactiveUsers[index].id, data).then(() => {
+    // this.userService.updateUser(this.inactiveUsers[index].id, data).then(() => {
 
       // this.authService
       //   .resetPassword(this.inactiveUsers[index].email)
@@ -46,12 +46,12 @@ export class ApplicationsComponent implements OnInit {
       //   .catch((err) => console.log(err));
 
 
-      this.snackBar.open('Application approved', 'Close', {
-        duration: 3000,
-        horizontalPosition: 'center',
-        verticalPosition: 'top',
-      });
-    });
+    //   this.snackBar.open('Application approved', 'Close', {
+    //     duration: 3000,
+    //     horizontalPosition: 'center',
+    //     verticalPosition: 'top',
+    //   });
+    // });
   }
 
   public reject(index: number) {
@@ -59,18 +59,18 @@ export class ApplicationsComponent implements OnInit {
     data.status = 'active';
     data.role = 'customer';
     data.application = 'rejected';
-    this.userService.updateUser(this.inactiveUsers[index].id, data).then(() => {
-      this.snackBar.open('Application rejected', 'Close', {
-        duration: 3000,
-        horizontalPosition: 'center',
-        verticalPosition: 'top',
-      });
-    });
+    // this.userService.updateUser(this.inactiveUsers[index].id, data).then(() => {
+    //   this.snackBar.open('Application rejected', 'Close', {
+    //     duration: 3000,
+    //     horizontalPosition: 'center',
+    //     verticalPosition: 'top',
+    //   });
+    // });
   }
 
   ngOnInit(): void {
-    this.userService.getAllApplications().subscribe((users) => {
-      this.inactiveUsers = users;
-    });
+    // this.userService.getAllApplications().subscribe((users) => {
+    //   this.inactiveUsers = users;
+    // });
   }
 }

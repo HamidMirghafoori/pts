@@ -8,11 +8,6 @@ import { AppComponent } from './app.component';
 import { ToolbarComponent } from './components/toolbar/toolbar.component';
 
 import { HttpClientModule } from '@angular/common/http';
-import { initializeApp, provideFirebaseApp } from '@angular/fire/app';
-import { getAuth, provideAuth } from '@angular/fire/auth';
-import { FIREBASE_OPTIONS } from '@angular/fire/compat';
-import { getDatabase, provideDatabase } from '@angular/fire/database';
-import { getFirestore, provideFirestore } from '@angular/fire/firestore';
 import { FormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatNativeDateModule } from '@angular/material/core';
@@ -22,7 +17,6 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 import { MatTableModule } from '@angular/material/table';
-import { environment } from '../environments/environment';
 import { AdminReportComponent } from './components/admin-report/admin-report.component';
 import { ApplicationsComponent } from './components/applications/applications.component';
 import { CardComponent } from './components/card/card.component';
@@ -68,19 +62,13 @@ export function tokenGetter() {
     FormsModule,
     ReactiveFormsModule,
     HttpClientModule,
-    provideFirebaseApp(() => initializeApp(environment.firebase)),
-    provideAuth(() => getAuth()),
-    provideFirestore(() => getFirestore()),
-    provideDatabase(() => getDatabase()),
     MatButtonModule,
     MatInputModule,
     MatDatepickerModule,
     MatNativeDateModule,
     MatFormFieldModule,
   ],
-  providers: [
-    { provide: FIREBASE_OPTIONS, useValue: environment.firebase }
-  ],
+  providers: [],
   bootstrap: [AppComponent],
 })
 export class AppModule {}

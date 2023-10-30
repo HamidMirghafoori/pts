@@ -36,20 +36,20 @@ export class AdminReportComponent {
         
         if (user.role === 'business') {
           this.showShopFilter = false;
-          this.buyService.getRevenueDataById(user.uid).subscribe(data=>{
-            this.revenueData = data;
-            this.filteredData = new MatTableDataSource<RevenueType>(
-              this.revenueData
-            );
-          })
+          // this.buyService.getRevenueDataById(user.uid).subscribe(data=>{
+          //   this.revenueData = data;
+          //   this.filteredData = new MatTableDataSource<RevenueType>(
+          //     this.revenueData
+          //   );
+          // })
         } else {
           this.showShopFilter = true;
-          this.buyService.getRevenueData().subscribe((data) => {
-            this.revenueData = data;
-            this.filteredData = new MatTableDataSource<RevenueType>(
-              this.revenueData
-            );
-          });
+          // this.buyService.getRevenueData().subscribe((data) => {
+          //   this.revenueData = data;
+          //   this.filteredData = new MatTableDataSource<RevenueType>(
+          //     this.revenueData
+          //   );
+          // });
         }
       }
     });

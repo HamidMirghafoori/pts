@@ -1,5 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-import { Auth } from '@angular/fire/auth';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import {
   ApplicationType,
@@ -19,7 +18,6 @@ export class SignupComponent implements OnInit {
 
   constructor(
     private fb: FormBuilder,
-    public auth: Auth,
     private authService: AuthenticationService
   ) {}
 
