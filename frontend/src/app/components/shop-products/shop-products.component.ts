@@ -68,7 +68,7 @@ export class ShopProductsComponent implements OnInit {
 
     const form = this.productForm.value;
     if (this.editMode) {
-      const id = this.selectedProduct.productId;
+      const id = this.selectedProduct._id;
       const data: ProductType = {
         ...this.selectedProduct,
         category: this.productForm.get('category')?.value,
@@ -104,7 +104,7 @@ export class ShopProductsComponent implements OnInit {
 
   public onDelete = (index: number) => {
     this.selectedProduct = this.products[index];
-    const id = this.selectedProduct.productId;
+    const id = this.selectedProduct._id;
     // this.productService.deleteProduct(id).then(() => {
     //   this.snackBar.open('Product deleted successfully', 'Close', {
     //     duration: 3000,

@@ -31,7 +31,7 @@ export class CardComponent implements OnInit {
   @Input() showReview: boolean = false;
 
   @Input() data: ProductType = {
-    productId: '',
+    _id: '',
     ownerId: '',
     bgImg: '',
     category: '',
@@ -45,6 +45,8 @@ export class CardComponent implements OnInit {
     currency: 'US$',
     offers: [],
     shopEmail: '',
+    createdAt:'',
+    updatedAt:''
   };
 
   onReviewClick() {
@@ -56,7 +58,7 @@ export class CardComponent implements OnInit {
       ? this.router.navigate(['signin'])
       : this.router.navigate(['purchasing-form'], {
           queryParams: {
-            itemID: this.data.productId,
+            itemID: this.data._id,
             shopId: this.data.ownerId,
             price: this.data.price,
             itemName: this.data.title,

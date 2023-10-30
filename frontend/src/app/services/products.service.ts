@@ -1,21 +1,25 @@
+import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { Observable, map } from 'rxjs';
 import { AuthenticationService } from './authentication.service';
 
 export interface ProductType {
-  productId: string;
-  ownerId: string;
   bgImg: string;
   category: string;
+  createdAt: string;
   destination: string;
+  offers: string[];
+  ownerId: string;
+  price: number;
+  shopEmail: string;
+  tags: string[];
   title: string;
+  updatedAt: string;
+  _id: string;
   rate: number;
   votes: number;
   bookedCount: number;
-  tags: string[];
-  price: number;
   currency: string;
-  offers: string[];
-  shopEmail: string;
 }
 
 @Injectable({
@@ -23,9 +27,11 @@ export interface ProductType {
 })
 export class ProductService {
   // private productsRef!: AngularFireList<ProductType>;
+  private rootUrl = 'http://localhost:8001'
 
   constructor(
     // private db: AngularFireDatabase,
+    private http: HttpClient,
     private authService: AuthenticationService
   ) {
     // this.productsRef = db.list('products');
@@ -84,20 +90,21 @@ export class ProductService {
   //   );
   // }
 
-  // getAllProducts(): Observable<ProductType[] | []> {
-  //   return this.productsRef.snapshotChanges().pipe(
-  //     map((products) => {
-  //       return products.map((c) => ({
-  //         ...(c.payload.val() as ProductType),
-  //         id: c.key ?? '',
-  //       }));
-  //     }),
-  //     catchError((error) => {
-  //       console.error('Error fetching data:', error);
-  //       return of([]);
-  //     })
-  //   );
-  // }
+  getAllProducts(): Observable<ProductType[] | []> {
+    return this.http.get<any>(this.rootUrl).pipe(map(response => response.products));
+    // return this.productsRef.snapshotChanges().pipe(
+    //   map((products) => {
+    //     return products.map((c) => ({
+    //       ...(c.payload.val() as ProductType),
+    //       id: c.key ?? '',
+    //     }));
+    //   }),
+    //   catchError((error) => {
+    //     console.error('Error fetching data:', error);
+    //     return of([]);
+    //   })
+    // );
+  }
 
   // getProductsByIds(productIds: string[]): Observable<any[]> {
   //   const productsRef = this.db.list<ProductType>('products');

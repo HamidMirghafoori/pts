@@ -30,6 +30,9 @@ export class ProductsListComponent implements OnInit {
       //   })
       // });
     } else {
+      this.productService
+        .getAllProducts()
+        .subscribe((products) => console.log('2>', products));
       // this.productService.getAllProducts().subscribe((products) => {
       //   const updated = products.map((product, index) => {
       //     return {
