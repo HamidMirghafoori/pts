@@ -32,18 +32,7 @@ export class ProductsListComponent implements OnInit {
     } else {
       this.productService
         .getAllProducts()
-        .subscribe((products) => console.log('2>', products));
-      // this.productService.getAllProducts().subscribe((products) => {
-      //   const updated = products.map((product, index) => {
-      //     return {
-      //       ...product,
-      //       bgImg: cardsImg[index % 7],
-      //       offers: Array.isArray(product.offers)? product.offers :[product.offers],
-      //       tags: Array.isArray(product.tags)? product.tags :[product.tags]
-      //     };
-      //   });
-      //   this.products = updated;
-      // });
+        .subscribe((products) => (this.products = products));
     }
   }
 }

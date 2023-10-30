@@ -1,6 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable, map } from 'rxjs';
+import { environment } from 'src/environments/environment.development';
 import { AuthenticationService } from './authentication.service';
 
 export interface ProductType {
@@ -27,7 +28,7 @@ export interface ProductType {
 })
 export class ProductService {
   // private productsRef!: AngularFireList<ProductType>;
-  private rootUrl = 'http://localhost:8001'
+  private rootUrl = environment.SERVER_URL;
 
   constructor(
     // private db: AngularFireDatabase,

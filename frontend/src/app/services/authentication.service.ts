@@ -1,24 +1,33 @@
+import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
 import { BehaviorSubject, Observable } from 'rxjs';
+import { environment } from 'src/environments/environment.development';
 import { Role } from '../components/signup/signup.component';
+import { signin } from './api';
 import { UserService } from './user.service';
 
 export type ApplicationType = 'pending' | 'approved' | 'rejected' | 'NA';
 export type StatusType = 'pending' | 'active';
-export interface AppUserType {
-  id: string;
-  status: StatusType;
-  role: Role;
+export interface UserType {
+  createdAt: string;
   email: string;
+  password: string;
+  role: Role;
+  status: StatusType;
+  updatedAt: string;
+  _id: string;
   description: string;
   type: string;
   application: ApplicationType;
 }
 
-export type UserType =   AppUserType;
-
+interface UserResponse extends UserType {
+  success: boolean;
+  token: string;
+  user: UserType;
+}
 @Injectable({
   providedIn: 'root',
 })
@@ -26,9 +35,10 @@ export class AuthenticationService {
   constructor(
     private router: Router,
     private userService: UserService,
-    private snackBar: MatSnackBar
+    private snackBar: MatSnackBar,
+    private http: HttpClient
   ) {}
-
+  private rootUrl = environment.SERVER_URL;
   private authSubject: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(
     false
   );
@@ -41,43 +51,37 @@ export class AuthenticationService {
     this.userSubject.asObservable();
 
   login(email: string, password: string): void {
-    // signInWithEmailAndPassword(this.auth, email, password)
-    //   .then((userCredential) => {
-    //     // Signed in
-    //     this.authSubject.next(true);
-    //     this.userService
-    //       .getUser(userCredential.user.uid)
-    //       .subscribe((appUser) => {
-    //         if (appUser) {
-    //           this.userSubject.next({ ...userCredential.user, ...appUser });
-    //           switch (appUser.role) {
-    //             case 'business':
-    //               this.router.navigate(['shop']);
-    //               break;
-    //             case 'admin':
-    //               this.router.navigate(['applications']);
-    //               break;
-    //             case 'officer':
-    //               this.router.navigate(['reports']);
-    //               break;
-    //             default:
-    //               this.router.navigate(['']);
-    //           }
-    //         }
-    //       });
-    //   })
-    //   .catch((error) => {
-    //     const errorCode = error.code;
-    //     const errorMessage = error.message;
-    //     console.log(errorCode);
-    //     console.log(errorMessage);
-    //     this.snackBar.open('Error: Username or Password mismatch', 'Close', {
-    //       duration: 3000,
-    //       horizontalPosition: 'center',
-    //       verticalPosition: 'top',
-    //       panelClass: ['error-snackbar'],
-    //     });
-    //   });
+    this.http
+      .post<UserResponse>(this.rootUrl + signin, { email, password })
+      .subscribe({
+        next: (response) => {
+          console.log(response);
+          this.authSubject.next(true);
+          this.userSubject.next({ ...response.user });
+              switch (response.user.role) {
+                case 'business':
+                  this.router.navigate(['shop']);
+                  break;
+                case 'admin':
+                  this.router.navigate(['applications']);
+                  break;
+                case 'officer':
+                  this.router.navigate(['reports']);
+                  break;
+                default:
+                  this.router.navigate(['']);
+              }
+        },
+        error: (error) => {
+          console.log(error.error);
+          this.snackBar.open(error.error, 'Close', {
+            duration: 3000,
+            horizontalPosition: 'center',
+            verticalPosition: 'top',
+            panelClass: ['error-snackbar'],
+          });
+        },
+      });
   }
 
   signup(
@@ -94,7 +98,6 @@ export class AuthenticationService {
     //     // already signed in
     //     const user: User = userCredential.user;
     //     console.log(user);
-
     //     this.userService
     //       // business role by default is inactive
     //       .addUser(user.uid, {
@@ -129,5 +132,4 @@ export class AuthenticationService {
     this.userSubject.next(null);
     this.router.navigate(['']);
   }
-
 }

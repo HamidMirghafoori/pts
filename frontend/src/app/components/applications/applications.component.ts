@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import {
-  AppUserType
+  UserType
 } from 'src/app/services/authentication.service';
 import { UserService } from 'src/app/services/user.service';
 
@@ -15,7 +15,7 @@ export class ApplicationsComponent implements OnInit {
     private userService: UserService,
     private snackBar: MatSnackBar,
   ) {}
-  inactiveUsers: AppUserType[] = [];
+  inactiveUsers: UserType[] = [];
   step: number = 0;
 
   public setStep(val: number) {
