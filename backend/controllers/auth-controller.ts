@@ -1,5 +1,10 @@
 import { CookieOptions, NextFunction, Request, Response } from "express";
-import { BusinessUserModel, BusinessUserType, UserModel, UserType } from "../models/user";
+import {
+  BusinessUserModel,
+  BusinessUserType,
+  UserModel,
+  UserType,
+} from "../models/user";
 import { ErrorResponse } from "../utils/errorResponse";
 
 const expire = process.env.EXPIRE_TOKEN ? +process.env.EXPIRE_TOKEN : 36000000;
@@ -63,6 +68,7 @@ exports.signup = async (req: Request, res: Response, next: NextFunction) => {
 exports.signin = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const { email, password } = req.body;
+
     if (!email || !password) {
       return res.status(400).send("E-mail and password are required");
     }
@@ -95,7 +101,7 @@ exports.signin = async (req: Request, res: Response, next: NextFunction) => {
 };
 
 const generateUserToken = async (
-  user: UserType,
+  user: any,
   statusCode: number,
   res: Response
 ) => {
@@ -109,7 +115,11 @@ const generateUserToken = async (
   res
     .status(statusCode)
     .cookie("token", token, options)
-    .json({ success: true, token, user });
+    .json({
+      success: true,
+      token,
+      user: { ...user._doc, description: "", type: "", application: "NA" },
+    });
 };
 
 const generateBusinessToken = async (
@@ -154,7 +164,7 @@ exports.userProfile = async (
   next: NextFunction
 ) => {
   const user = await UserModel.findById(req.user?._id);
-  if (!user){
+  if (!user) {
     res.redirect(302, "/api/products-list");
     return;
   }
@@ -162,6 +172,6 @@ exports.userProfile = async (
 
   res.status(200).json({
     success: true,
-    user
+    user,
   });
 };
