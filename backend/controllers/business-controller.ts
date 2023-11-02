@@ -122,6 +122,8 @@ export const getAllProducts = async (
     products = products.map((product) => {
       return { ...product, rate: 0, votes: 0, bookedCount: 0, currency: "US$" };
     });
+    console.log('getAllProducts....');
+    
     return res.status(200).json({
       success: true,
       message: "All products fetched",

@@ -62,7 +62,8 @@ export const getPurchases = async (
 ) => {
   try {
     const { userId } = req.body;
-
+    console.log('getPurchases....');
+    
     if (!mongoose.Types.ObjectId.isValid(userId)) {
       return res.status(400).json({ message: "Invalid userId" });
     }

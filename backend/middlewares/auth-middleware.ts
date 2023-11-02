@@ -12,14 +12,15 @@ exports.isRootAuthenticated = async (
   next: NextFunction
 ) => {
   let token!: string;
-  if (req.cookies){
-    token = req.cookies.token
-  }
+  console.log("isRootAuthenticated....");
+  token = req.body.token;
 
-  // make sure token exists
-  if (!token) {    
+  if (!token) {
+    console.log('isRootAuthenticated no TOKEN');
+    
+    res.redirect(302, "/api/products-list")
+  } else {
     next();
-    return;
   }
 };
 
@@ -29,47 +30,44 @@ exports.isAuthenticated = async (
   next: NextFunction
 ) => {
   let token!: string;
-  if (req.cookies){
-    token = req.cookies.token
-  }
-
+  console.log("isAuthenticated....");
+  token = req.body.token;
   // make sure token exists
-  if (!token) {    
-      return res.status(200).json({
-        message: 'unauthenticated',
-        success: true,
-        user: null,
-      })
+  if (!token) {
+    return res.status(200).json({
+      message: "unauthenticated",
+      success: true,
+      user: null,
+    });
   }
 
   try {
-  
     const decoded = jwt.verify(token, JWT_Secret) as JwtPayload;
-    
-    
+
     req.user = await UserModel.findById(decoded.id);
-    if(!req.user){
+    if (!req.user) {
       req.user = await BusinessUserModel.findById(decoded.id);
-      if (!req.user){
+      if (!req.user) {
         return res.status(401).json({
-          message: 'user not found',
-        })  
+          message: "user not found",
+        });
       }
-    };
-    
+    }
+
     next();
   } catch (error) {
     return res.status(500).json({
-      message: 'Auth: something went wrong. Login again',
-    })    }
+      message: "Auth: something went wrong. Login again",
+    });
+  }
 };
 
 // admin middleware
 exports.isAdmin = (req: ReqType, res: Response, next: NextFunction) => {
   if (req.user?.role !== "admin") {
     return res.status(401).json({
-      message: 'Access denied, you must be an admin',
-    })    
+      message: "Access denied, you must be an admin",
+    });
   }
   next();
 };
@@ -77,27 +75,33 @@ exports.isAdmin = (req: ReqType, res: Response, next: NextFunction) => {
 exports.isOfficer = (req: ReqType, res: Response, next: NextFunction) => {
   if (req.user?.role !== "officer") {
     return res.status(401).json({
-      message: 'Access denied, you must be an officer',
-    })    
+      message: "Access denied, you must be an officer",
+    });
   }
   next();
 };
 
-exports.isAdminOrOfficer = (req: ReqType, res: Response, next: NextFunction) => {
+exports.isAdminOrOfficer = (
+  req: ReqType,
+  res: Response,
+  next: NextFunction
+) => {
   if (req.user?.role !== "admin" && req.user?.role !== "officer") {
     return res.status(401).json({
-      message: 'Access denied, you must be an officer or admin',
-    })    
+      message: "Access denied, you must be an officer or admin",
+    });
   }
   next();
 };
 
 // user middleware
 exports.isCustomer = (req: ReqType, res: Response, next: NextFunction) => {
+  console.log("isCustomer....");
+
   if (req.user?.role !== "customer") {
     return res.status(401).json({
-      message: 'Access denied, you must be a customer',
-    })    
+      message: "Access denied, you must be a customer",
+    });
   }
   next();
 };
@@ -105,16 +109,16 @@ exports.isCustomer = (req: ReqType, res: Response, next: NextFunction) => {
 // business middleware
 exports.isBusiness = (req: ReqType, res: Response, next: NextFunction) => {
   const user = req.user as BusinessUserType;
-  
+
   if (user.role !== "business") {
     return res.status(401).json({
-      message: 'Access denied, you must be a business',
-    })    
+      message: "Access denied, you must be a business",
+    });
   }
   if (user.application !== "approved") {
     return res.status(401).json({
-      message: 'Access denied, business is not approved',
-    })    
+      message: "Access denied, business is not approved",
+    });
   }
   next();
 };

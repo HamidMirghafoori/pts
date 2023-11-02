@@ -4,7 +4,7 @@ const {signup, signin, logout, userProfile } = require("../controllers/auth-cont
 
 const { isRootAuthenticated } = require("../middlewares/auth-middleware");
 
-router.get('/', isRootAuthenticated, userProfile);
+router.post('/', isRootAuthenticated, userProfile);
 router.post('/signup', signup );
 router.post('/signin', signin );
 router.get('/logout', logout );

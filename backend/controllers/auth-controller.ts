@@ -163,13 +163,15 @@ exports.userProfile = async (
   res: Response,
   next: NextFunction
 ) => {
+  console.log('USER profile.....');
   const user = await UserModel.findById(req.user?._id);
   if (!user) {
     res.redirect(302, "/api/products-list");
     return;
   }
   // res.sseSetup();
-
+  console.log('user profile found!');
+  
   res.status(200).json({
     success: true,
     user,
