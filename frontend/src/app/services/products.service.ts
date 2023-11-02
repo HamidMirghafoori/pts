@@ -2,7 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable, map } from 'rxjs';
 import { environment } from 'src/environments/environment.development';
-import { AuthenticationService } from './authentication.service';
+import { AuthenticationService, UserType } from './authentication.service';
 
 export interface ProductType {
   bgImg: string;
@@ -91,8 +91,10 @@ export class ProductService {
   //   );
   // }
 
-  getAllProducts(): Observable<ProductType[] | []> {
-    return this.http.get<any>(this.rootUrl).pipe(map(response => response.products));
+  getAllProducts(user: UserType | null): Observable<ProductType[] | []> {
+    const body = { token: user?.token };
+  
+    return this.http.post<any>(this.rootUrl, body).pipe(map(response => response.products));
   }
 
   // getProductsByIds(productIds: string[]): Observable<any[]> {

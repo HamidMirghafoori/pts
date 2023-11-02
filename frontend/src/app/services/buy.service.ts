@@ -3,7 +3,7 @@ import { Injectable } from '@angular/core';
 import { Observable, map, tap } from 'rxjs';
 import { environment } from 'src/environments/environment.development';
 import { purchasesList } from './api';
-import { AuthenticationService } from './authentication.service';
+import { AuthenticationService, UserType } from './authentication.service';
 import { ProductType } from './products.service';
 
 export interface SoldType {
@@ -40,7 +40,19 @@ export class BuyService {
     itemName: string,
     shopEmail: string
   ): Promise<string> {
+    // const body = { userId: user?._id, token: user?.token };
+    
+    // const headers = new HttpHeaders({
+    //   'Content-Type': 'application/json'
+    // });
+
     return new Promise((resolve, reject) => {
+
+      // return this.http
+      // .post<any>(this.rootUrl + purchasesList, body, { headers: headers })
+      // .pipe(tap(console.log))
+      // .pipe(map((response) => response.products));
+
       // this.authService.authenticatedUser$.pipe(take(1)).subscribe((user) => {
       //   if (user) {
       //     const uid = user.uid;
@@ -114,11 +126,11 @@ export class BuyService {
   //   return this.db.object<SoldType>(`sold/${uid}`).valueChanges();
   // }
 
-  getCustomerBoughtItems(userId: string): Observable<ProductType[] | [] | null> {
-    const body = { userId };
-
+  getCustomerBoughtItems(user: UserType | null): Observable<ProductType[] | [] | null> {
+    const body = { userId: user?._id, token: user?.token };
+    
     const headers = new HttpHeaders({
-      'Content-Type': 'application/json',
+      'Content-Type': 'application/json'
     });
 
     return this.http
