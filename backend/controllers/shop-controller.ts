@@ -1,6 +1,8 @@
 import { NextFunction, Request, Response } from "express";
 import { ProductModel, ProductType } from "../models/products";
 import { PurchaseModel } from "../models/purchase";
+import { RevenueModel } from "../models/revenue";
+import { BusinessUserModel, UserModel } from "../models/user";
 
 const mongoose = require("mongoose");
 
@@ -62,8 +64,8 @@ export const getPurchases = async (
 ) => {
   try {
     const { userId } = req.body;
-    console.log('getPurchases....');
-    
+    console.log("getPurchases....");
+
     if (!mongoose.Types.ObjectId.isValid(userId)) {
       return res.status(400).json({ message: "Invalid userId" });
     }
@@ -187,6 +189,94 @@ export const ratePurchase = async (
     return res.status(401).json({
       success: false,
       message: "rating failed",
+      error,
+    });
+  }
+};
+
+export const addRevenue = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const { shopId } = req.body;
+    const { shopEmail } = req.body;
+    const { customerId } = req.body;
+    const { customerEmail } = req.body;
+    const { productId } = req.body;
+    const { productName } = req.body;
+    const { price } = req.body;
+    const { quantity } = req.body;
+
+    if (!mongoose.Types.ObjectId.isValid(shopId)) {
+      return res.status(400).json({ message: "shopId userId" });
+    }
+    if (!mongoose.Types.ObjectId.isValid(productId)) {
+      return res.status(400).json({ message: "Invalid productId" });
+    }
+    if (!mongoose.Types.ObjectId.isValid(customerId)) {
+      return res.status(400).json({ message: "customerId productId" });
+    }
+    if (!shopEmail) {
+      return res.status(400).json({ message: "shopEmail is missing" });
+    }
+    if (!customerEmail) {
+      return res.status(400).json({ message: "customerEmail is missing" });
+    }
+    if (!productName) {
+      return res.status(400).json({ message: "productName is missing" });
+    }
+    if (!price) {
+      return res.status(400).json({ message: "price is missing" });
+    }
+    if (!quantity) {
+      return res.status(400).json({ message: "quantity is missing" });
+    }
+
+    const product = await ProductModel.findById(productId);
+    if (!product) {
+      return res.status(401).json({
+        success: false,
+        message: "productId does not exist in database",
+      });
+    }
+    const customer = await UserModel.findById(customerId);
+    if (!customer) {
+      return res.status(401).json({
+        success: false,
+        message: "customerId does not exist in database",
+      });
+    }
+    const shop = await BusinessUserModel.findById(shopId);
+    if (!shop) {
+      return res.status(401).json({
+        success: false,
+        message: "shopId does not exist in database",
+      });
+    }
+
+    const payload = {
+      shopId,
+      shopEmail,
+      customerId,
+      customerEmail,
+      productId,
+      productName,
+      price,
+      quantity,
+    };
+    const revenue = await RevenueModel.create(payload);
+
+    return res.status(200).json({
+      success: true,
+      message: "Revenue is added",
+      revenue,
+    });
+  } catch (error) {
+    return res.status(401).json({
+      success: false,
+      message: "Revenue creation failed",
       error,
     });
   }

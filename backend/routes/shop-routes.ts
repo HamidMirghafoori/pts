@@ -1,5 +1,5 @@
 import express from "express";
-import { getPurchases, getSales, purchaseItem, ratePurchase } from "../controllers/shop-controller";
+import { addRevenue, getPurchases, getSales, purchaseItem, ratePurchase } from "../controllers/shop-controller";
 
 const router = express.Router();
 const {
@@ -9,6 +9,7 @@ const {
 } = require("../middlewares/auth-middleware");
 
 router.post("/purchase", isAuthenticated, isCustomer, purchaseItem);
+router.post("/add-revenue", isAuthenticated, isCustomer, addRevenue);
 router.post("/purchases-list", isAuthenticated, isCustomer, getPurchases);
 router.get("/sales-list", isAuthenticated, isAdminOrOfficer, getSales);
 router.post("/rate-purchase", isAuthenticated, isCustomer, ratePurchase);
