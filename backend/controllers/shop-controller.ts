@@ -15,6 +15,8 @@ export const purchaseItem = async (
     const { userId } = req.body;
     const { productId } = req.body;
     const { address } = req.body;
+    const { quantity } = req.body;
+    const { customerEmail } = req.body;
 
     if (!mongoose.Types.ObjectId.isValid(userId)) {
       return res.status(400).json({ message: "Invalid userId" });
@@ -24,6 +26,13 @@ export const purchaseItem = async (
     }
     if (!address) {
       return res.status(400).json({ message: "Address is missing" });
+    }
+
+    if (!customerEmail) {
+      return res.status(400).json({ message: "customerEmail is missing" });
+    }
+    if (!quantity) {
+      return res.status(400).json({ message: "quantity is missing" });
     }
 
     const product = await ProductModel.findById(productId);
@@ -41,6 +50,18 @@ export const purchaseItem = async (
       rate: -1,
     };
     const purchase = await PurchaseModel.create(payload);
+
+    const revenuePayload = {
+      shopId: product.ownerId,
+      shopEmail: product.shopEmail,
+      customerId: userId,
+      customerEmail: customerEmail,
+      productId: product._id,
+      productName: product.title,
+      price: product.price,
+      quantity,
+    };
+    const revenue = await RevenueModel.create(revenuePayload);
 
     return res.status(200).json({
       success: true,
@@ -200,14 +221,14 @@ export const addRevenue = async (
   next: NextFunction
 ) => {
   try {
-    const { shopId } = req.body;
-    const { shopEmail } = req.body;
-    const { customerId } = req.body;
-    const { customerEmail } = req.body;
-    const { productId } = req.body;
-    const { productName } = req.body;
-    const { price } = req.body;
-    const { quantity } = req.body;
+    const { quantity } = req.body; 
+    const { customerEmail } = req.body;  
+    const { productId } = req.body; 
+    const { customerId } = req.body; 
+    const { productName } = req.body;  
+    const { shopId } = req.body; 
+    const { shopEmail } = req.body; 
+    const { price } = req.body; 
 
     if (!mongoose.Types.ObjectId.isValid(shopId)) {
       return res.status(400).json({ message: "shopId userId" });
@@ -224,14 +245,14 @@ export const addRevenue = async (
     if (!customerEmail) {
       return res.status(400).json({ message: "customerEmail is missing" });
     }
+    if (!quantity) {
+      return res.status(400).json({ message: "quantity is missing" });
+    }
     if (!productName) {
       return res.status(400).json({ message: "productName is missing" });
     }
     if (!price) {
       return res.status(400).json({ message: "price is missing" });
-    }
-    if (!quantity) {
-      return res.status(400).json({ message: "quantity is missing" });
     }
 
     const product = await ProductModel.findById(productId);

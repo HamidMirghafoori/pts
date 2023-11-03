@@ -19,6 +19,7 @@ exports.isRootAuthenticated = async (
     console.log('isRootAuthenticated no TOKEN');
     
     res.redirect(302, "/api/products-list")
+    
   } else {
     next();
   }
