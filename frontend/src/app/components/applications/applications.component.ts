@@ -1,7 +1,9 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { Subscription } from 'rxjs';
 import {
-  UserType
+  AuthenticationService,
+  UserType,
 } from 'src/app/services/authentication.service';
 import { UserService } from 'src/app/services/user.service';
 
@@ -10,10 +12,14 @@ import { UserService } from 'src/app/services/user.service';
   templateUrl: './applications.component.html',
   styleUrls: ['./applications.component.scss'],
 })
-export class ApplicationsComponent implements OnInit {
+export class ApplicationsComponent implements OnInit, OnDestroy {
+  applicationSub!: Subscription;
+  userSub!: Subscription;
+
   constructor(
     private userService: UserService,
-    private snackBar: MatSnackBar,
+    private authService: AuthenticationService,
+    private snackBar: MatSnackBar
   ) {}
   inactiveUsers: UserType[] = [];
   step: number = 0;
@@ -39,12 +45,11 @@ export class ApplicationsComponent implements OnInit {
     data.application = 'approved';
     // this.userService.updateUser(this.inactiveUsers[index].id, data).then(() => {
 
-      // this.authService
-      //   .resetPassword(this.inactiveUsers[index].email)
-      //   .then(() => {
-      //   })
-      //   .catch((err) => console.log(err));
-
+    // this.authService
+    //   .resetPassword(this.inactiveUsers[index].email)
+    //   .then(() => {
+    //   })
+    //   .catch((err) => console.log(err));
 
     //   this.snackBar.open('Application approved', 'Close', {
     //     duration: 3000,
@@ -69,8 +74,17 @@ export class ApplicationsComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    // this.userService.getAllApplications().subscribe((users) => {
-    //   this.inactiveUsers = users;
-    // });
+    this.userSub = this.authService.authenticatedUser$.subscribe((user) => {
+      this.applicationSub = this.userService
+        .getAllApplications(user)
+        .subscribe((users) => {
+          this.inactiveUsers = users;
+        });
+    });
+  }
+
+  ngOnDestroy(): void {
+    this.applicationSub ? this.applicationSub.unsubscribe() : undefined;
+    this.userSub ? this.userSub.unsubscribe() : undefined;
   }
 }

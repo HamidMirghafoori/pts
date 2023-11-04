@@ -1,15 +1,18 @@
 // user.service.ts
+import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { Observable, map } from 'rxjs';
+import { environment } from 'src/environments/environment.development';
+import { getApplications } from './api';
+import { UserType } from './authentication.service';
 
 @Injectable({
   providedIn: 'root',
 })
 export class UserService {
-  // private usersRef!: AngularFireList<AppUserType>;
+  private rootUrl = environment.SERVER_URL;
 
-  constructor() {
-    // this.usersRef = db.list('users');
-  }
+  constructor(private http: HttpClient) {}
 
   // addUser(uid: string, userData: any): Promise<void> {
   //   return this.db.object(`users/${uid}`).set(userData);
@@ -27,16 +30,10 @@ export class UserService {
   //   return this.db.object(`users/${uid}`).remove();
   // }
 
-  // getAllApplications(): Observable<AppUserType[]> {
-  //   return this.usersRef.snapshotChanges().pipe(
-  //     map((users) => {
-  //       return users
-  //         .filter((user) => user.payload.val()?.status === 'pending')
-  //         .map((c) => ({
-  //           ...(c.payload.val() as AppUserType),
-  //           id: c.key ?? '',
-  //         }));
-  //     })
-  //   );
-  // }
+  getAllApplications(user: UserType | null): Observable<UserType[]> {
+    const body = { token: user?.token };
+    return this.http
+      .post<any>(this.rootUrl + getApplications, body)
+      .pipe(map((users) => users.applications));
+  }
 }

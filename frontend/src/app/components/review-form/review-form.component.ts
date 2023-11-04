@@ -1,6 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
+import { Subscription } from 'rxjs';
 import { AuthenticationService } from 'src/app/services/authentication.service';
 import { BuyService } from 'src/app/services/buy.service';
 
@@ -9,11 +10,12 @@ import { BuyService } from 'src/app/services/buy.service';
   templateUrl: './review-form.component.html',
   styleUrls: ['./review-form.component.scss'],
 })
-export class ReviewFormComponent implements OnInit {
+export class ReviewFormComponent implements OnInit, OnDestroy {
   reviewForm: FormGroup;
   rating: number = 0; // to manage star rating
   productId: string = '';
   purchaseId: string = '';
+  private authSub!: Subscription;
 
   constructor(
     private fb: FormBuilder,
@@ -42,7 +44,7 @@ export class ReviewFormComponent implements OnInit {
 
   onSubmit() {
     if (this.reviewForm.valid && this.rating > 0) {
-      this.authService.authenticatedUser$.subscribe((user) => {
+      this.authSub= this.authService.authenticatedUser$.subscribe((user) => {
         console.log({
           rating: this.rating,
           comments: this.reviewForm.value.comments,
@@ -55,7 +57,10 @@ export class ReviewFormComponent implements OnInit {
         );
       });
       this.router.navigate(['']);
-      // Handle your form submission logic here
     }
+  }
+
+  ngOnDestroy(): void {
+    this.authSub.unsubscribe();
   }
 }

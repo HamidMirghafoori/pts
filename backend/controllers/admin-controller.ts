@@ -13,7 +13,8 @@ export const applications = async (
   const applications = applicationsRes.filter(
     (application) => application.application === "pending"
   );
-
+    console.log('Found applications: ',applications.length);
+    
   res.status(200).json({
     success: true,
     applications,

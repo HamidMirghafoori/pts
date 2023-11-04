@@ -70,6 +70,7 @@ exports.isAdmin = (req: ReqType, res: Response, next: NextFunction) => {
       message: "Access denied, you must be an admin",
     });
   }
+
   next();
 };
 

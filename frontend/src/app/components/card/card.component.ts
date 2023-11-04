@@ -54,7 +54,7 @@ export class CardComponent implements OnInit {
 
   onReviewClick() {
     console.log('card-> review:', this.data._id, this.data.purchaseId);
-    
+
     this.router.navigate(['review'], {
       queryParams: {
         productId: this.data._id,

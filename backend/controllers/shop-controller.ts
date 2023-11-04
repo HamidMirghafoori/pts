@@ -179,7 +179,6 @@ export const ratePurchase = async (
     }
 
     const purchase = await PurchaseModel.find({ _id: purchaseId });
-    console.log(purchase);
 
     if (purchase.length < 1) {
       return res.status(404).json({
