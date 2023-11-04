@@ -25,12 +25,14 @@ export class SignupComponent implements OnInit {
     this.registrationForm = this.fb.group(
       {
         email: ['', [Validators.required, Validators.email]],
+        mobile: ['', [Validators.required, Validators.minLength(7)]],
         password: ['', Validators.required],
         repeatPassword: ['', Validators.required],
         isBusiness: false,
         businessDescription: [''],
         businessType: [''],
         files: [[]],
+        fileSubmission: [['']],
       },
       { validator: this.passwordMatchValidator }
     );
@@ -39,16 +41,14 @@ export class SignupComponent implements OnInit {
       .get('isBusiness')
       ?.valueChanges.subscribe((isBusiness) => {
         const businessDescriptionControl = this.registrationForm.get(
-          'businessDescription',
+          'businessDescription'
         );
-        const fileController = this.registrationForm.get(
-          'fileSubmission',
-        );
+        const fileController = this.registrationForm.get('fileSubmission');
         const businessTypeControl = this.registrationForm.get('businessType');
 
         if (isBusiness) {
           businessDescriptionControl?.setValidators([Validators.required]);
-          fileController?.setValidators([Validators.required])
+          fileController?.setValidators([Validators.required]);
         } else {
           businessDescriptionControl?.clearValidators();
           businessTypeControl?.clearValidators();
@@ -67,13 +67,11 @@ export class SignupComponent implements OnInit {
 
   onSubmit() {
     const email: string = this.registrationForm.value.email;
+    const mobile: string = this.registrationForm.value.mobile;
     const password: string = this.registrationForm.value.password;
-    const role: Role = this.registrationForm.value.isBusiness
-      ? 'business'
-      : 'customer';
-    const application: ApplicationType = this.registrationForm.value.isBusiness
-      ? 'pending'
-      : 'NA';
+    const isBusiness: boolean = this.registrationForm.value.isBusiness;
+    const role: Role = isBusiness ? 'business' : 'customer';
+    const application: ApplicationType = isBusiness ? 'pending' : 'NA';
     const description: string =
       this.registrationForm.value.businessDescription ?? '';
     const type: string = this.registrationForm.value.businessType ?? '';
@@ -82,12 +80,14 @@ export class SignupComponent implements OnInit {
       : 'active';
     this.authService.signup(
       email,
+      mobile,
       password,
       role,
       description,
       type,
       status,
-      application
+      application,
+      isBusiness
     );
   }
 

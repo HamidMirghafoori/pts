@@ -41,6 +41,9 @@ const userSchema = new Schema(
       type: String,
       default: "customer",
     },
+    mobile: {
+      type: String,
+    },  
     status: {
       type: String,
       default: "active",
@@ -129,6 +132,9 @@ const businessUserSchema = new Schema({
   status: {
     type: String,
     default: "active",
+  },
+  mobile: {
+    type: String,
   },
   application: {
     type: String,

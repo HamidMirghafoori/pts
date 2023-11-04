@@ -10,6 +10,16 @@
   </mat-form-field>
 
   <mat-form-field>
+    <input matInput placeholder="Mobile" formControlName="mobile" />
+    <mat-error *ngIf="registrationForm.get('mobile')?.hasError('required')"
+      >Contact number is required</mat-error
+    >
+    <mat-error *ngIf="registrationForm.get('mobile')?.hasError('minlength')"
+      >Contact number minimum length is 7</mat-error
+    >
+  </mat-form-field>
+
+  <mat-form-field>
     <input
       matInput
       type="password"

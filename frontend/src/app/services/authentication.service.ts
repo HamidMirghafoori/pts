@@ -5,7 +5,7 @@ import { Router } from '@angular/router';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { environment } from 'src/environments/environment.development';
 import { Role } from '../components/signup/signup.component';
-import { signin } from './api';
+import { signin, signup } from './api';
 import { UserService } from './user.service';
 
 export type ApplicationType = 'pending' | 'approved' | 'rejected' | 'NA';
@@ -86,45 +86,46 @@ export class AuthenticationService {
 
   signup(
     email: string,
+    mobile: string,
     password: string,
     role: string,
     description: string,
     type: string,
     status: string,
-    application: ApplicationType
-  ) {
-    // createUserWithEmailAndPassword(this.auth, email, password)
-    //   .then((userCredential) => {
-    //     // already signed in
-    //     const user: User = userCredential.user;
-    //     console.log(user);
-    //     this.userService
-    //       // business role by default is inactive
-    //       .addUser(user.uid, {
-    //         role,
-    //         email,
-    //         description,
-    //         type,
-    //         status,
-    //         application,
-    //       })
-    //       .then(() => {
-    //         this.router.navigate(['']);
-    //       });
-    //   })
-    //   .catch((error) => {
-    //     const errorCode = error.code;
-    //     // const errorMessage = error.message;
-    //     console.log(errorCode);
-    //     if (errorCode === 'auth/email-already-in-use') {
-    //       this.snackBar.open('Error: Account already exists', 'Close', {
-    //         duration: 3000,
-    //         horizontalPosition: 'center',
-    //         verticalPosition: 'top',
-    //         panelClass: ['error-snackbar'],
-    //       });
-    //     }
-    //   });
+    application: ApplicationType,
+    isBusiness: boolean
+  ): void {
+    const body = {
+      email,
+      mobile,
+      password,
+      role,
+      businessDescription: description,
+      type,
+      status,
+      application,
+      isBusiness
+    };
+    this.http.post<UserResponse>(this.rootUrl + signup, body).subscribe({
+      next: (response) => {
+        console.log(response);
+        this.snackBar.open('User created successfully', 'Close', {
+          duration: 3000,
+          horizontalPosition: 'center',
+          verticalPosition: 'top',
+        });
+        this.router.navigate(['signin']);
+      },
+      error: (error) => {
+        console.log(error.error);
+        this.snackBar.open(error.error, 'Close', {
+          duration: 3000,
+          horizontalPosition: 'center',
+          verticalPosition: 'top',
+          panelClass: ['error-snackbar'],
+        });
+      },
+    });
   }
 
   logout() {

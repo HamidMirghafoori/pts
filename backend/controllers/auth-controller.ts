@@ -11,9 +11,14 @@ const expire = process.env.EXPIRE_TOKEN ? +process.env.EXPIRE_TOKEN : 36000000;
 
 exports.signup = async (req: Request, res: Response, next: NextFunction) => {
   const { email } = req.body;
+  const { mobile } = req.body;
   const { isBusiness } = req.body;
 
   if (!email) {
+    return res.status(400).send("Email is missing");
+  }
+
+  if (!mobile) {
     return res.status(400).send("Email is missing");
   }
 
@@ -24,6 +29,8 @@ exports.signup = async (req: Request, res: Response, next: NextFunction) => {
   }
 
   if (isBusiness) {
+    console.log('log......>',req.body.businessDescription);
+    
     const businessDescription: string = req.body.businessDescription || "";
     // const businessType = (req.body.businessType as string) || "";
     // const files = (req.body.files as string[]) || [""];

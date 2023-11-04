@@ -28,15 +28,12 @@ export interface ProductType {
   providedIn: 'root',
 })
 export class ProductService {
-  // private productsRef!: AngularFireList<ProductType>;
   private rootUrl = environment.SERVER_URL;
 
   constructor(
-    // private db: AngularFireDatabase,
     private http: HttpClient,
     private authService: AuthenticationService
   ) {
-    // this.productsRef = db.list('products');
   }
 
   addProduct(productData: any): Promise<string> {
@@ -56,18 +53,6 @@ export class ProductService {
       //   });
     });
   }
-
-  // getProduct(uid: string): Observable<ProductType | null> {
-  //   return this.db.object<ProductType>(`products/${uid}`).valueChanges();
-  // }
-
-  // updateProduct(uid: string, newData: ProductType): Promise<void> {
-  //   return this.db.object(`products/${uid}`).update(newData);
-  // }
-
-  // deleteProduct(uid: string): Promise<void> {
-  //   return this.db.object(`products/${uid}`).remove();
-  // }
 
   // getAllUserProducts(): Observable<ProductType[] | []> {
   //   return this.authService.authenticatedUser$.pipe(
@@ -98,36 +83,4 @@ export class ProductService {
     return this.http.post<any>(this.rootUrl, body).pipe(map(response => response.products));
   }
 
-  // getProductsByIds(productIds: string[]): Observable<any[]> {
-  //   const productsRef = this.db.list<ProductType>('products');
-
-  //   return combineLatest(
-  //     productIds.map((id) =>
-  //       productsRef
-  //         .valueChanges()
-  //         .pipe(
-  //           map((products) => {
-  //             return products.filter((product) => product.productId === id);
-  //           })
-  //         )
-  //         .pipe(
-  //           map((products) =>
-  //             products.map((product) => {
-  //               return {
-  //                 ...product,
-  //                 offers: Array.isArray(product.offers)
-  //                   ? product.offers
-  //                   : [product.offers],
-  //                 tags: Array.isArray(product.tags)
-  //                   ? product.tags
-  //                   : [product.tags],
-  //               };
-  //             })
-  //           )
-  //         )
-  //         //flatten the array
-  //         .pipe(mergeMap((productArrays) => productArrays))
-  //     )
-  //   );
-  // }
 }
