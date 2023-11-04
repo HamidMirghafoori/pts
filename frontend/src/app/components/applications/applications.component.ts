@@ -1,5 +1,5 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { MatSnackBar } from '@angular/material/snack-bar';
+import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import {
   AuthenticationService,
@@ -15,11 +15,14 @@ import { UserService } from 'src/app/services/user.service';
 export class ApplicationsComponent implements OnInit, OnDestroy {
   applicationSub!: Subscription;
   userSub!: Subscription;
+  approveSub!: Subscription;
+  rejectSub!: Subscription;
+  user!: UserType | null;
 
   constructor(
     private userService: UserService,
     private authService: AuthenticationService,
-    private snackBar: MatSnackBar
+    private router: Router
   ) {}
   inactiveUsers: UserType[] = [];
   step: number = 0;
@@ -41,40 +44,25 @@ export class ApplicationsComponent implements OnInit, OnDestroy {
 
   public approve(index: number) {
     const data = this.inactiveUsers[index];
-    data.status = 'active';
-    data.application = 'approved';
-    // this.userService.updateUser(this.inactiveUsers[index].id, data).then(() => {
-
-    // this.authService
-    //   .resetPassword(this.inactiveUsers[index].email)
-    //   .then(() => {
-    //   })
-    //   .catch((err) => console.log(err));
-
-    //   this.snackBar.open('Application approved', 'Close', {
-    //     duration: 3000,
-    //     horizontalPosition: 'center',
-    //     verticalPosition: 'top',
-    //   });
-    // });
+    this.approveSub = this.userService
+      .updateBusinessApplication(data._id, 'approved', this.user?.token)
+      .subscribe((data) => {
+        this.inactiveUsers.splice(index, 1);
+      });
   }
 
   public reject(index: number) {
     const data = this.inactiveUsers[index];
-    data.status = 'active';
-    data.role = 'customer';
-    data.application = 'rejected';
-    // this.userService.updateUser(this.inactiveUsers[index].id, data).then(() => {
-    //   this.snackBar.open('Application rejected', 'Close', {
-    //     duration: 3000,
-    //     horizontalPosition: 'center',
-    //     verticalPosition: 'top',
-    //   });
-    // });
+    this.rejectSub = this.userService
+      .updateBusinessApplication(data._id, 'rejected', this.user?.token)
+      .subscribe((data) => {
+        this.inactiveUsers.splice(index, 1);
+      });
   }
 
   ngOnInit(): void {
     this.userSub = this.authService.authenticatedUser$.subscribe((user) => {
+      this.user = user;
       this.applicationSub = this.userService
         .getAllApplications(user)
         .subscribe((users) => {

@@ -33,11 +33,10 @@ exports.isAuthenticated = async (
   let token!: string;
   console.log("isAuthenticated....");
   token = req.body.token;
-  // make sure token exists
   if (!token) {
-    return res.status(200).json({
+    return res.status(403).json({
       message: "unauthenticated",
-      success: true,
+      success: false,
       user: null,
     });
   }
