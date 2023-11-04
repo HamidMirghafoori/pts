@@ -109,6 +109,8 @@ export const getPurchases = async (
     const productsRes = (await ProductModel.find({
       _id: { $in: productIds },
     }).lean()) as ProductType[];
+
+        // TODO: add rate and votes need to be added to the response based on purchases info
     const products = productsRes.map((product: any) => {
       return {
         ...product,
@@ -161,7 +163,8 @@ export const ratePurchase = async (
     const { productId } = req.body;
     const { purchaseId } = req.body;
     const { rate } = req.body;
-
+    console.log('rating....', userId, productId, purchaseId, rate);
+    
     if (!mongoose.Types.ObjectId.isValid(userId)) {
       return res.status(400).json({ message: "Invalid userId" });
     }

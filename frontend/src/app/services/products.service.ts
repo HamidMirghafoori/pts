@@ -19,6 +19,7 @@ export interface ProductType {
   _id: string;
   rate: number;
   votes: number;
+  purchaseId: string;
   bookedCount: number;
   currency: string;
 }

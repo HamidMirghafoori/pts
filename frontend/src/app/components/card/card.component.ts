@@ -47,12 +47,20 @@ export class CardComponent implements OnInit {
     currency: 'US$',
     offers: [],
     shopEmail: '',
-    createdAt:'',
-    updatedAt:''
+    purchaseId: '',
+    createdAt: '',
+    updatedAt: '',
   };
 
   onReviewClick() {
-    this.router.navigate(['Review']);
+    console.log('card-> review:', this.data._id, this.data.purchaseId);
+    
+    this.router.navigate(['review'], {
+      queryParams: {
+        productId: this.data._id,
+        purchaseId: this.data.purchaseId,
+      },
+    });
   }
 
   onPurchase() {
@@ -62,7 +70,7 @@ export class CardComponent implements OnInit {
           queryParams: {
             itemID: this.data._id,
             userId: this.user._id,
-            userEmail: this.user.email
+            userEmail: this.user.email,
           },
         });
   }

@@ -40,6 +40,12 @@ const adminRoutes = require("./routes/admin-routes")
 const businessRoutes = require("./routes/business-routes")
 const shopRoutes = require("./routes/shop-routes")
 
+app.use((req, res, next)=>{
+  console.log('REQUEST URL:', req.originalUrl);
+  
+  next();
+})
+
 // Routes Middlewares
 app.use("/api", authRoutes);
 app.use("/api", adminRoutes);

@@ -2,7 +2,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable, map } from 'rxjs';
 import { environment } from 'src/environments/environment.development';
-import { purchase, purchasesList } from './api';
+import { purchase, purchasesList, rateItem } from './api';
 import { AuthenticationService, UserType } from './authentication.service';
 import { ProductType } from './products.service';
 
@@ -67,43 +67,6 @@ export class BuyService {
     });
   }
 
-  // getRevenueData(): Observable<RevenueType[] | []> {
-  // return this.db
-  //   .object<any>(`revenue`)
-  //   .valueChanges()
-  //   .pipe(
-  //     map((data) => {
-  //       if (data) {
-  //         return Object.keys(data).map((key) => data[key]) as RevenueType[];
-  //       } else {
-  //         return [];
-  //       }
-  //     })
-  //   );
-  //}
-
-  // getRevenueDataById(uid: string): Observable<RevenueType[] | []> {
-  //   return this.db
-  //     .object<any>(`revenue`)
-  //     .valueChanges()
-  //     .pipe(
-  //       filter((data) => !!data),
-  //       map((data) => {
-  //         if (data) {
-  //           return Object.keys(data)
-  //             .filter((key) => data[key].shopId === uid)
-  //             .map((key) => data[key]) as RevenueType[];
-  //         } else {
-  //           return [];
-  //         }
-  //       })
-  //     );
-  // }
-
-  // getSoldItem(uid: string): Observable<SoldType | null> {
-  //   return this.db.object<SoldType>(`sold/${uid}`).valueChanges();
-  // }
-
   getCustomerBoughtItems(
     user: UserType | null
   ): Observable<ProductType[] | [] | null> {
@@ -116,25 +79,34 @@ export class BuyService {
     return this.http
       .post<any>(this.rootUrl + purchasesList, body, { headers: headers })
       .pipe(map((response) => response.products));
+  }
 
-    // return this.authService.authenticatedUser$.pipe(
-    //   switchMap((user) => {
-    //     if (!user) {
-    //       return of([]);
-    //     }
-    //     return this.db
-    //       .object<any>(`sold/${user?.uid}`)
-    //       .valueChanges()
-    //       .pipe(
-    //         map((data) => {
-    //           if (data) {
-    //             return Object.keys(data).map((key) => data[key]);
-    //           } else {
-    //             return [];
-    //           }
-    //         })
-    //       );
-    //   })
-    // );
+  rateBoughtItem(
+    user: UserType | null,
+    productId: string,
+    purchaseId: string,
+    rate: number
+  ): string {
+    const body = {
+      userId: user?._id,
+      purchaseId,
+      productId,
+      rate,
+      token: user?.token,
+    };
+
+    const headers = new HttpHeaders({
+      'Content-Type': 'application/json',
+    });
+    console.log('calling.... ', this.rootUrl + rateItem);
+
+    this.http
+      .post<any>(this.rootUrl + rateItem, body, { headers: headers })
+      .subscribe((res) => {
+        console.log(res);
+        return JSON.stringify(res);
+      });
+
+    return '';
   }
 }

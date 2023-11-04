@@ -1,20 +1,39 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
+import { AuthenticationService } from 'src/app/services/authentication.service';
+import { BuyService } from 'src/app/services/buy.service';
 
 @Component({
   selector: 'app-review-form',
   templateUrl: './review-form.component.html',
-  styleUrls: ['./review-form.component.scss']
+  styleUrls: ['./review-form.component.scss'],
 })
-export class ReviewFormComponent {
+export class ReviewFormComponent implements OnInit {
   reviewForm: FormGroup;
   rating: number = 0; // to manage star rating
+  productId: string = '';
+  purchaseId: string = '';
 
-  constructor(private fb: FormBuilder, private router:Router) {
+  constructor(
+    private fb: FormBuilder,
+    private router: Router,
+    private buyService: BuyService,
+    private authService: AuthenticationService,
+    private route: ActivatedRoute
+  ) {
     this.reviewForm = this.fb.group({
-      comments: ['', Validators.required]
+      comments: ['', Validators.required],
     });
+  }
+
+  ngOnInit(): void {
+    this.route.queryParams.subscribe((params) => {
+      this.productId = params['productId'];
+      this.purchaseId = params['purchaseId'];
+    });
+    console.log('Review:', this.productId, this.purchaseId);
+    
   }
 
   setRating(value: number) {
@@ -23,9 +42,17 @@ export class ReviewFormComponent {
 
   onSubmit() {
     if (this.reviewForm.valid && this.rating > 0) {
-      console.log({
-        rating: this.rating,
-        comments: this.reviewForm.value.comments
+      this.authService.authenticatedUser$.subscribe((user) => {
+        console.log({
+          rating: this.rating,
+          comments: this.reviewForm.value.comments,
+        });
+        this.buyService.rateBoughtItem(
+          user,
+          this.productId,
+          this.purchaseId,
+          this.rating
+        );
       });
       this.router.navigate(['']);
       // Handle your form submission logic here

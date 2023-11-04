@@ -17,7 +17,7 @@ const routes: Routes = [
   { path: 'purchasing-form', component: PurchasingFormComponent },
   { path: 'payment-gateway', component: PaymentGatewayComponent },
   { path: 'signup', component: SignupComponent },
-  { path: 'Review', component: ReviewFormComponent },
+  { path: 'review', component: ReviewFormComponent },
   { path: 'dev', component: ShopProductsComponent },
   {
     path: 'my-orders',
