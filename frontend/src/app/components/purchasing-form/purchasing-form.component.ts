@@ -10,10 +10,9 @@ import { ActivatedRoute, Router } from '@angular/router';
 export class PurchasingFormComponent implements OnInit {
   purchaseForm: FormGroup;
   private itemId: string = '';
-  private shopId: string = '';
-  private itemName: string = '';
-  private shopEmail: string = '';
-  private price: string = '';
+  private userId: string = '';
+  private userEmail: string = '';
+
 
   constructor(
     private fb: FormBuilder,
@@ -33,10 +32,8 @@ export class PurchasingFormComponent implements OnInit {
   ngOnInit(): void {
     this.route.queryParams.subscribe((params) => {
       this.itemId = params['itemID'];
-      this.shopId = params['shopId'];
-      this.itemName = params['itemName'];
-      this.shopEmail = params['shopEmail'];
-      this.price = params['price'];
+      this.userId = params['userId'];
+      this.userEmail = params['userEmail'];
     });
   }
 
@@ -46,10 +43,8 @@ export class PurchasingFormComponent implements OnInit {
         queryParams: {
           itemID: this.itemId,
           address: this.purchaseForm.get('address')?.value,
-          shopId: this.shopId,
-          price: this.price,
-          itemName: this.itemName,
-          shopEmail: this.shopEmail
+          userId: this.userId,
+          userEmail: this.userEmail
         },
       });
     }

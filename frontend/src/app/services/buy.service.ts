@@ -1,8 +1,8 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable, map, tap } from 'rxjs';
+import { Observable, map } from 'rxjs';
 import { environment } from 'src/environments/environment.development';
-import { purchasesList } from './api';
+import { purchase, purchasesList } from './api';
 import { AuthenticationService, UserType } from './authentication.service';
 import { ProductType } from './products.service';
 
@@ -25,67 +25,45 @@ export interface RevenueType {
   providedIn: 'root',
 })
 export class BuyService {
+  user!: UserType | null;
+
   constructor(
     private authService: AuthenticationService,
     private http: HttpClient
-  ) {}
+  ) {
+    this.authService.authenticatedUser$.subscribe((user) => (this.user = user));
+  }
 
   private rootUrl = environment.SERVER_URL;
 
   buyItem(
-    itemId: string,
+    itemId: string, //productId
     address: string,
-    shopId: string,
-    price: string,
-    itemName: string,
-    shopEmail: string
+    userId: string,
+    quantity: number = 1,
+    userEmail: string
   ): Promise<string> {
-    // const body = { userId: user?._id, token: user?.token };
-    
-    // const headers = new HttpHeaders({
-    //   'Content-Type': 'application/json'
-    // });
+    const body = {
+      userId,
+      productId: itemId,
+      address,
+      quantity,
+      customerEmail: userEmail,
+      token: this.user?.token,
+    };
+
+    const headers = new HttpHeaders({
+      'Content-Type': 'application/json',
+    });
 
     return new Promise((resolve, reject) => {
+      this.http
+        .post<any>(this.rootUrl + purchase, body, { headers: headers })
+        .subscribe((response) => {
+          console.log('SHOP....>', response);
 
-      // return this.http
-      // .post<any>(this.rootUrl + purchasesList, body, { headers: headers })
-      // .pipe(tap(console.log))
-      // .pipe(map((response) => response.products));
-
-      // this.authService.authenticatedUser$.pipe(take(1)).subscribe((user) => {
-      //   if (user) {
-      //     const uid = user.uid;
-      //     const ref = this.db.database.ref(`sold/${uid}`).push();
-      //     const soldData: SoldType = {
-      //       productId: itemId,
-      //       address: address,
-      //       rate: -1,
-      //     };
-      //     ref
-      //       .set(soldData)
-      //       .then(() => {
-      //         const data: RevenueType = {
-      //           customerId: uid,
-      //           customerEmail: user.email,
-      //           itemId: itemId,
-      //           itemName: itemName,
-      //           price: price,
-      //           shopId: shopId,
-      //           shopEmail: shopEmail,
-      //         };
-      //         this.db
-      //           .list('revenue')
-      //           .push(data)
-      //           .then(() => {
-      //             resolve(ref.key as string);
-      //           });
-      //       })
-      //       .catch((error) => {
-      //         reject(error);
-      //       });
-      //   }
-      // });
+          resolve(response.toString());
+        });
     });
   }
 
@@ -126,16 +104,17 @@ export class BuyService {
   //   return this.db.object<SoldType>(`sold/${uid}`).valueChanges();
   // }
 
-  getCustomerBoughtItems(user: UserType | null): Observable<ProductType[] | [] | null> {
+  getCustomerBoughtItems(
+    user: UserType | null
+  ): Observable<ProductType[] | [] | null> {
     const body = { userId: user?._id, token: user?.token };
-    
+
     const headers = new HttpHeaders({
-      'Content-Type': 'application/json'
+      'Content-Type': 'application/json',
     });
 
     return this.http
       .post<any>(this.rootUrl + purchasesList, body, { headers: headers })
-      .pipe(tap(console.log))
       .pipe(map((response) => response.products));
 
     // return this.authService.authenticatedUser$.pipe(

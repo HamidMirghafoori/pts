@@ -11,6 +11,8 @@ export const purchaseItem = async (
   res: Response,
   next: NextFunction
 ) => {
+  console.log('purchaseItem....');
+  
   try {
     const { userId } = req.body;
     const { productId } = req.body;

@@ -61,10 +61,8 @@ export class CardComponent implements OnInit {
       : this.router.navigate(['purchasing-form'], {
           queryParams: {
             itemID: this.data._id,
-            shopId: this.data.ownerId,
-            price: this.data.price,
-            itemName: this.data.title,
-            shopEmail: this.data.shopEmail
+            userId: this.user._id,
+            userEmail: this.user.email
           },
         });
   }

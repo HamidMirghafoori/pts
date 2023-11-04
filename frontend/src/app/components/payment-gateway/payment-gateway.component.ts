@@ -15,11 +15,9 @@ export class PaymentGatewayComponent implements OnInit {
   );
   public years = Array.from({ length: 8 }, (_, i) => (i + 2023).toString());
   private itemId: string = '';
-  private shopId: string = '';
-  private itemName: string = '';
-  private shopEmail: string = '';
   private address: string = '';
-  private price: string = '';
+  private userId: string = '';
+  private userEmail: string = '';
 
   constructor(
     private fb: FormBuilder,
@@ -49,11 +47,9 @@ export class PaymentGatewayComponent implements OnInit {
   ngOnInit(): void {
     this.route.queryParams.subscribe((params) => {
       this.itemId = params['itemID'];
-      this.shopId = params['shopId'];
-      this.itemName = params['itemName'];
-      this.shopEmail = params['shopEmail'];
       this.address = params['address'];
-      this.price = params['price'];
+      this.userId = params['userId'];
+      this.userEmail = params['userEmail'];
     });
   }
 
@@ -63,12 +59,13 @@ export class PaymentGatewayComponent implements OnInit {
         .buyItem(
           this.itemId,
           this.address,
-          this.shopId,
-          this.price,
-          this.itemName,
-          this.shopEmail
+          this.userId,
+          1,
+          this.userEmail
         )
-        .then(() => {
+        .then((res) => {
+          console.log(res);
+          
           // display receipt
 
           // after receipt
