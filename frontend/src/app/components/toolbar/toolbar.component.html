@@ -8,7 +8,7 @@
     <mat-icon>menu</mat-icon>
     <span>PTS</span>
   </button>
-  <div class="user">{{user?.email}}</div>
+  <div class="user">{{ user?.email }}</div>
   <span class="spacer"></span>
 
   <div class="auth" *ngIf="!isLoggedIn">
@@ -27,12 +27,21 @@
       <span>Applications</span>
     </button>
   </div>
-  <div class="flex-row" *ngIf="user?.role === 'business'">
+  <div
+    class="flex-row"
+    *ngIf="user?.role === 'business' || user?.role === 'officer'"
+  >
     <button mat-button class="" aria-label="" routerLink="reports">
       <mat-icon>assignment</mat-icon>
       <span>Reports</span>
     </button>
-    <button mat-button class="" aria-label="" routerLink="shop">
+    <button
+      mat-button
+      class=""
+      aria-label=""
+      routerLink="shop"
+      *ngIf="user?.role === 'business'"
+    >
       <mat-icon>shop</mat-icon>
       <span>Shop</span>
     </button>

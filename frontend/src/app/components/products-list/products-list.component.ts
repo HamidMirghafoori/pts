@@ -26,7 +26,7 @@ export class ProductsListComponent implements OnInit {
     const roles = this.route.snapshot.data['roles'];
     this.authService.authenticatedUser$.subscribe((user) => {
       this.userId = user ? user._id : '';
-      if (user?.role==='business'){
+      if (user?.role !=='customer'){
         this.canBuy=false;
       }
       if (roles && roles.includes('customer')) {
