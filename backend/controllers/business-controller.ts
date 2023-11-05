@@ -5,7 +5,6 @@ import { ProductModel, ProductType } from "../models/products";
 import { BusinessUserModel } from "../models/user";
 
 const mongoose = require("mongoose");
-const ObjectId = mongoose.ObjectId;
 
 export const createProduct = async (
   req: Request,
@@ -21,6 +20,7 @@ export const createProduct = async (
     const { offers } = req.body;
     let { bgImg } = req.body;
     const { ownerId } = req.body;
+    const { productId } = req.body;
     const { shopEmail } = req.body;
     const { productDescription } = req.body;
 
@@ -60,19 +60,6 @@ export const createProduct = async (
     if (!price) {
       return res.status(401).send({ message: "price is missing" });
     }
-    console.log(req.files);
-    const image = req.files.file as fileUpload.UploadedFile;
-    const imagePath = rootDir + "/public/" + image.name.split(" ").join("");
-    bgImg = bgImg.split(" ").join("");
-    console.log(image, imagePath);
-
-    image.mv(imagePath, (err) => {
-      if (err) {
-        return res.status(500).send(err);
-      }
-
-      // res.send('File uploaded!');
-    });
 
     const payload = {
       title,
@@ -87,12 +74,26 @@ export const createProduct = async (
       productDescription,
     };
 
-    const product = await ProductModel.create(payload);
+    const updateRes = await ProductModel.findOneAndUpdate(
+      { _id: productId },
+      { ...payload },
+      { new: true, upsert: true }
+    );
+
+    const image = req.files.file as fileUpload.UploadedFile;
+    const imagePath = rootDir + "/public/" + image.name.split(" ").join("");
+    bgImg = bgImg.split(" ").join("");
+
+    image.mv(imagePath, (err) => {
+      if (err) {
+        return res.status(500).send(err);
+      }
+    });
 
     return res.status(200).json({
       success: true,
-      message: "Product created",
-      product,
+      message: productId ? "Product created" : "Product updated",
+      product: updateRes,
     });
   } catch (error) {
     return res.status(401).json({
@@ -118,10 +119,8 @@ export const getProducts = async (
       return res.status(400).json({ message: "id is missing" });
     }
     const payload = id ? { ownerId: id } : {};
-    console.log("payload", payload);
 
     const products = await ProductModel.find(payload);
-    console.log(products);
 
     return res.status(200).json({
       success: true,

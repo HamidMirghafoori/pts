@@ -1,7 +1,8 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { Observable, map } from 'rxjs';
+import { Router } from '@angular/router';
+import { Observable, catchError, map, of } from 'rxjs';
 import { environment } from 'src/environments/environment.development';
 import { createProduct, getShopProducts } from './api';
 import { UserType } from './authentication.service';
@@ -32,18 +33,22 @@ export interface ProductType {
 export class ProductService {
   private rootUrl = environment.SERVER_URL;
 
-  constructor(private http: HttpClient, private snackBar: MatSnackBar) {}
+  constructor(
+    private http: HttpClient,
+    private snackBar: MatSnackBar,
+    private router: Router
+  ) {}
 
-  addProduct(productData: any): Promise<string> {
+  addProduct(productData: any): Promise<ProductType> {
     const headers = new HttpHeaders();
     headers.append('Content-Type', 'multipart/form-data');
 
     return new Promise((resolve, reject) => {
       this.http
-        .post(this.rootUrl + createProduct, productData, { headers })
+        .post<any>(this.rootUrl + createProduct, productData, { headers })
         .subscribe({
           next: (response) => {
-            // console.log(response);
+            resolve(response.product)
           },
           error: (error) => {
             this.snackBar.open(error.error.message, 'Close', {
@@ -60,9 +65,19 @@ export class ProductService {
   getAllShopProducts(user: UserType | null): Observable<ProductType[] | []> {
     const body = { id: user?._id, token: user?.token };
 
-    return this.http
-      .post<any>(this.rootUrl + getShopProducts, body)
-      .pipe(map((data) => data.products));
+    return this.http.post<any>(this.rootUrl + getShopProducts, body).pipe(
+      map((data) => data.products),
+      catchError((error) => {
+        this.snackBar.open(error.error.message, 'Close', {
+          duration: 3000,
+          horizontalPosition: 'center',
+          verticalPosition: 'top',
+          panelClass: ['error-snackbar'],
+        });
+        this.router.navigate(['']);
+        return of([]);
+      })
+    );
   }
 
   getAllProducts(user: UserType | null): Observable<ProductType[] | []> {

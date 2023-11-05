@@ -56,8 +56,6 @@ export class ShopProductsComponent implements OnInit {
 
       this.productService.getAllShopProducts(this.user).subscribe({
         next: (products) => {
-          console.log(products);
-
           this.products = products;
         },
         error: (error) => {
@@ -104,35 +102,13 @@ export class ShopProductsComponent implements OnInit {
       return;
     }
 
-    const form = this.productForm.value;
-    if (this.editMode) {
-      const id = this.selectedProduct._id;
-      const data: ProductType = {
-        ...this.selectedProduct,
-        category: this.productForm.get('category')?.value,
-        destination: this.productForm.get('destination')?.value,
-        offers: [this.productForm.get('offers')?.value],
-        price: this.productForm.get('price')?.value,
-        tags: [this.productForm.get('tags')?.value],
-        title: this.productForm.get('title')?.value,
-        shopEmail,
-      };
-      this.editMode = false;
-      // this.productService.updateProduct(id, data).then(() => {
-      //   this.snackBar.open('Product updated successfully', 'Close', {
-      //     duration: 3000,
-      //     horizontalPosition: 'center',
-      //     verticalPosition: 'top',
-      //   });
-      //   this.productPanel.close();
-      // });
-      return;
-    }
-
     const formData = new FormData();
     formData.append('title', this.productForm.get('title')?.value);
     formData.append('category', this.productForm.get('category')?.value);
-    formData.append('destination', this.productForm.get('destination')?.value);
+    formData.append(
+      'destination',
+      this.productForm.get('destination')?.value
+    );
     formData.append('price', this.productForm.get('price')?.value);
     formData.append(
       'productDescription',
@@ -145,15 +121,35 @@ export class ShopProductsComponent implements OnInit {
     formData.append('shopEmail', shopEmail);
     formData.append('token', token);
     formData.append('ownerId', ownerId);
-
-    this.productService.addProduct(formData).then(() => {
-      this.productPanel.close();
+    
+    if (this.editMode) {
+      formData.append('productId', this.selectedProduct._id);
+    } 
+    this.productService.addProduct(formData).then(res=>{
+      this.snackBar.open('Product updated successfully', 'Close', {
+        duration: 3000,
+        horizontalPosition: 'center',
+        verticalPosition: 'top',
+      });
+      if (this.editMode) {
+        this.products = this.products.map(product=>{
+          if (product._id === res._id){
+            return res
+          }
+          return product
+        })
+        this.selectedProduct = res;
+        this.editMode = false;
+      }
     });
+    this.productPanel.close();
   }
 
   public onEdit = (index: number) => {
     this.selectedProduct = this.products[index];
     this.productForm.patchValue(this.selectedProduct);
+    this.productForm.get('bgImg')?.setValue('');
+    this.selectedFile = null;
     this.editMode = true;
     this.productPanel.open();
   };
