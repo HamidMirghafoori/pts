@@ -5,7 +5,7 @@ import {
   CanActivateFn,
   RouterStateSnapshot,
 } from '@angular/router';
-import { Observable } from 'rxjs';
+import { Observable, of, switchMap, take } from 'rxjs';
 import { AuthenticationService } from './services/authentication.service';
 
 @Injectable({
@@ -25,41 +25,43 @@ class Permissions {
     return false;
   }
 
-  // canActivate(
-  //   route: ActivatedRouteSnapshot,
-  //   state: RouterStateSnapshot
-  // ): Observable<boolean> | Promise<boolean> | boolean {
-  //   const roles = route.data['roles'] as string[];
+  canActivate(
+    route: ActivatedRouteSnapshot,
+    state: RouterStateSnapshot
+  ): Observable<boolean> | Promise<boolean> | boolean {
+    const roles = route.data['roles'] as string[];
 
-  //   return this.authService.authenticatedUser$.pipe(
-  //     take(1),
-  //     switchMap((user) => {
-  //       const id = user?.uid;
-  //       if (!id) return of(false);
-  //       if (user.role === 'business') {
-  //         if (user.status === 'pending') {
-  //           this.snackBar.open('Error: Business is not approved yet', 'Close', {
-  //             duration: 3000,
-  //             horizontalPosition: 'center',
-  //             verticalPosition: 'top',
-  //             panelClass: ['error-snackbar'],
-  //           });
-  //           return of(false);
-  //         }
-  //         if (user.application === 'rejected') {
-  //           this.snackBar.open('Error: Business is Rejected!', 'Close', {
-  //             duration: 3000,
-  //             horizontalPosition: 'center',
-  //             verticalPosition: 'top',
-  //             panelClass: ['error-snackbar'],
-  //           });
-  //           return of(false);
-  //         }
-  //       }
-  //       return of(this.isMatchOne(user.role, roles));
-  //     })
-  //   );
-  // }
+    return this.authService.authenticatedUser$.pipe(
+      take(1),
+      switchMap((user) => {
+        const id = user?._id;
+        console.log('canActivate:', user, '>>>',id);
+        
+        if (!id) return of(false);
+        if (user.role === 'business') {
+          if (user.application === 'pending') {
+            this.snackBar.open('Error: Business is not approved yet', 'Close', {
+              duration: 3000,
+              horizontalPosition: 'center',
+              verticalPosition: 'top',
+              panelClass: ['error-snackbar'],
+            });
+            return of(false);
+          }
+          if (user.application === 'rejected') {
+            this.snackBar.open('Error: Business is Rejected!', 'Close', {
+              duration: 3000,
+              horizontalPosition: 'center',
+              verticalPosition: 'top',
+              panelClass: ['error-snackbar'],
+            });
+            return of(false);
+          }
+        }
+        return of(this.isMatchOne(user.role, roles));
+      })
+    );
+  }
 }
 
 export const AuthGuard: CanActivateFn = (
@@ -67,6 +69,6 @@ export const AuthGuard: CanActivateFn = (
   state: RouterStateSnapshot
 ): Observable<boolean> | Promise<boolean> | boolean => {
   const permissions = inject(Permissions);
-  return true
-  // return permissions.canActivate(next, state);
+  // return true
+  return permissions.canActivate(next, state);
 };

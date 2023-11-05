@@ -15,13 +15,6 @@ export class ToolbarComponent implements OnInit {
   user!: UserType | null;
 
   ngOnInit(): void {
-    // this.authService.isAuthenticated$.subscribe((data) =>
-    //   console.log('AUTH iAuthenticated:', data)
-    //   );
-    //   this.authService.authenticatedUser$.subscribe(user=>{
-    //     console.log('AUTH user:', user)
-    // })
-
     this.authService.isAuthenticated$.subscribe((isLoggedIn) => {
       this.isLoggedIn = isLoggedIn;
     });

@@ -1,5 +1,5 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { Subscription } from 'rxjs';
 import {
   AuthenticationService,
@@ -22,7 +22,8 @@ export class ApplicationsComponent implements OnInit, OnDestroy {
   constructor(
     private userService: UserService,
     private authService: AuthenticationService,
-    private router: Router
+    private snackBar: MatSnackBar,
+
   ) {}
   inactiveUsers: UserType[] = [];
   step: number = 0;
@@ -48,6 +49,11 @@ export class ApplicationsComponent implements OnInit, OnDestroy {
       .updateBusinessApplication(data._id, 'approved', this.user?.token)
       .subscribe((data) => {
         this.inactiveUsers.splice(index, 1);
+        this.snackBar.open('Business approved!', 'Close', {
+          duration: 3000,
+          horizontalPosition: 'center',
+          verticalPosition: 'top',
+        });
       });
   }
 
@@ -57,6 +63,13 @@ export class ApplicationsComponent implements OnInit, OnDestroy {
       .updateBusinessApplication(data._id, 'rejected', this.user?.token)
       .subscribe((data) => {
         this.inactiveUsers.splice(index, 1);
+        this.snackBar.open('Business Rejected!', 'Close', {
+          duration: 3000,
+          horizontalPosition: 'center',
+          verticalPosition: 'top',
+          panelClass: ['error-snackbar'],
+        });
+
       });
   }
 
