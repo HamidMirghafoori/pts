@@ -13,6 +13,7 @@
           [formGroup]="productForm"
           (ngSubmit)="onSubmit()"
           class="flex-col width100"
+          enctype="multipart/form-data"
         >
           <mat-form-field>
             <input matInput placeholder="Title" formControlName="title" />
@@ -76,6 +77,27 @@
             </select>
           </mat-form-field>
 
+          <mat-form-field>
+            <input
+              matInput
+              placeholder="Product Description"
+              formControlName="productDescription"
+            />
+          </mat-form-field>
+
+          <mat-form-field>
+            <input
+              matInput
+              type="text"
+              formControlName="bgImg"
+              readonly
+            />
+            <mat-error *ngIf="productForm.get('bgImg')?.hasError('required')">
+              Please select one image file 
+            </mat-error>
+          </mat-form-field>
+          <input type="file" (change)="onImageSelected($event)" />
+          
           <button
             mat-raised-button
             color="primary"

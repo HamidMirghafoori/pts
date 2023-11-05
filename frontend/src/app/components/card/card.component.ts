@@ -89,5 +89,8 @@ export class CardComponent implements OnInit {
     if (this.location.path() === '/my-orders') {
       this.showReview = true;
     }
+
+    console.log(this.serverUrl , this.data.bgImg);
   }
+  
 }

@@ -47,7 +47,9 @@
     >
   </mat-form-field>
 
-  <mat-slide-toggle formControlName="isBusiness" class="toggle">Business</mat-slide-toggle>
+  <mat-slide-toggle formControlName="isBusiness" class="toggle"
+    >Business</mat-slide-toggle
+  >
 
   <div *ngIf="registrationForm.get('isBusiness')?.value">
     <div class="business">
@@ -78,21 +80,27 @@
       </mat-form-field>
     </div>
 
-  <mat-form-field>
-    <input matInput type="text" formControlName="fileSubmission"  readonly class="hidden">
-  <input type="file" (change)="onFileSelected($event)" multiple>
-    <mat-error *ngIf="registrationForm.get('files')?.hasError('required')">
-      Please select at least one file
-    </mat-error>
-  </mat-form-field>
+    <mat-form-field>
+      <input
+        matInput
+        type="text"
+        formControlName="fileSubmission"
+        readonly
+        class="hidden"
+      />
+      <input type="file" (change)="onFileSelected($event)" multiple />
+      <mat-error *ngIf="registrationForm.get('files')?.hasError('required')">
+        Please select at least one file
+      </mat-error>
+    </mat-form-field>
 
-  <div *ngIf="selectedFiles.length > 0">
-    <p>Selected Files:</p>
-    <ul>
-      <li *ngFor="let file of selectedFiles">{{ file.name }}</li>
-    </ul>
+    <div *ngIf="selectedFiles.length > 0">
+      <p>Selected Files:</p>
+      <ul>
+        <li *ngFor="let file of selectedFiles">{{ file.name }}</li>
+      </ul>
+    </div>
   </div>
-</div>
 
   <button
     mat-raised-button

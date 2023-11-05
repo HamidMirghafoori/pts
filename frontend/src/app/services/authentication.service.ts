@@ -6,7 +6,6 @@ import { BehaviorSubject, Observable } from 'rxjs';
 import { environment } from 'src/environments/environment.development';
 import { Role } from '../components/signup/signup.component';
 import { signin, signup } from './api';
-import { UserService } from './user.service';
 
 export type ApplicationType = 'pending' | 'approved' | 'rejected' | 'NA';
 export type StatusType = 'pending' | 'active';
@@ -35,7 +34,6 @@ interface UserResponse extends UserType {
 export class AuthenticationService {
   constructor(
     private router: Router,
-    private userService: UserService,
     private snackBar: MatSnackBar,
     private http: HttpClient
   ) {}
