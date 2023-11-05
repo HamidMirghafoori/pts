@@ -21,7 +21,7 @@ export class ShopProductsComponent implements OnInit {
   productForm!: FormGroup;
   allTags: string[] = ['Bestseller', 'Easy Refund'];
   editMode: boolean = false;
-  selectedProduct!: ProductType;
+  selectedProduct: ProductType | undefined;
   selectedFile: File | null = null;
   user: UserType | null = null;
 
@@ -105,10 +105,7 @@ export class ShopProductsComponent implements OnInit {
     const formData = new FormData();
     formData.append('title', this.productForm.get('title')?.value);
     formData.append('category', this.productForm.get('category')?.value);
-    formData.append(
-      'destination',
-      this.productForm.get('destination')?.value
-    );
+    formData.append('destination', this.productForm.get('destination')?.value);
     formData.append('price', this.productForm.get('price')?.value);
     formData.append(
       'productDescription',
@@ -121,23 +118,26 @@ export class ShopProductsComponent implements OnInit {
     formData.append('shopEmail', shopEmail);
     formData.append('token', token);
     formData.append('ownerId', ownerId);
-    
+
     if (this.editMode) {
-      formData.append('productId', this.selectedProduct._id);
-    } 
-    this.productService.addProduct(formData).then(res=>{
+      formData.append(
+        'productId',
+        this.selectedProduct?._id ? this.selectedProduct._id : ''
+      );
+    }
+    this.productService.addProduct(formData).then((res) => {
       this.snackBar.open('Product updated successfully', 'Close', {
         duration: 3000,
         horizontalPosition: 'center',
         verticalPosition: 'top',
       });
       if (this.editMode) {
-        this.products = this.products.map(product=>{
-          if (product._id === res._id){
-            return res
+        this.products = this.products.map((product) => {
+          if (product._id === res._id) {
+            return res;
           }
-          return product
-        })
+          return product;
+        });
         this.selectedProduct = res;
         this.editMode = false;
       }
@@ -156,6 +156,30 @@ export class ShopProductsComponent implements OnInit {
 
   public onDelete = (index: number) => {
     this.selectedProduct = this.products[index];
-    const id = this.selectedProduct._id;
+    const productId = this.selectedProduct._id;
+    console.log(productId, this.user?._id);
+    
+    this.productService
+      .deleteProduct({ ownerId: this.user?._id, productId, token: this.user?.token })
+      .then(() => {
+        this.snackBar.open('Product deleted successfully', 'Close', {
+          duration: 3000,
+          horizontalPosition: 'center',
+          verticalPosition: 'top',
+        });
+        this.products = this.products.filter((product) => {
+          product._id !== productId
+        });
+        this.selectedFile = null;
+        this.selectedProduct = undefined;
+      })
+      .catch(() => {
+        this.snackBar.open('Product delete failed', 'Close', {
+          duration: 3000,
+          horizontalPosition: 'center',
+          verticalPosition: 'top',
+          panelClass: ['error-snackbar'],
+        });
+      });
   };
 }

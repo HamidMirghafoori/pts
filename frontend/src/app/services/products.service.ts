@@ -4,7 +4,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
 import { Observable, catchError, map, of } from 'rxjs';
 import { environment } from 'src/environments/environment.development';
-import { createProduct, getShopProducts } from './api';
+import { createProduct, deleteProduct, getShopProducts } from './api';
 import { UserType } from './authentication.service';
 
 export interface ProductType {
@@ -57,6 +57,29 @@ export class ProductService {
               verticalPosition: 'top',
               panelClass: ['error-snackbar'],
             });
+          },
+        });
+    });
+  }
+
+  deleteProduct(payload: any): Promise<boolean> {
+    const headers = new HttpHeaders();
+
+    return new Promise((resolve, reject) => {
+      this.http
+        .post<any>(this.rootUrl + deleteProduct, payload, { headers })
+        .subscribe({
+          next: (response) => {
+            resolve(true)
+          },
+          error: (error) => {
+            this.snackBar.open(error.error.message, 'Close', {
+              duration: 3000,
+              horizontalPosition: 'center',
+              verticalPosition: 'top',
+              panelClass: ['error-snackbar'],
+            });
+            reject(false)
           },
         });
     });
