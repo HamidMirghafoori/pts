@@ -7,6 +7,10 @@ const productsSchema = new Schema(
       trim: true,
       required: [true, "Title is missing"],
     },
+    productDescription: {
+      type: String,
+      trim: true,
+    },
     bgImg: {
       type: String,
       trim: true,

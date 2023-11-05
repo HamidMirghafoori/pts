@@ -29,7 +29,6 @@ exports.signup = async (req: Request, res: Response, next: NextFunction) => {
   }
 
   if (isBusiness) {
-    console.log('log......>',req.body.businessDescription);
     
     const businessDescription: string = req.body.businessDescription || "";
     // const businessType = (req.body.businessType as string) || "";

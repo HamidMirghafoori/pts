@@ -3,6 +3,9 @@ import cors from 'cors';
 import dotenv from "dotenv";
 import express, { Application, Request, Response } from "express";
 import mongoose from "mongoose";
+const fileUpload = require('express-fileupload');
+
+export const rootDir = __dirname;
 
 dotenv.config();
 
@@ -15,6 +18,9 @@ app.use(express.json());
 app.use(cookieParser());
 app.use(cors());
 app.use(express.static('public'));
+app.use(fileUpload());
+
+
 
 // // Your API endpoint to trigger SSE updates  SAMPLE
 // app.post('/trigger-sse-update', (req, res) => {

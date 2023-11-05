@@ -1,4 +1,6 @@
 import { NextFunction, Request, Response } from "express";
+import fileUpload from 'express-fileupload';
+import { rootDir } from "..";
 import { ProductModel, ProductType } from "../models/products";
 import { BusinessUserModel } from "../models/user";
 
@@ -17,9 +19,14 @@ export const createProduct = async (
     const { price } = req.body;
     const { tags } = req.body;
     const { offers } = req.body;
-    const { bgImg } = req.body;
+    let { bgImg } = req.body;
     const { ownerId } = req.body;
     const { shopEmail } = req.body;
+    const { productDescription } = req.body;
+    
+    if (!req.files || !req.files.file) {
+      return res.status(400).json({ message: "No files were uploaded." });
+    }
 
     if (!mongoose.Types.ObjectId.isValid(ownerId)) {
       return res.status(400).json({ message: "Invalid ownerId" });
@@ -31,18 +38,6 @@ export const createProduct = async (
         message: "ownerId of the business does not exist in database",
       });
     }
-
-    const payload = {
-      title,
-      category,
-      destination,
-      price,
-      tags,
-      offers,
-      bgImg,
-      ownerId,
-      shopEmail,
-    };
 
     if (!title) {
       return res.status(401).send({ message: "title is missing" });
@@ -65,6 +60,32 @@ export const createProduct = async (
     if (!price) {
       return res.status(401).send({ message: "price is missing" });
     }
+    console.log(req.files);
+    const image = req.files.file as fileUpload.UploadedFile;
+    const imagePath = rootDir + '/public/' + image.name.split(" ").join("");
+    bgImg = bgImg.split(" ").join("")
+    console.log(image, imagePath);
+    
+    image.mv(imagePath, (err) => {
+      if (err) {
+        return res.status(500).send(err);
+      }
+  
+      // res.send('File uploaded!');
+    });
+
+    const payload = {
+      title,
+      category,
+      destination,
+      price,
+      tags,
+      offers,
+      bgImg,
+      ownerId,
+      shopEmail,
+      productDescription,
+    };
 
     const product = await ProductModel.create(payload);
 
@@ -122,7 +143,7 @@ export const getAllProducts = async (
     products = products.map((product) => {
       return { ...product, rate: 0, votes: 0, bookedCount: 0, currency: "US$" };
     });
-    console.log('getAllProducts....');
+    console.log("getAllProducts....");
 
     return res.status(200).json({
       success: true,
