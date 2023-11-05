@@ -22,11 +22,18 @@ exports.signup = async (req: Request, res: Response, next: NextFunction) => {
     return res.status(400).send("Email is missing");
   }
 
-  const userExist = await UserModel.findOne({ email });
+  let userExist = await UserModel.findOne({ email });
 
   if (userExist) {
-    return next(new ErrorResponse("E-mail already exists", 400));
+    return res.status(403).send("E-mail already exists");
   }
+
+  userExist = await BusinessUserModel.findOne({ email });
+
+  if (userExist) {
+    return res.status(403).send("E-mail already exists");
+  }
+
 
   if (isBusiness) {
     

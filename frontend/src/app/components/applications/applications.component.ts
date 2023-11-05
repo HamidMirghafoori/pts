@@ -22,8 +22,7 @@ export class ApplicationsComponent implements OnInit, OnDestroy {
   constructor(
     private userService: UserService,
     private authService: AuthenticationService,
-    private snackBar: MatSnackBar,
-
+    private snackBar: MatSnackBar
   ) {}
   inactiveUsers: UserType[] = [];
   step: number = 0;
@@ -69,7 +68,6 @@ export class ApplicationsComponent implements OnInit, OnDestroy {
           verticalPosition: 'top',
           panelClass: ['error-snackbar'],
         });
-
       });
   }
 
@@ -78,14 +76,26 @@ export class ApplicationsComponent implements OnInit, OnDestroy {
       this.user = user;
       this.applicationSub = this.userService
         .getAllApplications(user)
-        .subscribe((users) => {
-          this.inactiveUsers = users;
+        .subscribe({
+          next: (users) => {
+            this.inactiveUsers = users;
+          },
+          error: (error) => {
+            this.snackBar.open('User Unsubscribed!', 'Close', {
+              duration: 3000,
+              horizontalPosition: 'center',
+              verticalPosition: 'top',
+              panelClass: ['error-snackbar'],
+            });
+          },
         });
     });
   }
 
   ngOnDestroy(): void {
-    this.applicationSub ? this.applicationSub.unsubscribe() : undefined;
+    // this.applicationSub ? this.applicationSub.unsubscribe() : undefined;
     this.userSub ? this.userSub.unsubscribe() : undefined;
+    this.approveSub ? this.approveSub.unsubscribe() : undefined;
+    this.rejectSub ? this.rejectSub.unsubscribe() : undefined;
   }
 }

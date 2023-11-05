@@ -29,7 +29,7 @@ const routes: Routes = [
     path: 'applications',
     component: ApplicationsComponent,
     canActivate: [AuthGuard],
-    data: { roles: ['admin'] },
+    data: { roles: ['admin', 'officer'] },
   },
   {
     path: 'shop',
@@ -41,7 +41,7 @@ const routes: Routes = [
     path: 'reports',
     component: AdminReportComponent,
     canActivate: [AuthGuard],
-    data: { roles: ['officer', 'business'] },
+    data: { roles: ['business'] },
   },
   { path: '**', redirectTo: '' },
 ];

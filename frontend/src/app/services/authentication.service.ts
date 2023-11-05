@@ -64,7 +64,7 @@ export class AuthenticationService {
               this.router.navigate(['applications']);
               break;
             case 'officer':
-              this.router.navigate(['reports']);
+              this.router.navigate(['applications']);
               break;
             default:
               this.router.navigate(['']);

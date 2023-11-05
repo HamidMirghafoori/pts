@@ -3,7 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
-import { Observable, catchError, map } from 'rxjs';
+import { Observable, catchError, map, of } from 'rxjs';
 import { environment } from 'src/environments/environment.development';
 import { getApplications, updateApplication } from './api';
 import { UserType } from './authentication.service';
@@ -22,13 +22,14 @@ export class UserService {
 
   getAllApplications(user: UserType | null): Observable<UserType[]> {
     const body = { token: user?.token };
+    if (!user?.token) {
+      return of([]);
+    }
     return this.http.post<any>(this.rootUrl + getApplications, body).pipe(
       map((users) => {
-        console.log('getAllApplications ,users', users);
         return users.applications;
       }),
       catchError((error) => {
-        console.log('getAllApplications error:', error.error);
         this.snackBar.open('Yor are not authenticated, login again', 'Close', {
           duration: 3000,
           horizontalPosition: 'center',

@@ -1,7 +1,8 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatExpansionPanel } from '@angular/material/expansion';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { Subscription } from 'rxjs';
 import {
   AuthenticationService,
   UserType,
@@ -13,7 +14,7 @@ import { ProductService, ProductType } from 'src/app/services/products.service';
   templateUrl: './shop-products.component.html',
   styleUrls: ['./shop-products.component.scss'],
 })
-export class ShopProductsComponent implements OnInit {
+export class ShopProductsComponent implements OnInit, OnDestroy {
   @ViewChild('productPanel') productPanel!: MatExpansionPanel;
 
   products: ProductType[] = [];
@@ -24,6 +25,7 @@ export class ShopProductsComponent implements OnInit {
   selectedProduct: ProductType | undefined;
   selectedFile: File | null = null;
   user: UserType | null = null;
+  productServiceSub!: Subscription;
 
   allOffers: string[] = [
     'Exclusive Combo',
@@ -54,20 +56,26 @@ export class ShopProductsComponent implements OnInit {
     this.authService.authenticatedUser$.subscribe((user) => {
       this.user = user;
 
-      this.productService.getAllShopProducts(this.user).subscribe({
-        next: (products) => {
-          this.products = products;
-        },
-        error: (error) => {
-          this.snackBar.open(error.error.message, 'Close', {
-            duration: 3000,
-            horizontalPosition: 'center',
-            verticalPosition: 'top',
-            panelClass: ['error-snackbar'],
-          });
-        },
-      });
+      this.productServiceSub = this.productService
+        .getAllShopProducts(this.user)
+        .subscribe({
+          next: (products) => {
+            this.products = products;
+          },
+          error: (error) => {
+            this.snackBar.open(error.error.message, 'Close', {
+              duration: 3000,
+              horizontalPosition: 'center',
+              verticalPosition: 'top',
+              panelClass: ['error-snackbar'],
+            });
+          },
+        });
     });
+  }
+
+  ngOnDestroy(): void {
+    this.productServiceSub.unsubscribe();
   }
 
   onImageSelected(event: any) {
@@ -162,7 +170,6 @@ export class ShopProductsComponent implements OnInit {
   public onDelete = (index: number) => {
     this.selectedProduct = this.products[index];
     const productId = this.selectedProduct._id;
-    console.log(productId, this.user?._id);
 
     this.productService
       .deleteProduct({

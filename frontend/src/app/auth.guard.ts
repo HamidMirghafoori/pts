@@ -34,9 +34,7 @@ class Permissions {
     return this.authService.authenticatedUser$.pipe(
       take(1),
       switchMap((user) => {
-        const id = user?._id;
-        console.log('canActivate:', user, '>>>',id);
-        
+        const id = user?._id;        
         if (!id) return of(false);
         if (user.role === 'business') {
           if (user.application === 'pending') {

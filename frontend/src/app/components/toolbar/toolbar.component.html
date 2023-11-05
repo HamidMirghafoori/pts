@@ -21,7 +21,7 @@
       <span>Sign in</span>
     </button>
   </div>
-  <div class="flex-row" *ngIf="user?.role === 'admin'">
+  <div class="flex-row" *ngIf="user?.role === 'admin' || user?.role === 'officer'">
     <button mat-button class="" aria-label="" routerLink="applications">
       <mat-icon>assignment</mat-icon>
       <span>Applications</span>
@@ -29,7 +29,7 @@
   </div>
   <div
     class="flex-row"
-    *ngIf="user?.role === 'business' || user?.role === 'officer'"
+    *ngIf="user?.role === 'business'"
   >
     <button mat-button class="" aria-label="" routerLink="reports">
       <mat-icon>assignment</mat-icon>
