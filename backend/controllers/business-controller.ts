@@ -1,5 +1,5 @@
 import { NextFunction, Request, Response } from "express";
-import fileUpload from 'express-fileupload';
+import fileUpload from "express-fileupload";
 import { rootDir } from "..";
 import { ProductModel, ProductType } from "../models/products";
 import { BusinessUserModel } from "../models/user";
@@ -23,7 +23,7 @@ export const createProduct = async (
     const { ownerId } = req.body;
     const { shopEmail } = req.body;
     const { productDescription } = req.body;
-    
+
     if (!req.files || !req.files.file) {
       return res.status(400).json({ message: "No files were uploaded." });
     }
@@ -62,15 +62,15 @@ export const createProduct = async (
     }
     console.log(req.files);
     const image = req.files.file as fileUpload.UploadedFile;
-    const imagePath = rootDir + '/public/' + image.name.split(" ").join("");
-    bgImg = bgImg.split(" ").join("")
+    const imagePath = rootDir + "/public/" + image.name.split(" ").join("");
+    bgImg = bgImg.split(" ").join("");
     console.log(image, imagePath);
-    
+
     image.mv(imagePath, (err) => {
       if (err) {
         return res.status(500).send(err);
       }
-  
+
       // res.send('File uploaded!');
     });
 
@@ -114,10 +114,14 @@ export const getProducts = async (
       if (!mongoose.Types.ObjectId.isValid(id)) {
         return res.status(400).json({ message: "Invalid ownerId" });
       }
+    } else {
+      return res.status(400).json({ message: "id is missing" });
     }
     const payload = id ? { ownerId: id } : {};
+    console.log("payload", payload);
 
     const products = await ProductModel.find(payload);
+    console.log(products);
 
     return res.status(200).json({
       success: true,

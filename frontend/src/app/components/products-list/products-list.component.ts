@@ -12,7 +12,9 @@ import { ProductService, ProductType } from 'src/app/services/products.service';
 export class ProductsListComponent implements OnInit {
   public products: ProductType[] = [];
   userId!: string;
-
+  canReview: boolean= false;
+  canBuy: boolean= true;
+  
   constructor(
     private route: ActivatedRoute,
     private buyService: BuyService,
@@ -24,6 +26,9 @@ export class ProductsListComponent implements OnInit {
     const roles = this.route.snapshot.data['roles'];
     this.authService.authenticatedUser$.subscribe((user) => {
       this.userId = user ? user._id : '';
+      if (user?.role==='business'){
+        this.canBuy=false;
+      }
       if (roles && roles.includes('customer')) {
         this.buyService
           .getCustomerBoughtItems(user)
@@ -32,6 +37,7 @@ export class ProductsListComponent implements OnInit {
               return;
             }
             this.products = boughtItems;
+            this.canReview = true;
           });
       } else {
         this.productService

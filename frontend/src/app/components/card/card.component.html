@@ -50,8 +50,7 @@
             (click)="onReviewClick()"
             mat-stroked-button
             color="primary"
-            [disabled]="!canReview"
-            *ngIf="showReview"
+            *ngIf="canReview"
           >
             Review
           </button>
@@ -59,8 +58,7 @@
             (click)="onPurchase()"
             mat-stroked-button
             color="primary"
-            [disabled]="!user"
-            *ngIf="!showReview"
+            *ngIf="canBuy"
           >
             BUY
           </button>

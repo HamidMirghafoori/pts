@@ -2,7 +2,10 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatExpansionPanel } from '@angular/material/expansion';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { AuthenticationService } from 'src/app/services/authentication.service';
+import {
+  AuthenticationService,
+  UserType,
+} from 'src/app/services/authentication.service';
 import { ProductService, ProductType } from 'src/app/services/products.service';
 
 @Component({
@@ -20,6 +23,7 @@ export class ShopProductsComponent implements OnInit {
   editMode: boolean = false;
   selectedProduct!: ProductType;
   selectedFile: File | null = null;
+  user: UserType | null = null;
 
   allOffers: string[] = [
     'Exclusive Combo',
@@ -47,19 +51,25 @@ export class ShopProductsComponent implements OnInit {
       offers: [''],
       bgImg: ['', Validators.required],
     });
+    this.authService.authenticatedUser$.subscribe((user) => {
+      this.user = user;
 
-    // this.productService.getAllUserProducts().subscribe((products) => {
-    //   const transformed = products.map((product, index) => ({
-    //     ...product,
-    //     bgImg: cardsImg[index % 7],
-    //     offers: Array.isArray(product.offers)
-    //       ? product.offers
-    //       : [product.offers],
-    //     tags: Array.isArray(product.tags) ? product.tags : [product.tags],
-    //   }));
+      this.productService.getAllShopProducts(this.user).subscribe({
+        next: (products) => {
+          console.log(products);
 
-    //   this.products = transformed;
-    // });
+          this.products = products;
+        },
+        error: (error) => {
+          this.snackBar.open(error.error.message, 'Close', {
+            duration: 3000,
+            horizontalPosition: 'center',
+            verticalPosition: 'top',
+            panelClass: ['error-snackbar'],
+          });
+        },
+      });
+    });
   }
 
   onImageSelected(event: any) {
@@ -79,14 +89,9 @@ export class ShopProductsComponent implements OnInit {
   }
 
   onSubmit() {
-    let shopEmail: string = '';
-    let ownerId: string = '';
-    let token: string = '';
-    this.authService.authenticatedUser$.subscribe((user) => {
-      shopEmail = user ? user.email : '';
-      ownerId = user ? user._id : '';
-      token = user?.token || '';
-    });
+    const shopEmail: string = this.user ? this.user.email : '';
+    const ownerId: string = this.user ? this.user._id : '';
+    const token: string = this.user?.token || '';
 
     if (shopEmail === '') {
       this.snackBar.open('Something went wrong login again', 'Close', {
@@ -129,7 +134,10 @@ export class ShopProductsComponent implements OnInit {
     formData.append('category', this.productForm.get('category')?.value);
     formData.append('destination', this.productForm.get('destination')?.value);
     formData.append('price', this.productForm.get('price')?.value);
-    formData.append('productDescription', this.productForm.get('productDescription')?.value);
+    formData.append(
+      'productDescription',
+      this.productForm.get('productDescription')?.value
+    );
     formData.append('tags', this.productForm.get('tags')?.value);
     formData.append('offers', this.productForm.get('offers')?.value);
     formData.append('bgImg', this.productForm.get('bgImg')?.value);
@@ -138,11 +146,9 @@ export class ShopProductsComponent implements OnInit {
     formData.append('token', token);
     formData.append('ownerId', ownerId);
 
-    this.productService
-      .addProduct(formData)
-      .then(() => {
-        this.productPanel.close();
-      });
+    this.productService.addProduct(formData).then(() => {
+      this.productPanel.close();
+    });
   }
 
   public onEdit = (index: number) => {
@@ -155,12 +161,5 @@ export class ShopProductsComponent implements OnInit {
   public onDelete = (index: number) => {
     this.selectedProduct = this.products[index];
     const id = this.selectedProduct._id;
-    // this.productService.deleteProduct(id).then(() => {
-    //   this.snackBar.open('Product deleted successfully', 'Close', {
-    //     duration: 3000,
-    //     horizontalPosition: 'center',
-    //     verticalPosition: 'top',
-    //   });
-    // });
   };
 }

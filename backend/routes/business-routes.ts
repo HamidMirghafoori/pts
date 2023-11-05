@@ -7,7 +7,7 @@ const {
   isBusiness,
 } = require("../middlewares/auth-middleware");
 
-router.get("/products", isAuthenticated, isBusiness, getProducts);
+router.post("/products", isAuthenticated, isBusiness, getProducts);
 router.get("/products-list", getAllProducts);
 router.post("/create-product", isAuthenticated, isBusiness, createProduct);
 

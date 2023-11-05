@@ -21,16 +21,16 @@ export class CardComponent implements OnInit {
     private readonly location: Location
   ) {}
   serverUrl = environment.SERVER_BASE;
-  isLoggedIn = false;
   user!: UserType | null;
   showForm = false;
-  isBusiness: boolean = false;
-  canReview: boolean = false;
-
+  
   @Input() onEdit!: (index: number) => void;
   @Input() onDelete!: (index: number) => void;
   @Input() index!: number;
   @Input() showReview: boolean = false;
+  @Input() isBusiness: boolean = false;
+  @Input() canReview: boolean = false;
+  @Input() canBuy: boolean = false;
 
   @Input() data: ProductType = {
     _id: '',
@@ -76,21 +76,7 @@ export class CardComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.authService.isAuthenticated$.subscribe((isLoggedIn) => {
-      this.isLoggedIn = isLoggedIn;
-    });
     this.authService.authenticatedUser$.subscribe((user) => (this.user = user));
-    this.isBusiness = this.user?.role === 'business' ? true : false;
-    if (this.user && this.user.role === 'customer') {
-      this.canReview = true;
-    } else {
-      this.canReview = false;
-    }
-    if (this.location.path() === '/my-orders') {
-      this.showReview = true;
-    }
-
-    console.log(this.serverUrl , this.data.bgImg);
   }
   
 }

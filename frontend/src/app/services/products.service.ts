@@ -3,7 +3,7 @@ import { Injectable } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Observable, map } from 'rxjs';
 import { environment } from 'src/environments/environment.development';
-import { createProduct } from './api';
+import { createProduct, getShopProducts } from './api';
 import { UserType } from './authentication.service';
 
 export interface ProductType {
@@ -54,44 +54,16 @@ export class ProductService {
             });
           },
         });
-      // const ref = this.db.database.ref('products').push();
-      // this.authService.authenticatedUser$.subscribe((user) => {
-      //   productData = { ...productData, ownerId: user?.id, productId: ref.key };
-      // });
-
-      // ref
-      //   .set(productData)
-      //   .then(() => {
-      //     resolve(ref.key as string);
-      //   })
-      //   .catch((error) => {
-      //     reject(error);
-      //   });
     });
   }
 
-  // getAllUserProducts(): Observable<ProductType[] | []> {
-  //   return this.authService.authenticatedUser$.pipe(
-  //     switchMap((user) => {
-  //       return this.productsRef.snapshotChanges().pipe(
-  //         map((products) => {
-  //           return products
-  //             .filter((product) => {
-  //               return product.payload.val()?.ownerId === user?.id;
-  //             })
-  //             .map((c) => ({
-  //               ...(c.payload.val() as ProductType),
-  //               id: c.key ?? '',
-  //             }));
-  //         }),
-  //         catchError((error) => {
-  //           console.error('Error fetching data:', error);
-  //           return of([]);
-  //         })
-  //       );
-  //     })
-  //   );
-  // }
+  getAllShopProducts(user: UserType | null): Observable<ProductType[] | []> {
+    const body = { id: user?._id, token: user?.token };
+
+    return this.http
+      .post<any>(this.rootUrl + getShopProducts, body)
+      .pipe(map((data) => data.products));
+  }
 
   getAllProducts(user: UserType | null): Observable<ProductType[] | []> {
     const body = { token: user?.token };

@@ -111,19 +111,6 @@
       </mat-panel-description>
     </mat-expansion-panel>
   </mat-accordion>
-  <!-- <mat-accordion class="accordion">
-    <mat-expansion-panel
-      (opened)="(panelOpen === true)"
-      (closed)="(panelOpen === false)"
-    >
-      <mat-expansion-panel-header class="header">
-        Report
-      </mat-expansion-panel-header>
-      <mat-panel-description>
-        <app-products-table></app-products-table>
-      </mat-panel-description>
-    </mat-expansion-panel>
-  </mat-accordion> -->
 </div>
 <div class="flex-row container">
   <app-card
@@ -132,6 +119,8 @@
     [onEdit]="onEdit"
     [index]="i"
     [onDelete]="onDelete"
+    [isBusiness]="true"
+    [canBuy]="false"
   ></app-card>
   <div class="filler"></div>
   <div class="filler"></div>
