@@ -1,5 +1,10 @@
 import express from "express";
-import { createProduct, getAllProducts, getProducts } from "../controllers/business-controller";
+import {
+  createProduct,
+  deleteProduct,
+  getAllProducts,
+  getProducts,
+} from "../controllers/business-controller";
 
 const router = express.Router();
 const {
@@ -10,5 +15,6 @@ const {
 router.post("/products", isAuthenticated, isBusiness, getProducts);
 router.get("/products-list", getAllProducts);
 router.post("/create-product", isAuthenticated, isBusiness, createProduct);
+router.post("/delete-product", isAuthenticated, isBusiness, deleteProduct);
 
 module.exports = router;

@@ -104,6 +104,45 @@ export const createProduct = async (
   }
 };
 
+export const deleteProduct = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  const { ownerId } = req.body;
+  const { productId } = req.body;
+
+  if (!mongoose.Types.ObjectId.isValid(ownerId)) {
+    return res.status(400).json({ message: "Invalid ownerId" });
+  }
+  if (!mongoose.Types.ObjectId.isValid(productId)) {
+    return res.status(400).json({ message: "Invalid productId" });
+  }
+  const product = await ProductModel.findOne({ _id: productId });
+
+  if (product?.ownerId.toHexString() === ownerId) {
+    ProductModel.findByIdAndDelete(productId)
+      .then((removedDocument) => {
+        if (removedDocument) {
+          return res
+            .status(200)
+            .json({ message: "Product deleted successfully", status: true });
+        } else {
+          return res
+            .status(404)
+            .json({ message: "Product is not found", status: false });
+        }
+      })
+      .catch((error) => {
+        console.error("Error deleting document:", error);
+      });
+  } else {
+    return res
+      .status(403)
+      .json({ message: "Product is not belong to you", status: false });
+  }
+};
+
 export const getProducts = async (
   req: Request,
   res: Response,
