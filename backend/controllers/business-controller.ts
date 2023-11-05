@@ -3,6 +3,7 @@ import fileUpload from "express-fileupload";
 import { rootDir } from "..";
 import { ProductModel, ProductType } from "../models/products";
 import { BusinessUserModel } from "../models/user";
+const fs = require("fs");
 
 const mongoose = require("mongoose");
 
@@ -74,11 +75,19 @@ export const createProduct = async (
       productDescription,
     };
 
-    const updateRes = await ProductModel.findOneAndUpdate(
-      { _id: productId },
-      { ...payload },
-      { new: true, upsert: true }
-    );
+    const product = productId
+      ? await ProductModel.findById({ _id: productId })
+      : undefined;
+    let updateRes: any;
+    if (!product) {
+      updateRes = await ProductModel.create({ ...payload });
+    } else {
+      updateRes = await ProductModel.findOneAndUpdate(
+        { _id: productId },
+        { ...payload },
+        { new: true, upsert: true }
+      );
+    }
 
     const image = req.files.file as fileUpload.UploadedFile;
     const imagePath = rootDir + "/public/" + image.name.split(" ").join("");
@@ -124,6 +133,14 @@ export const deleteProduct = async (
     ProductModel.findByIdAndDelete(productId)
       .then((removedDocument) => {
         if (removedDocument) {
+          const imagePath =
+            rootDir + "/public/" + removedDocument.bgImg.split(" ").join("");
+          fs.unlink(imagePath, (err: any) => {
+            if (err) {
+              console.log("failed to delete ", removedDocument.bgImg);
+            }
+            console.log(removedDocument.bgImg, " deleted successfully.");
+          });
           return res
             .status(200)
             .json({ message: "Product deleted successfully", status: true });
