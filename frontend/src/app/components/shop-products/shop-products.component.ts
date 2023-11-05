@@ -125,8 +125,11 @@ export class ShopProductsComponent implements OnInit {
         this.selectedProduct?._id ? this.selectedProduct._id : ''
       );
     }
+    const msg = this.editMode
+      ? 'Product updated successfully'
+      : 'Product created successfully';
     this.productService.addProduct(formData).then((res) => {
-      this.snackBar.open('Product updated successfully', 'Close', {
+      this.snackBar.open(msg, 'Close', {
         duration: 3000,
         horizontalPosition: 'center',
         verticalPosition: 'top',
@@ -140,6 +143,8 @@ export class ShopProductsComponent implements OnInit {
         });
         this.selectedProduct = res;
         this.editMode = false;
+      } else {
+        this.products.push(res);
       }
     });
     this.productPanel.close();
@@ -158,9 +163,13 @@ export class ShopProductsComponent implements OnInit {
     this.selectedProduct = this.products[index];
     const productId = this.selectedProduct._id;
     console.log(productId, this.user?._id);
-    
+
     this.productService
-      .deleteProduct({ ownerId: this.user?._id, productId, token: this.user?.token })
+      .deleteProduct({
+        ownerId: this.user?._id,
+        productId,
+        token: this.user?.token,
+      })
       .then(() => {
         this.snackBar.open('Product deleted successfully', 'Close', {
           duration: 3000,
@@ -168,7 +177,7 @@ export class ShopProductsComponent implements OnInit {
           verticalPosition: 'top',
         });
         this.products = this.products.filter((product) => {
-          product._id !== productId
+          product._id !== productId;
         });
         this.selectedFile = null;
         this.selectedProduct = undefined;
