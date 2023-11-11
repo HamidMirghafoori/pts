@@ -1,45 +1,6 @@
-<!-- <mat-form-field *ngIf="showShopFilter">
-  <mat-label>Shop Email</mat-label>
-  <mat-select [(ngModel)]="selectedShopId" (ngModelChange)="filterTable()">
-
-    <mat-option *ngFor="let shop of uniqueShopIds()" [value]="shop">{{ shop }}</mat-option>
-  </mat-select>
-</mat-form-field>
-
-<mat-form-field>
-  <mat-label>Item Name</mat-label>
-  <mat-select [(ngModel)]="selectedItemId" (ngModelChange)="filterTable()">
-
-    <mat-option *ngFor="let item of uniqueItemIds()" [value]="item">{{ item }}</mat-option>
-  </mat-select>
-</mat-form-field>
-
-<mat-table [dataSource]="filteredData">
-  <ng-container matColumnDef="customerEmail">
-    <mat-header-cell *matHeaderCellDef [style.min-width.px]="140"> Customer</mat-header-cell>
-    <mat-cell *matCellDef="let element" [style.min-width.px]="140"> {{ element.customerEmail }} </mat-cell>
-  </ng-container>
-  <ng-container matColumnDef="itemName">
-    <mat-header-cell *matHeaderCellDef [style.min-width.px]="180"> Item</mat-header-cell>
-    <mat-cell *matCellDef="let element" [style.min-width.px]="180"> {{ element.itemName }} </mat-cell>
-  </ng-container>
-  <ng-container matColumnDef="shopEmail">
-    <mat-header-cell *matHeaderCellDef [style.min-width.px]="140"> Shop</mat-header-cell>
-    <mat-cell *matCellDef="let element" [style.min-width.px]="140"> {{ element.shopEmail }} </mat-cell>
-  </ng-container>
-  <ng-container matColumnDef="price">
-    <mat-header-cell *matHeaderCellDef [style.min-width.px]="80"> Price </mat-header-cell>
-    <mat-cell *matCellDef="let element" [style.min-width.px]="80"> {{ element.price }} </mat-cell>
-  </ng-container>
-
-  <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
-  <mat-row *matRowDef="let row; columns: displayedColumns"></mat-row>
-</mat-table>
- -->
-
 <div style="height: 500px; width: 500px;">
-  <canvas id="chart1">{{chart1}}</canvas>
+  <canvas id="chart1">{{pieChart}}</canvas>
 </div>
-<canvas id="chart2">{{chart2}}</canvas>
-<canvas id="chart3">{{chart3}}</canvas>
+<canvas id="chart2">{{barChart}}</canvas>
+<canvas id="chart3">{{lineChart}}</canvas>
 
