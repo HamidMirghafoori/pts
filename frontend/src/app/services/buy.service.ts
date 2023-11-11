@@ -2,7 +2,8 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable, map } from 'rxjs';
 import { environment } from 'src/environments/environment.development';
-import { purchase, purchasesList, rateItem } from './api';
+import { ReportType } from '../components/admin-report/admin-report.component';
+import { purchase, purchasesList, rateItem, shopReport } from './api';
 import { AuthenticationService, UserType } from './authentication.service';
 import { ProductType } from './products.service';
 
@@ -108,5 +109,24 @@ export class BuyService {
       });
 
     return '';
+  }
+
+
+  getShopReport(
+    user: UserType | null
+  ): Observable<ReportType> {
+    const body = {
+      shopId: user?._id,
+      token: user?.token,
+    };
+
+    const headers = new HttpHeaders({
+      'Content-Type': 'application/json',
+    });
+    console.log('calling.... ', this.rootUrl + shopReport);
+
+    return this.http
+      .post<any>(this.rootUrl + shopReport, body, { headers: headers })
+      .pipe(map((response) => response.shopReport as ReportType));
   }
 }

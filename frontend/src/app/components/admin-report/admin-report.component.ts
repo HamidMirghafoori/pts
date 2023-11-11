@@ -1,5 +1,4 @@
 import { ChangeDetectorRef, Component } from '@angular/core';
-import { MatTableDataSource } from '@angular/material/table';
 import { Chart, ChartConfiguration, ChartData, registerables } from 'chart.js';
 import { take } from 'rxjs';
 import { AuthenticationService } from 'src/app/services/authentication.service';
@@ -28,7 +27,7 @@ interface ProductSalesReport {
   date: string;
   product: ProductSalesProduct[];
 }
-interface ReportType {
+export interface ReportType {
   products: ProductReportType[];
   sales: SalesReportType[];
   productSales: ProductSalesReport[];
@@ -39,116 +38,13 @@ interface ReportType {
   styleUrls: ['./admin-report.component.scss'],
 })
 export class AdminReportComponent {
-  filteredData!: MatTableDataSource<RevenueType>;
   revenueData: RevenueType[] = [];
   colors = ['red', 'blue', 'darkOrange', 'green', 'darkSlateBlue', 'brown'];
   colorsAlpha = ['#ff000033', '#0000ff33', '#ff8c0033', '#00ff0033', '#483d8b33', '#FFEBCD33'];
-  public displayedColumns: string[] = [
-    'customerEmail',
-    'itemName',
-    'shopEmail',
-    'price',
-  ];
 
-  selectedShopId!: string;
-  selectedItemId!: string;
-  showShopFilter: boolean = true;
-
-  response: ReportType = {
-    products: [
-      {
-        productId: '654806d034ab6fa73deab36a',
-        title: 'Saiful Muluk sh3',
-        count: 12,
-      },
-      { productId: '6548076134ab6fa73deab379', title: 'Tohoka sh3', count: 16 },
-      { productId: '6548070134ab6fa73deab36f', title: 'Pattaya sh3', count: 8 },
-    ],
-    sales: [
-      { date: 'Jan', gross: 2750 },
-      { date: 'Feb', gross: 2150 },
-      { date: 'Mar', gross: 1200 },
-      { date: 'May', gross: 3700 },
-      { date: 'Apr', gross: 2200 },
-      { date: 'Jun', gross: 2450 },
-      { date: 'Jul', gross: 2000 },
-    ],
-    productSales: [
-      {
-        date: 'Jan',
-        product: [
-          {
-            id: '654806d034ab6fa73deab36a',
-            title: 'Saiful Muluk sh3',
-            count: 2,
-          },
-        ],
-      },
-      {
-        date: 'Feb',
-        product: [
-          {
-            id: '654806d034ab6fa73deab36a',
-            title: 'Saiful Muluk sh3',
-            count: 6,
-          },
-          { id: '6548076134ab6fa73deab379', title: 'Tohoka sh3', count: 8 },
-        ],
-      },
-      {
-        date: 'Mar',
-        product: [
-          {
-            id: '654806d034ab6fa73deab36a',
-            title: 'Saiful Muluk sh3',
-            count: 1,
-          },
-          { id: '6548076134ab6fa73deab379', title: 'Tohoka sh3', count: 2 },
-          { id: '6548070134ab6fa73deab36f', title: 'Pattaya sh3', count: 10 },
-        ],
-      },
-      {
-        date: 'May',
-        product: [
-          { id: '6548070134ab6fa73deab36f', title: 'Pattaya sh3', count: 8 },
-        ],
-      },
-      {
-        date: 'Apr',
-        product: [
-          {
-            id: '654806d034ab6fa73deab36a',
-            title: 'Saiful Muluk sh3',
-            count: 2,
-          },
-          { id: '6548070134ab6fa73deab36f', title: 'Pattaya sh3', count: 3 },
-        ],
-      },
-      {
-        date: 'Jun',
-        product: [
-          {
-            id: '654806d034ab6fa73deab36a',
-            title: 'Saiful Muluk sh3',
-            count: 3,
-          },
-          { id: '6548076134ab6fa73deab379', title: 'Tohoka sh3', count: 6 },
-        ],
-      },
-      {
-        date: 'Jul',
-        product: [
-          {
-            id: '654806d034ab6fa73deab36a',
-            title: 'Saiful Muluk sh3',
-            count: 5,
-          },
-          { id: '6548076134ab6fa73deab379', title: 'Tohoka sh3', count: 3 },
-          { id: '6548070134ab6fa73deab36f', title: 'Pattaya sh3', count: 4 },
-        ],
-      },
-    ],
-  };
+  
+  response!: ReportType;
+  
   constructor(
     private buyService: BuyService,
     private cdr: ChangeDetectorRef,
@@ -159,25 +55,15 @@ export class AdminReportComponent {
     this.authService.authenticatedUser$.pipe(take(1)).subscribe((user) => {
       if (user) {
         if (user.role === 'business') {
-          this.showShopFilter = false;
-          // this.buyService.getRevenueDataById(user.uid).subscribe(data=>{
-          //   this.revenueData = data;
-          //   this.filteredData = new MatTableDataSource<RevenueType>(
-          //     this.revenueData
-          //   );
-          // })
+          this.buyService.getShopReport(user).subscribe(response=>{
+            this.response = response
+            this.generateBarChart();
+          })
         } else {
-          this.showShopFilter = true;
-          // this.buyService.getRevenueData().subscribe((data) => {
-          //   this.revenueData = data;
-          //   this.filteredData = new MatTableDataSource<RevenueType>(
-          //     this.revenueData
-          //   );
-          // });
+
         }
       }
     });
-    this.generateBarChart();
   }
 
   pieChart: any;

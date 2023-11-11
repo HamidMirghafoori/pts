@@ -409,7 +409,7 @@ export const getShopReport = async (
   };
   return res.status(200).json({
     success: true,
-    message: "Revenue is added",
-    report,
+    message: "Report is generated",
+    shopReport: report,
   });
 };

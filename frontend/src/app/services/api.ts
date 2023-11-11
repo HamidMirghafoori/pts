@@ -8,3 +8,4 @@ export const updateApplication = 'update-application';
 export const getShopProducts = 'products';
 export const createProduct = 'create-product';
 export const deleteProduct = 'delete-product';
+export const shopReport = 'shop-report';
