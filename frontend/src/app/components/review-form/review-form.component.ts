@@ -61,6 +61,6 @@ export class ReviewFormComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    this.authSub.unsubscribe();
+    this.authSub && this.authSub.unsubscribe();
   }
 }
