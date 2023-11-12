@@ -16,10 +16,9 @@ exports.isRootAuthenticated = async (
   token = req.body.token;
 
   if (!token) {
-    console.log('isRootAuthenticated no TOKEN');
-    
-    res.redirect(302, "/api/products-list")
-    
+    console.log("isRootAuthenticated no TOKEN");
+
+    res.redirect(302, "/api/products-list");
   } else {
     next();
   }
@@ -31,8 +30,8 @@ exports.isAuthenticated = async (
   next: NextFunction
 ) => {
   let token!: string;
-  console.log("isAuthenticated....");
   token = req.body.token;
+  console.log("isAuthenticated....", token);
   if (!token) {
     return res.status(403).json({
       message: "unauthenticated",
@@ -90,6 +89,25 @@ exports.isAdminOrOfficer = (
   if (req.user?.role !== "admin" && req.user?.role !== "officer") {
     return res.status(401).json({
       message: "Access denied, you must be an officer or admin",
+    });
+  }
+  next();
+};
+
+exports.isBusinessOrOfficer = (
+  req: ReqType,
+  res: Response,
+  next: NextFunction
+) => {
+  console.log(
+    "isBusinessOrOfficer...",
+    req.user?.role === "business",
+    req.user?.role === "officer"
+  );
+
+  if (!(req.user?.role === "business" || req.user?.role === "officer")) {
+    return res.status(401).json({
+      message: "Access denied, you must be an officer or business",
     });
   }
   next();

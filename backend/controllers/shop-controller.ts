@@ -361,19 +361,23 @@ export const getShopReport = async (
 ) => {
   const { shopId } = req.body;
 
-  if (!mongoose.Types.ObjectId.isValid(shopId)) {
+  if (shopId && !mongoose.Types.ObjectId.isValid(shopId)) {
     return res.status(400).json({ message: "Invalid shopId" });
   }
+  if (shopId) {
+    const shop = await BusinessUserModel.findById(shopId);
 
-  const shop = await BusinessUserModel.findById(shopId);
-  if (!shop) {
-    return res.status(401).json({
-      success: false,
-      message: "shopId does not exist in database",
-    });
+    if (!shop) {
+      return res.status(401).json({
+        success: false,
+        message: "shopId does not exist in database",
+      });
+    }
   }
 
-  const soldItems = await RevenueModel.find({ shopId });
+  const soldItems = shopId
+    ? await RevenueModel.find({ shopId })
+    : await RevenueModel.find();
   // console.log(soldItems[0], soldItems.length);
   interface ProductType {
     productId: string;
@@ -388,7 +392,7 @@ export const getShopReport = async (
   let pricesArray = await (
     await ProductModel.find({ _id: { $in: productsIds } })
   ).map((product) => {
-    return { [product._id.toHexString()]: product.price, 'title': product.title };
+    return { [product._id.toHexString()]: product.price, title: product.title };
   });
   const prices: any = {};
   const productsNames: any = {};
@@ -400,10 +404,10 @@ export const getShopReport = async (
 
   pricesArray.forEach((obj) => {
     const key = Object.keys(obj)[0];
-    productsNames[key] = obj['title'];
+    productsNames[key] = obj["title"];
   });
 
-  console.log("productsNames", productsNames);
+  // console.log("productsNames", productsNames);
 
   // const products = productsIds.reduce((p,c)=> (p['productId']=c, p['title']="", p), {})
   const products: ProductType[] = productsIds.map((id) => {
@@ -491,17 +495,17 @@ export const getShopReport = async (
     finalSold[month] = Object.entries(countsById).map(([id, count]) => ({
       id,
       count,
-      title: productsNames[id]
+      title: productsNames[id],
     }));
   }
-console.log(finalSold);
+  // console.log(finalSold);
 
   const productSales = Object.entries(finalSold).map(([date, product]) => ({
     date,
     product,
   }));
 
-  // console.log(productSales);
+  console.log({...productSales[0]});
 
   const report = {
     products,
