@@ -5,6 +5,53 @@ import { RevenueModel } from "../models/revenue";
 import { BusinessUserModel, UserModel } from "../models/user";
 
 const mongoose = require("mongoose");
+interface MonthType {
+  [key: string]: number;
+}
+
+const emptySales: MonthType = {
+  Jan: 0,
+  Feb: 0,
+  Mar: 0,
+  Apr: 0,
+  May: 0,
+  Jun: 0,
+  Jul: 0,
+  Aug: 0,
+  Sep: 0,
+  Oct: 0,
+  Nov: 0,
+  Dec: 0,
+};
+
+const monthEnum: { [key: number]: string } = {
+  0: "Jan",
+  1: "Feb",
+  2: "Mar",
+  3: "Apr",
+  4: "May",
+  5: "Jun",
+  6: "Jul",
+  7: "Aug",
+  8: "Sep",
+  9: "Oct",
+  10: "Nov",
+  11: "Dec",
+};
+
+type MType =
+  | "Jan"
+  | "Feb"
+  | "Mar"
+  | "Apr"
+  | "May"
+  | "Jun"
+  | "Jul"
+  | "Aug"
+  | "Sep"
+  | "Oct"
+  | "Nov"
+  | "Dec";
 
 export const purchaseItem = async (
   req: Request,
@@ -191,7 +238,7 @@ export const ratePurchase = async (
       purchase[0].userId.toHexString() !== userId ||
       purchase[0].productId.toHexString() !== productId
     ) {
-      console.log(purchase[0]);
+      // console.log(purchase[0]);
       return res.status(404).json({
         success: false,
         message:
@@ -235,7 +282,7 @@ export const addRevenue = async (
     const { price } = req.body;
 
     if (!mongoose.Types.ObjectId.isValid(shopId)) {
-      return res.status(400).json({ message: "shopId userId" });
+      return res.status(400).json({ message: "Invalid shopId" });
     }
     if (!mongoose.Types.ObjectId.isValid(productId)) {
       return res.status(400).json({ message: "Invalid productId" });
@@ -312,101 +359,156 @@ export const getShopReport = async (
   res: Response,
   next: NextFunction
 ) => {
+  const { shopId } = req.body;
+
+  if (!mongoose.Types.ObjectId.isValid(shopId)) {
+    return res.status(400).json({ message: "Invalid shopId" });
+  }
+
+  const shop = await BusinessUserModel.findById(shopId);
+  if (!shop) {
+    return res.status(401).json({
+      success: false,
+      message: "shopId does not exist in database",
+    });
+  }
+
+  const soldItems = await RevenueModel.find({ shopId });
+  // console.log(soldItems[0], soldItems.length);
+  interface ProductType {
+    productId: string;
+    title: string;
+    count: number;
+  }
+  const productsIds: string[] = Array.from(
+    new Set(soldItems.map((item) => item.productId.toHexString()))
+  );
+
+  //fetch products prices
+  let pricesArray = await (
+    await ProductModel.find({ _id: { $in: productsIds } })
+  ).map((product) => {
+    return { [product._id.toHexString()]: product.price, 'title': product.title };
+  });
+  const prices: any = {};
+  const productsNames: any = {};
+
+  pricesArray.forEach((obj) => {
+    const key = Object.keys(obj)[0];
+    prices[key] = obj[key];
+  });
+
+  pricesArray.forEach((obj) => {
+    const key = Object.keys(obj)[0];
+    productsNames[key] = obj['title'];
+  });
+
+  console.log("productsNames", productsNames);
+
+  // const products = productsIds.reduce((p,c)=> (p['productId']=c, p['title']="", p), {})
+  const products: ProductType[] = productsIds.map((id) => {
+    const title = soldItems.filter(
+      (item) => item.productId.toHexString() === id
+    )[0].productName;
+    return { productId: id, title, count: 0 };
+  });
+  for (let i = 0; i < products.length; i++) {
+    products[i].count = soldItems.filter(
+      (item) => item.productId.toHexString() === products[i].productId
+    ).length;
+  }
+  // console.log(productsIds, products);
+  const salesObj: MonthType = { ...emptySales };
+
+  let min = new Date(2050, 1, 1);
+  let max = new Date(1900, 1, 1);
+  for (let i = 0; i < soldItems.length; i++) {
+    if (soldItems[i].createdAt > max) {
+      max = soldItems[i].createdAt;
+    }
+    if (soldItems[i].createdAt < min) {
+      min = soldItems[i].createdAt;
+    }
+    const m = soldItems[i].createdAt.toLocaleString("default", {
+      month: "short",
+    }) as MType;
+    salesObj[m] = salesObj[m] + prices[soldItems[i].productId.toHexString()];
+  }
+  // console.log(salesObj);
+
+  let salesObjRange!: MonthType;
+  for (let i = min.getMonth(); i <= max.getMonth(); i++) {
+    let mm = monthEnum[i];
+    salesObjRange = {
+      ...salesObjRange,
+      [mm]: salesObj[mm],
+    };
+  }
+  const sales = Object.keys(salesObjRange).map((date) => ({
+    date,
+    gross: salesObjRange[date],
+  }));
+
+  // console.log(sales);
+  const sorted = soldItems.sort(
+    (a, b) => a.createdAt.getTime() - b.createdAt.getTime()
+  );
+
+  let soldRearranged: any = {};
+  for (let i = 0; i < sorted.length; i++) {
+    const m2 = sorted[i].createdAt.toLocaleString("default", {
+      month: "short",
+    });
+    const val = soldRearranged[m2] ?? [];
+    soldRearranged = {
+      ...soldRearranged,
+      [m2]: [...val, sorted[i].productId.toHexString()],
+    };
+  }
+
+  Object.keys(soldRearranged).forEach((key) => {
+    const products = soldRearranged[key].map((item: string) => {
+      return { id: item, count: 1 };
+    });
+    soldRearranged[key] = products;
+  });
+
+  const finalSold: any = {};
+
+  for (const month in soldRearranged) {
+    const countsById: any = {};
+
+    (soldRearranged[month] as { id: string; count: number }[]).forEach(
+      ({ id, count }) => {
+        if (countsById[id]) {
+          countsById[id] += count;
+        } else {
+          countsById[id] = count;
+        }
+      }
+    );
+
+    finalSold[month] = Object.entries(countsById).map(([id, count]) => ({
+      id,
+      count,
+      title: productsNames[id]
+    }));
+  }
+console.log(finalSold);
+
+  const productSales = Object.entries(finalSold).map(([date, product]) => ({
+    date,
+    product,
+  }));
+
+  // console.log(productSales);
+
   const report = {
-    products: [
-      {
-        productId: "654806d034ab6fa73deab36a",
-        title: "Saiful Muluk sh3",
-        count: 12,
-      },
-      { productId: "6548076134ab6fa73deab379", title: "Tohoka sh3", count: 16 },
-      { productId: "6548070134ab6fa73deab36f", title: "Pattaya sh3", count: 8 },
-    ],
-    sales: [
-      { date: "Jan", gross: 2750 },
-      { date: "Feb", gross: 2150 },
-      { date: "Mar", gross: 1200 },
-      { date: "May", gross: 3700 },
-      { date: "Apr", gross: 2200 },
-      { date: "Jun", gross: 2450 },
-      { date: "Jul", gross: 2000 },
-    ],
-    productSales: [
-      {
-        date: "Jan",
-        product: [
-          {
-            id: "654806d034ab6fa73deab36a",
-            title: "Saiful Muluk sh3",
-            count: 2,
-          },
-        ],
-      },
-      {
-        date: "Feb",
-        product: [
-          {
-            id: "654806d034ab6fa73deab36a",
-            title: "Saiful Muluk sh3",
-            count: 6,
-          },
-          { id: "6548076134ab6fa73deab379", title: "Tohoka sh3", count: 8 },
-        ],
-      },
-      {
-        date: "Mar",
-        product: [
-          {
-            id: "654806d034ab6fa73deab36a",
-            title: "Saiful Muluk sh3",
-            count: 1,
-          },
-          { id: "6548076134ab6fa73deab379", title: "Tohoka sh3", count: 2 },
-          { id: "6548070134ab6fa73deab36f", title: "Pattaya sh3", count: 10 },
-        ],
-      },
-      {
-        date: "May",
-        product: [
-          { id: "6548070134ab6fa73deab36f", title: "Pattaya sh3", count: 8 },
-        ],
-      },
-      {
-        date: "Apr",
-        product: [
-          {
-            id: "654806d034ab6fa73deab36a",
-            title: "Saiful Muluk sh3",
-            count: 2,
-          },
-          { id: "6548070134ab6fa73deab36f", title: "Pattaya sh3", count: 3 },
-        ],
-      },
-      {
-        date: "Jun",
-        product: [
-          {
-            id: "654806d034ab6fa73deab36a",
-            title: "Saiful Muluk sh3",
-            count: 3,
-          },
-          { id: "6548076134ab6fa73deab379", title: "Tohoka sh3", count: 6 },
-        ],
-      },
-      {
-        date: "Jul",
-        product: [
-          {
-            id: "654806d034ab6fa73deab36a",
-            title: "Saiful Muluk sh3",
-            count: 5,
-          },
-          { id: "6548076134ab6fa73deab379", title: "Tohoka sh3", count: 3 },
-          { id: "6548070134ab6fa73deab36f", title: "Pattaya sh3", count: 4 },
-        ],
-      },
-    ],
+    products,
+    sales,
+    productSales,
   };
+
   return res.status(200).json({
     success: true,
     message: "Report is generated",
