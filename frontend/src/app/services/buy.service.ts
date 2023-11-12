@@ -113,17 +113,18 @@ export class BuyService {
 
 
   getShopReport(
-    user: UserType | null
+    user: UserType | null,
+    fetchAll: boolean = false
   ): Observable<ReportType> {
     const body = {
-      shopId: user?._id,
+      shopId: fetchAll ? undefined : user?._id,
       token: user?.token,
     };
 
     const headers = new HttpHeaders({
       'Content-Type': 'application/json',
     });
-    console.log('calling.... ', this.rootUrl + shopReport);
+    // console.log('calling.... ', this.rootUrl + shopReport);
 
     return this.http
       .post<any>(this.rootUrl + shopReport, body, { headers: headers })

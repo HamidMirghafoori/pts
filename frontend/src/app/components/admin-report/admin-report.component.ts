@@ -40,11 +40,17 @@ export interface ReportType {
 export class AdminReportComponent {
   revenueData: RevenueType[] = [];
   colors = ['red', 'blue', 'darkOrange', 'green', 'darkSlateBlue', 'brown'];
-  colorsAlpha = ['#ff000033', '#0000ff33', '#ff8c0033', '#00ff0033', '#483d8b33', '#FFEBCD33'];
+  colorsAlpha = [
+    '#ff000033',
+    '#0000ff33',
+    '#ff8c0033',
+    '#00ff0033',
+    '#483d8b33',
+    '#FFEBCD33',
+  ];
 
-  
   response!: ReportType;
-  
+
   constructor(
     private buyService: BuyService,
     private cdr: ChangeDetectorRef,
@@ -55,12 +61,15 @@ export class AdminReportComponent {
     this.authService.authenticatedUser$.pipe(take(1)).subscribe((user) => {
       if (user) {
         if (user.role === 'business') {
-          this.buyService.getShopReport(user).subscribe(response=>{
-            this.response = response
+          this.buyService.getShopReport(user).subscribe((response) => {
+            this.response = response;
             this.generateBarChart();
-          })
-        } else {
-
+          });
+        } else if (user.role === 'officer') {
+          this.buyService.getShopReport(user, true).subscribe((response) => {
+            this.response = response;
+            this.generateBarChart();
+          });
         }
       }
     });
@@ -144,7 +153,7 @@ export class AdminReportComponent {
         backgroundColor: this.colorsAlpha[index % 6],
       });
     });
-    
+
     return barData;
   }
 

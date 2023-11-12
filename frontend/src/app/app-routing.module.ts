@@ -41,7 +41,7 @@ const routes: Routes = [
     path: 'reports',
     component: AdminReportComponent,
     canActivate: [AuthGuard],
-    data: { roles: ['business'] },
+    data: { roles: ['business', 'officer'] },
   },
   { path: '**', redirectTo: '' },
 ];
