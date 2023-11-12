@@ -12,7 +12,8 @@ export class PurchasingFormComponent implements OnInit {
   private itemId: string = '';
   private userId: string = '';
   private userEmail: string = '';
-
+  private title: string = '';
+  private price: string = '';
 
   constructor(
     private fb: FormBuilder,
@@ -34,6 +35,8 @@ export class PurchasingFormComponent implements OnInit {
       this.itemId = params['itemID'];
       this.userId = params['userId'];
       this.userEmail = params['userEmail'];
+      this.title = params['title'];
+      this.price = params['price'];
     });
   }
 
@@ -44,7 +47,9 @@ export class PurchasingFormComponent implements OnInit {
           itemID: this.itemId,
           address: this.purchaseForm.get('address')?.value,
           userId: this.userId,
-          userEmail: this.userEmail
+          userEmail: this.userEmail,
+          title: this.title,
+          price: this.price,
         },
       });
     }

@@ -6,6 +6,7 @@ import { ApplicationsComponent } from './components/applications/applications.co
 import { PaymentGatewayComponent } from './components/payment-gateway/payment-gateway.component';
 import { ProductsListComponent } from './components/products-list/products-list.component';
 import { PurchasingFormComponent } from './components/purchasing-form/purchasing-form.component';
+import { ReceiptComponent } from './components/receipt/receipt.component';
 import { ReviewFormComponent } from './components/review-form/review-form.component';
 import { ShopProductsComponent } from './components/shop-products/shop-products.component';
 import { SigninComponent } from './components/signin/signin.component';
@@ -18,7 +19,7 @@ const routes: Routes = [
   { path: 'payment-gateway', component: PaymentGatewayComponent },
   { path: 'signup', component: SignupComponent },
   { path: 'review', component: ReviewFormComponent },
-  { path: 'dev', component: AdminReportComponent },
+  { path: 'dev', component: ReceiptComponent },
   {
     path: 'my-orders',
     component: ProductsListComponent,

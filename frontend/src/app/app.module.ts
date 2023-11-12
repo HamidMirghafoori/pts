@@ -28,6 +28,7 @@ import { ShopProductsComponent } from './components/shop-products/shop-products.
 import { SigninComponent } from './components/signin/signin.component';
 import { SignupComponent } from './components/signup/signup.component';
 import { MaterialModule } from './material/material.module';
+import { ReceiptComponent } from './components/receipt/receipt.component';
 
 
 
@@ -50,6 +51,7 @@ export function tokenGetter() {
     PaymentGatewayComponent,
     ReviewFormComponent,
     AdminReportComponent,
+    ReceiptComponent,
   ],
   imports: [
     BrowserModule,

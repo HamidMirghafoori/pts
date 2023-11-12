@@ -42,10 +42,7 @@
     <mat-form-field appearance="fill">
       <mat-label>Expiry Year</mat-label>
       <mat-select formControlName="expiryYear">
-        <mat-option
-          *ngFor="let year of years"
-          [value]="year"
-        >
+        <mat-option *ngFor="let year of years" [value]="year">
           {{ year }}
         </mat-option>
       </mat-select>
@@ -71,6 +68,14 @@
   <div class="flex-row">
     <button mat-raised-button (click)="onBack()" color="warn">Back</button>
     <div class="flex-grow"></div>
-    <button mat-raised-button color="primary" type="submit">Submit</button>
+    <button mat-raised-button color="primary" type="submit" [disabled]="paid">Submit</button>
   </div>
 </form>
+
+<app-receipt
+  *ngIf="paid"
+  [address]="address"
+  [price]="+price"
+  [email]="userEmail"
+  [title]="title"
+></app-receipt>

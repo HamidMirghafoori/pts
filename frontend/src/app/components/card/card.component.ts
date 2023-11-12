@@ -71,6 +71,8 @@ export class CardComponent implements OnInit {
             itemID: this.data._id,
             userId: this.user._id,
             userEmail: this.user.email,
+            title: this.data.title,
+            price: this.data.price,
           },
         });
   }

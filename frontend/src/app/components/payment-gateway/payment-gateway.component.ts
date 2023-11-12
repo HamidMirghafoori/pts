@@ -15,9 +15,12 @@ export class PaymentGatewayComponent implements OnInit {
   );
   public years = Array.from({ length: 8 }, (_, i) => (i + 2023).toString());
   private itemId: string = '';
-  private address: string = '';
+  public address: string = '';
   private userId: string = '';
-  private userEmail: string = '';
+  public userEmail: string = '';
+  public paid: boolean  = false;
+  public title: string = '';
+  public price: string = '';
 
   constructor(
     private fb: FormBuilder,
@@ -50,6 +53,8 @@ export class PaymentGatewayComponent implements OnInit {
       this.address = params['address'];
       this.userId = params['userId'];
       this.userEmail = params['userEmail'];
+      this.title = params['title'];
+      this.price = params['price'];
     });
   }
 
@@ -64,17 +69,12 @@ export class PaymentGatewayComponent implements OnInit {
           this.userEmail
         )
         .then((res) => {
-          console.log(res);
-          
-          // display receipt
-
-          // after receipt
-          this.router.navigate(['']);
+          this.paid=true;
         });
     }
   }
 
-  onBack() {
+  onBack() : void{
     this.router.navigate(['']);
   }
 }

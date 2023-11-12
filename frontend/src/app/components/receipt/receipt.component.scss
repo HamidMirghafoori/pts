@@ -1,0 +1,63 @@
+.container {
+  width: 800px;
+  height: 400px;
+  border: 1px solid black;
+  border-radius: 8px;
+  background-color: #eee;
+  margin-top: 32px;
+}
+
+.mat-column-total {
+  font-weight: bold;
+}
+.gap {
+  height: 32px;
+}
+
+.name,
+.address,
+.date {
+  margin: 16px;
+  font-weight: 300;
+  font-size: large;
+}
+
+.label {
+  font-weight: 600;
+  margin-right: 24px;
+}
+
+.button {
+  margin-top: 32px;
+  width: 200px;
+  height: 48px;
+  justify-self: center;
+}
+
+.close {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+}
+
+
+.total {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 52px;
+  background-color: rgb(228, 228, 228);
+  margin: 0 16px;
+  border-radius: 8px;
+  padding: 8px 64px;
+}
+
+.price {
+  font-weight: 800;
+  font-size: 24px;
+  background-color: whitesmoke;
+  min-width: 128px;
+  padding: 8px 16px;
+  border-radius: 8px;
+  text-align: end;
+}
