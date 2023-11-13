@@ -1,7 +1,7 @@
 import { ChangeDetectorRef, Component } from '@angular/core';
 import { Chart, ChartConfiguration, ChartData, registerables } from 'chart.js';
 import { take } from 'rxjs';
-import { AuthenticationService } from 'src/app/services/authentication.service';
+import { AuthenticationService, UserType } from 'src/app/services/authentication.service';
 import { BuyService, RevenueType } from 'src/app/services/buy.service';
 
 Chart.register(...registerables);
@@ -31,6 +31,7 @@ export interface ReportType {
   products: ProductReportType[];
   sales: SalesReportType[];
   productSales: ProductSalesReport[];
+  shopsInfo: {shopId: string, email: string}[];
 }
 @Component({
   selector: 'app-admin-report',
@@ -57,9 +58,14 @@ export class AdminReportComponent {
     private authService: AuthenticationService
   ) {}
 
+  shopsInfo!: {shopId: string, email: string}[];
+  selectedShop: string = '';
+  user: UserType | null = null;
+  
   ngOnInit() {
     this.authService.authenticatedUser$.pipe(take(1)).subscribe((user) => {
       if (user) {
+        this.user = user;
         if (user.role === 'business') {
           this.buyService.getShopReport(user).subscribe((response) => {
             this.response = response;
@@ -68,10 +74,20 @@ export class AdminReportComponent {
         } else if (user.role === 'officer') {
           this.buyService.getShopReport(user, true).subscribe((response) => {
             this.response = response;
+            this.shopsInfo = [{shopId: '', email: 'Select shop email'},...response.shopsInfo];
             this.generateBarChart();
           });
         }
       }
+    });
+  }
+
+  onSelectedShop(){
+    const newUser = {...this.user, _id: this.selectedShop} as UserType;
+    this.buyService.getShopReport(newUser).subscribe((response) => {
+      this.response = response;
+      this.shopsInfo = [{shopId: '', email: 'Select shop email'},...response.shopsInfo];
+      this.generateBarChart();
     });
   }
 
@@ -164,6 +180,16 @@ export class AdminReportComponent {
     const ctx1 = canvas1.getContext('2d');
     const ctx2 = canvas2.getContext('2d');
     const ctx3 = canvas3.getContext('2d');
+
+    if (this.pieChart) {
+      this.pieChart.destroy();
+    }
+    if (this.barChart) {
+      this.barChart.destroy();
+    }
+    if (this.lineChart) {
+      this.lineChart.destroy();
+    }
 
     this.buildLineData();
 

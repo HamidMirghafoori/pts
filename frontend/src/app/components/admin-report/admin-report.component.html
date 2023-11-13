@@ -1,3 +1,10 @@
+<mat-form-field>
+  <mat-label>Select shop Email</mat-label>
+  <mat-select [(ngModel)]="selectedShop" (ngModelChange)="onSelectedShop()">
+    <mat-option *ngFor="let item of shopsInfo" [value]="item.shopId">{{ item.email }}</mat-option>
+  </mat-select>
+</mat-form-field>
+
 <div style="height: 500px; width: 500px;">
   <canvas id="chart1">{{pieChart}}</canvas>
 </div>
