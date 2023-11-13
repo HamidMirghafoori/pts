@@ -388,6 +388,20 @@ export const getShopReport = async (
     new Set(soldItems.map((item) => item.productId.toHexString()))
   );
 
+  const shopIds: string[] = Array.from(
+    new Set(soldItems.map((item) => item.shopId.toHexString()))
+  );
+
+  const shopsInfo = shopIds.reduce((result, shopId) => {
+    const email = soldItems.find((item) => item.shopId.toHexString() === shopId)
+      ?.shopEmail as string;
+
+    result.push({shopId, email});
+
+
+    return result;
+  }, [] as { shopId: string, email: string }[]);
+
   //fetch products prices
   let pricesArray = await (
     await ProductModel.find({ _id: { $in: productsIds } })
@@ -505,12 +519,13 @@ export const getShopReport = async (
     product,
   }));
 
-  console.log({...productSales[0]});
+  // console.log({...productSales[0]});
 
   const report = {
     products,
     sales,
     productSales,
+    shopsInfo,
   };
 
   return res.status(200).json({
