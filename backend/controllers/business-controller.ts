@@ -223,7 +223,7 @@ export const getAllProducts = async (
     });
     console.log("getAllProducts....");
 
-    const ratings = await PurchaseModel.aggregate([
+    const ratings = (await PurchaseModel.aggregate([
       { $match: { rate: { $gte: 0 } } },
       {
         $group: {
@@ -233,7 +233,7 @@ export const getAllProducts = async (
         },
       },
       { $project: { _id: 1, ratings: 1, count: 1 } },
-    ]) as RatingsType[];
+    ])) as RatingsType[];
 
     for (let i = 0; i < products.length; i++) {
       let matchingObject = ratings.find(
@@ -241,7 +241,7 @@ export const getAllProducts = async (
       );
 
       if (matchingObject) {
-        products[i].rate = matchingObject.ratings;
+        products[i].rate = Math.round(matchingObject.ratings * 10) / 10;
         products[i].votes = matchingObject.count;
       }
     }

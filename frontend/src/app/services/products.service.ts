@@ -25,6 +25,7 @@ export interface ProductType {
   purchaseId: string;
   bookedCount: number;
   currency: string;
+  productDescription: string;
 }
 
 @Injectable({

@@ -50,6 +50,7 @@ export class CardComponent implements OnInit {
     purchaseId: '',
     createdAt: '',
     updatedAt: '',
+    productDescription: ''
   };
 
   onReviewClick() {
