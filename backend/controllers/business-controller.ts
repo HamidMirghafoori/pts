@@ -1,7 +1,9 @@
 import { NextFunction, Request, Response } from "express";
 import fileUpload from "express-fileupload";
+import { Types } from "mongoose";
 import { rootDir } from "..";
 import { ProductModel, ProductType } from "../models/products";
+import { PurchaseModel } from "../models/purchase";
 import { BusinessUserModel } from "../models/user";
 const fs = require("fs");
 
@@ -192,17 +194,57 @@ export const getProducts = async (
   }
 };
 
+interface ProductsExtended extends ProductType {
+  rate: number;
+  votes: number;
+  bookedCount: number;
+  currency: string;
+}
+interface RatingsType {
+  _id: Types.ObjectId;
+  ratings: number;
+  count: number;
+}
 export const getAllProducts = async (
   req: Request,
   res: Response,
   next: NextFunction
 ) => {
   try {
-    let products = (await ProductModel.find().lean()) as ProductType[];
+    let products = (await ProductModel.find().lean()) as ProductsExtended[];
     products = products.map((product) => {
-      return { ...product, rate: 0, votes: 0, bookedCount: 0, currency: "US$" };
+      return {
+        ...product,
+        rate: 0,
+        votes: 0,
+        bookedCount: 0,
+        currency: "US$",
+      };
     });
     console.log("getAllProducts....");
+
+    const ratings = await PurchaseModel.aggregate([
+      { $match: { rate: { $gte: 0 } } },
+      {
+        $group: {
+          _id: "$productId",
+          ratings: { $avg: "$rate" },
+          count: { $sum: 1 },
+        },
+      },
+      { $project: { _id: 1, ratings: 1, count: 1 } },
+    ]) as RatingsType[];
+
+    for (let i = 0; i < products.length; i++) {
+      let matchingObject = ratings.find(
+        (obj) => obj._id.toHexString() === products[i]._id.toHexString()
+      );
+
+      if (matchingObject) {
+        products[i].rate = matchingObject.ratings;
+        products[i].votes = matchingObject.count;
+      }
+    }
 
     return res.status(200).json({
       success: true,
